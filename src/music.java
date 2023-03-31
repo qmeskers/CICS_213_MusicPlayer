@@ -16,5 +16,7 @@ public class music {
 		System.out.println("Hello World");
 
 	}
-
+private static void music() {
+	
+}
 }

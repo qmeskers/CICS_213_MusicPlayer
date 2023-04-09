@@ -1,3 +1,6 @@
+import java.io.IOException;
+import java.util.ArrayList;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.widgets.Display;
@@ -9,6 +12,7 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Control;
 
+
 public class Player extends Shell {
 	/*for the timer we might want to do something like timer += 2 after we set it when the video loads to account for load 
 	times in the youtube player so the song doesn't cut off early */
@@ -17,6 +21,22 @@ public class Player extends Shell {
 	private boolean paused = false; //currently unused, variable will be used to stop timer when song is paused
 	private String currentSong = "https://www.youtube.com/embed/Zmvt7yFTtt8?autoplay=1"; //will be replaced by top of queue 
 	private String testURL = "https://www.youtube.com/embed/MgV-bCxE6ZI?autoplay=1"; //used for testing purposes
+	private ArrayList<Song> songs = new ArrayList<>();
+	
+	
+	  private Song song;
+	    
+	    public Player(String artist, String album, String name, String url, int yearReleased) {
+	        this.song = new Song(artist, album, name, url, yearReleased);
+	    }
+	    
+	  
+	
+	    
+	    
+	   
+	
+	
 	/**
 	 * Launch the application.
 	 * @param args
@@ -40,12 +60,17 @@ public class Player extends Shell {
 	/**
 	 * Create the shell.
 	 * @param display
+	 * @throws IOException 
 	 */
-	public Player(Display display) {
+	public Player(Display display) throws IOException {
 		super(display, SWT.SHELL_TRIM);
 		setMaximumSize(new Point(600, 400));
 		setMinimumSize(new Point(600, 400));
+		  // load the songs from the JSON file
+	   
+	   
 		
+	
 		Label lblArtist = new Label(this, SWT.NONE);
 		lblArtist.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		lblArtist.setBounds(10, 10, 81, 25);

@@ -1,0 +1,26 @@
+{
+  "songs": [
+    {
+      "artist": "The Beatles",
+      "album": "Abbey Road",
+      "name": "Something",
+      "yearReleased": 1969,
+      "url": "https://www.youtube.com/watch?v=UelDrZ1aFeY"
+    },
+    {
+      "artist": "test",
+      "album": "test",
+      "name": "test",
+      "yearReleased": 1969,
+      "url": "https://www.youtube.com/watch?v=UelDrZ1aFeY"
+    }
+    
+    {
+      "artist": "blah",
+      "album": "blah",
+      "name": "blah",
+      "yearReleased": 1975,
+      "url": "https://www.youtube.com/watch?v=UelDrZ1aFeY"
+    }
+  ]
+}

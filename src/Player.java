@@ -22,6 +22,7 @@ public class Player extends Shell {
 	private String currentSong = "https://www.youtube.com/embed/Zmvt7yFTtt8?autoplay=1"; //will be replaced by top of queue 
 	private String testURL = "https://www.youtube.com/embed/MgV-bCxE6ZI?autoplay=1"; //used for testing purposes
 	private ArrayList<Song> songs = new ArrayList<>();
+	private ArrayList<Song> songlist = new ArrayList<Song>();// this is the arraylist for the song list-brian
 	
 	
 	  private Song song;

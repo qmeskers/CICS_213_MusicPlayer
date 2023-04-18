@@ -1,26 +1,14 @@
 {
   "songs": [
     {
-      "artist": "The Beatles",
-      "album": "Abbey Road",
-      "name": "Something",
-      "yearReleased": 1969,
-      "url": "https://www.youtube.com/watch?v=UelDrZ1aFeY"
-    },
-    {
-      "artist": "test",
-      "album": "test",
-      "name": "test",
-      "yearReleased": 1969,
-      "url": "https://www.youtube.com/watch?v=UelDrZ1aFeY"
+      "artist": "Imagine Dragons",
+      "album": " Mercury – Acts 1 & 2",
+      "name": "Bones",
+      "yearReleased": 2022,
+      "url": "https://www.youtube.com/embed/u_GhTPiv1VY?autoplay=1",
+      "genre": "Rock",
+      "duration": 164
     }
-    
-    {
-      "artist": "blah",
-      "album": "blah",
-      "name": "blah",
-      "yearReleased": 1975,
-      "url": "https://www.youtube.com/watch?v=UelDrZ1aFeY"
-    }
+   
   ]
 }

@@ -21,23 +21,16 @@ public class Player extends Shell {
 	private boolean paused = false; //currently unused, variable will be used to stop timer when song is paused
 	private String currentSong = "https://www.youtube.com/embed/Zmvt7yFTtt8?autoplay=1"; //will be replaced by top of queue 
 	private String testURL = "https://www.youtube.com/embed/MgV-bCxE6ZI?autoplay=1"; //used for testing purposes
-	private ArrayList<Song> songs = new ArrayList<>();
 	private ArrayList<Song> songlist = new ArrayList<Song>();// this is the arraylist for the song list-brian
 	
 	
 	  private Song song;
 	    
-	    public Player(String artist, String album, String name, String url, int yearReleased) {
-	        this.song = new Song(artist, album, name, url, yearReleased);
+	    public Player(String artist, String album, String name, String url, int yearReleased, String genre, int duration) {
+	        this.song = new Song(artist, album, name, url, yearReleased, genre, duration);
 	    }
 	    
-	  
-	
-	    
-	    
-	   
-	
-	
+
 	/**
 	 * Launch the application.
 	 * @param args

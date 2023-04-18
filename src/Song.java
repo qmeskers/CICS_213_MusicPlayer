@@ -12,17 +12,39 @@ public class Song {
     private String name;
     private int yearReleased;
     private String url;
+    private String genre;
+    private int duration;
+    
 
     //constructor
-    public Song(String artist, String album, String name, String url, int yearReleased) {
+    public Song(String artist, String album, String name, String url, int yearReleased, String genre, int duration) {
         this.artist = artist;
         this.album = album;
         this.name = name;
         this.url = url;
         this.yearReleased = yearReleased;
+        this.genre = genre;
+        this.duration = duration;
+        
     }
 
-    //getters and setters
+    public String getGenre() {
+		return genre;
+	}
+
+	public void setGenre(String genre) {
+		this.genre = genre;
+	}
+
+	public int getDuration() {
+		return duration;
+	}
+
+	public void setDuration(int duration) {
+		this.duration = duration;
+	}
+
+	//getters and setters
     public String getArtist() {
         return artist;
     }
@@ -109,13 +131,16 @@ public class Song {
             String album = (String) songJson.get("album");
             String name = (String) songJson.get("name");
             Long yearReleasedLong = (Long) songJson.get("yearReleased");
+            String genre = (String) songJson.get("genre");
+            Number durationNumber = (Number) songJson.get("duration");
+            int duration = durationNumber != null ? durationNumber.intValue() : 0;
             int yearReleased = yearReleasedLong != null ? yearReleasedLong.intValue() : 0;
             String url = (String) songJson.get("url");
-            return new Song(artist, album, name, url, yearReleased);
+            return new Song(artist, album, name, url, yearReleased, genre, duration);
         } catch (Exception e) {
             System.err.println("Error creating song from JSON: " + e.getMessage());
             return null;
         }
     }
-    }
+}
        

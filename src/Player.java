@@ -1,16 +1,12 @@
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;import java.util.HashMap;
+import java.util.HashMap;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.graphics.Point;
@@ -67,23 +63,10 @@ public class Player extends Shell {
      * @wbp.parser.constructor
      */
     public Player(Display display) throws IOException {
-    	super(display, SWT.SHELL_TRIM);
-		setMaximumSize(new Point(600, 400));
-		setMinimumSize(new Point(600, 400));
-		
-		TabFolder tabFolder = new TabFolder(this, SWT.NONE);
-		tabFolder.setBounds(0, 0, 600, 400);
-		
-		
-		//Now playing tab controls:
-		TabItem playerTab = new TabItem(tabFolder, SWT.NONE);
-		playerTab.setText("Now Playing");
-		
-		Composite composite = new Composite(tabFolder, SWT.NONE);
-		playerTab.setControl(composite);
-		GridLayout gl_composite = new GridLayout(1, false);
-		gl_composite.verticalSpacing = 10;
-		composite.setLayout(gl_composite);
+        super(display, SWT.SHELL_TRIM);
+        setSize(598, 431);
+        setMaximumSize(new Point(600, 400));
+        setMinimumSize(new Point(600, 400));
         
      // load the songs from the JSON file
         songList = Song.loadSongsFromJson("songsList.json");
@@ -100,7 +83,7 @@ public class Player extends Shell {
         }
 
         // create the tree widget
-        Tree tree = new Tree(composite, SWT.BORDER);
+        Tree tree = new Tree(this, SWT.BORDER);
         tree.setBounds(285, 20, 150, 200);
 
         // populate the tree with genres as top-level items
@@ -116,51 +99,34 @@ public class Player extends Shell {
             }
         }
 
-        TabFolder tabFolder = new TabFolder(this, SWT.NONE);
-		tabFolder.setBounds(0, 0, 600, 400);
-		
-		
-		//Now playing tab controls:
-		TabItem playerTab = new TabItem(tabFolder, SWT.NONE);
-		playerTab.setText("Now Playing");
-		
-		Composite composite = new Composite(tabFolder, SWT.NONE);
-		playerTab.setControl(composite);
-		GridLayout gl_composite = new GridLayout(1, false);
-		gl_composite.verticalSpacing = 10;
-		composite.setLayout(gl_composite);
-		
-		
-		Label lblArtist = new Label(composite, SWT.NONE);
-		lblArtist.setSize(34, 15);
-		lblArtist.setBounds(10, 9, 81, 25);
+		Label lblArtist = new Label(this, SWT.NONE);
 		lblArtist.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		lblArtist.setBounds(10, 10, 81, 25);
 		lblArtist.setText("Artist:");
 		
-		Label lblWhenSongPlays = new Label(composite, SWT.NONE);
-		lblWhenSongPlays.setSize(206, 15);
-		lblWhenSongPlays.setBounds(10, 39, 332, 25);
+		Label lblWhenSongPlays = new Label(this, SWT.NONE);
+		lblWhenSongPlays.setBounds(10, 38, 332, 25);
 		lblWhenSongPlays.setText("When song plays artist name goes here");
 		
-		Label lblAlbum = new Label(composite, SWT.NONE);
+		Label lblAlbum = new Label(this, SWT.NONE);
 		lblAlbum.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		lblAlbum.setBounds(10, 69, 81, 25);
 		lblAlbum.setText("Album:");
 		
-		Label lblWhenSongPlays_1 = new Label(composite, SWT.NONE);
+		Label lblWhenSongPlays_1 = new Label(this, SWT.NONE);
 		lblWhenSongPlays_1.setBounds(10, 100, 332, 25);
 		lblWhenSongPlays_1.setText("When song plays album name goes here");
 		
-		Label lblSong = new Label(composite, SWT.NONE);
+		Label lblSong = new Label(this, SWT.NONE);
 		lblSong.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		lblSong.setBounds(10, 131, 81, 25);
 		lblSong.setText("Song:");
 		
-		Label lblNewLabel = new Label(composite, SWT.NONE);
+		Label lblNewLabel = new Label(this, SWT.NONE);
 		lblNewLabel.setBounds(10, 162, 332, 25);
 		lblNewLabel.setText("When song plays song name goes here");
 		
-		Button btnRepeat = new Button(composite, SWT.NONE);
+		Button btnRepeat = new Button(this, SWT.NONE);
 		btnRepeat.setBounds(36, 279, 105, 35);
 		btnRepeat.setText("Repeat");
 		btnRepeat.addListener(SWT.Selection, event -> {
@@ -176,7 +142,7 @@ public class Player extends Shell {
 			songList.add(i+1, songList.get(i));
 		});
 		
-		Button btnRestart = new Button(composite, SWT.NONE);
+		Button btnRestart = new Button(this, SWT.NONE);
 		btnRestart.setBounds(168, 279, 105, 35);
 		btnRestart.setText("Restart");
 		btnRestart.addListener(SWT.Selection, event -> {
@@ -231,8 +197,7 @@ public class Player extends Shell {
 		    }
 		});
 		
-		Button btnPause = new Button(composite, SWT.NONE);
-		Button btnPause = new Button(composite, SWT.NONE);
+		Button btnPause = new Button(this, SWT.NONE);
 		btnPause.setBounds(299, 279, 105, 35);
 		btnPause.setText("Pause");
 		btnPause.addListener(SWT.Selection, event -> {
@@ -258,8 +223,7 @@ public class Player extends Shell {
 			});
 		
 		
-		Button btnSkip = new Button(composite, SWT.NONE);
-		Button btnSkip = new Button(composite, SWT.NONE);
+		Button btnSkip = new Button(this, SWT.NONE);
 		btnSkip.setBounds(429, 279, 105, 35);
 		btnSkip.setText("Skip");
 		btnSkip.addListener(SWT.Selection, event -> {
@@ -284,59 +248,6 @@ public class Player extends Shell {
 		lblNewLabel.setText(songList.get(i).getAlbum());
 		timer = songList.get(i).getDuration();
 		startTimer(display);
-		
-		//Playlist tab controls:
-		TabItem playlistTab = new TabItem(tabFolder, SWT.NONE);
-		playlistTab.setText("Playlists");
-		
-		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
-		playlistTab.setControl(composite_1);
-		
-		List playlistList = new List(composite_1, SWT.BORDER);
-		playlistList.setBounds(10, 10, 71, 68); //spacing TBD
-		//load all playlists into this list and assign a variable for getselected
-		
-		Button selectButton = new Button(composite_1, SWT.NONE);
-		selectButton.setText("Play");
-		selectButton.setBounds(240, 279, 105, 35);
-		//add listener to play the selected playlist from the list
-		
-		
-		//Playlist Builder Tab Controls:
-		TabItem playlistBuilderTab = new TabItem(tabFolder, SWT.NONE);
-		playlistBuilderTab.setText("Create Playlists");
-		
-		Composite composite_2 = new Composite(tabFolder, SWT.NONE);
-		playlistBuilderTab.setControl(composite_2);
-		
-		List allSongs = new List(composite_2, SWT.BORDER);
-		allSongs.setBounds(10, 25, 150, 268);//spacing TBD
-		
-		List songsToAdd = new List(composite_2, SWT.BORDER);
-		songsToAdd.setBounds(410, 25, 150, 268);//spacing TBD
-		
-		Button rightArrow = new Button(composite_2, SWT.NONE);
-		rightArrow.setText(">");
-		rightArrow.setBounds(280, 95, 35, 35);
-		//add listener to add song selected on right to left list
-		
-		Button leftArrow = new Button(composite_2, SWT.NONE);
-		leftArrow.setText("<");
-		leftArrow.setBounds(280, 140, 35, 35);
-		//add listener to move song selected on left off of the list
-		
-		Button createPlaylistButton = new Button(composite_2, SWT.NONE);
-		createPlaylistButton.setText("create playlist");
-		createPlaylistButton.setBounds(240, 279, 105, 35);
-		//add listener to generate new playlist and add it to the list of playlists located on tab 2
-		
-		Label playlistNameLabel = new Label(composite_2, SWT.NONE);
-		playlistNameLabel.setText("Playlist Name: ");
-		playlistNameLabel.setBounds(195, 10, 80, 25);
-		
-		Text playlistNameField = new Text(composite_2, SWT.BORDER);
-		playlistNameField.setText("");
-		playlistNameField.setBounds(280, 10, 100, 20);
 }
 	
 	/**

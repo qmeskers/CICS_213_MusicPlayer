@@ -1,12 +1,16 @@
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashMap;import java.util.HashMap;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.graphics.Point;
@@ -228,6 +232,7 @@ public class Player extends Shell {
 		});
 		
 		Button btnPause = new Button(composite, SWT.NONE);
+		Button btnPause = new Button(composite, SWT.NONE);
 		btnPause.setBounds(299, 279, 105, 35);
 		btnPause.setText("Pause");
 		btnPause.addListener(SWT.Selection, event -> {
@@ -253,6 +258,7 @@ public class Player extends Shell {
 			});
 		
 		
+		Button btnSkip = new Button(composite, SWT.NONE);
 		Button btnSkip = new Button(composite, SWT.NONE);
 		btnSkip.setBounds(429, 279, 105, 35);
 		btnSkip.setText("Skip");

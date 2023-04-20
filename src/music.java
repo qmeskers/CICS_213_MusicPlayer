@@ -1,7 +1,5 @@
 import java.util.List;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+
 import org.json.simple.parser.ParseException;
 
 /**
@@ -20,7 +18,7 @@ public class music {
 	 */
 	public static void main(String[] args) throws ParseException {
 		//tests for song json loader
-		 String filename = "songlist.json";
+		 String filename = "songsList.json";
 		 List<Song> songs = Song.loadSongsFromJson(filename);
 
 	        // Print out some values from the song list

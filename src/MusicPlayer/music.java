@@ -1,3 +1,4 @@
+package MusicPlayer;
 import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -36,5 +37,3 @@ public class music {
 	        }
 	    }
 	}
-
-

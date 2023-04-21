@@ -6,11 +6,11 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/dee/Downloads/CICS_213_MusicPlayer-main/bin/json_simple-1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/dee/Downloads/CICS_213_MusicPlayer-main/bin/org.eclipse.swt.win32.win32.x86_64_3.123.0.v20230104-1102.jar"/>
-	<classpathentry kind="lib" path="C:/Users/dee/Downloads/CICS_213_MusicPlayer-main/bin/org.eclipse.swt_3.123.0.v20230104-1102.jar"/>
-	<classpathentry kind="lib" path="C:/Users/qmesk/git/CICS_213_MusicPlayer/bin/json_simple-1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/qmesk/git/CICS_213_MusicPlayer/bin/org.eclipse.swt.win32.win32.x86_64_3.123.0.v20230104-1102.jar"/>
-	<classpathentry kind="lib" path="C:/Users/qmesk/git/CICS_213_MusicPlayer/bin/org.eclipse.swt_3.123.0.v20230104-1102.jar"/>
+	<classpathentry kind="lib" path="C:/Users/qmesk/git/musicplayertest/json_simple-1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/qmesk/git/musicplayertest/org.eclipse.swt.win32.win32.x86_64_3.123.0.v20230104-1102.jar"/>
+	<classpathentry kind="lib" path="C:/Users/qmesk/git/musicplayertest/org.eclipse.swt_3.123.0.v20230104-1102.jar"/>
+	<classpathentry kind="lib" path="C:/Users/meskersq/git/musicplayertest/json_simple-1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/meskersq/git/musicplayertest/org.eclipse.swt.win32.win32.x86_64_3.123.0.v20230104-1102.jar"/>
+	<classpathentry kind="lib" path="C:/Users/meskersq/git/musicplayertest/org.eclipse.swt_3.123.0.v20230104-1102.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -5,4 +5,4 @@ You do that by:
 3.click on the libraries tab
 4.click on classpath
 5.click add external JARS
-6.select the two jar files found in the /bin folder of the project
+6.select the two jar files found in the first folder of the project

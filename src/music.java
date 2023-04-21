@@ -12,6 +12,7 @@ import org.json.simple.parser.ParseException;
  * @author fisherj
  *
  */
+@SuppressWarnings("unused")
 public class music {
 
 	/**

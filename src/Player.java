@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.net.http.WebSocket.Listener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.eclipse.swt.SWT;
@@ -6,6 +7,7 @@ import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
@@ -16,6 +18,7 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Button;
@@ -95,6 +98,7 @@ public class Player extends Shell {
         HashMap<String, ArrayList<Song>> songsByGenre = new HashMap<>();
 
         for (Song song : songList) {
+        	
             String genre = song.getGenre();
             if (!songsByGenre.containsKey(genre)) {
                 songsByGenre.put(genre, new ArrayList<Song>());
@@ -277,8 +281,33 @@ public class Player extends Shell {
 		playlistTab.setControl(composite_1);
 		
 		List playlistList = new List(composite_1, SWT.BORDER);
-		playlistList.setBounds(10, 10, 71, 68); //spacing TBD
-		//load all playlists into this list and assign a variable for getselected
+		playlistList.setBounds(10, 50, 150, 150); //spacing TBD
+		
+		Label playlistListLabel = new Label(composite_1, SWT.NONE);
+		playlistListLabel.setText("Playlists");
+		playlistListLabel.setBounds(25, 25, 150, 30);
+		
+		List songsInPlayList = new List(composite_1, SWT.BORDER);
+		songsInPlayList.setBounds(400, 50, 150, 150); //spacing TBD
+		Label songsInPlaylistLabel = new Label(composite_1, SWT.NONE);
+		songsInPlaylistLabel.setText("Songs in Playlist");
+		songsInPlaylistLabel.setBounds(425, 20, 150, 20); //spacing TBD
+		
+		PlaylistCollections playlistCollections = new PlaylistCollections();
+
+		playlistList.addSelectionListener(new SelectionAdapter() {
+		    @Override
+		    public void widgetSelected(SelectionEvent e) {
+		        songsInPlayList.removeAll(); // clear the songs list
+		        String playlistName = playlistList.getItem(playlistList.getSelectionIndex());
+		        Playlist playlist = playlistCollections.getPlaylistByName(playlistName);
+		        if (playlist != null) {
+		            for (Song song : playlist.getSongs()) {
+		                songsInPlayList.add(song.getName());
+		            }
+		        }
+		    }
+		});
 		
 		Button selectButton = new Button(composite_1, SWT.NONE);
 		selectButton.setText("Play");
@@ -293,8 +322,11 @@ public class Player extends Shell {
 		Composite composite_2 = new Composite(tabFolder, SWT.NONE);
 		playlistBuilderTab.setControl(composite_2);
 		
-		List allSongs = new List(composite_2, SWT.BORDER);
+		List allSongs = new List(composite_2, SWT.BORDER | SWT.V_SCROLL);
 		allSongs.setBounds(10, 25, 150, 268);//spacing TBD
+		for (Song song : songList) {
+		    allSongs.add(song.getName());
+		}
 		
 		List songsToAdd = new List(composite_2, SWT.BORDER);
 		songsToAdd.setBounds(410, 25, 150, 268);//spacing TBD
@@ -304,24 +336,105 @@ public class Player extends Shell {
 		rightArrow.setBounds(280, 95, 35, 35);
 		//add listener to add song selected on right to left list
 		
+		
+		
 		Button leftArrow = new Button(composite_2, SWT.NONE);
 		leftArrow.setText("<");
 		leftArrow.setBounds(280, 140, 35, 35);
+		Label playlistNameLabel = new Label(composite_2, SWT.NONE);
+		playlistNameLabel.setText("Playlist Name: ");
+		playlistNameLabel.setBounds(195, 10, 80, 25);
+		
+		rightArrow.addSelectionListener(new SelectionAdapter() {
+		    @Override
+		    public void widgetSelected(SelectionEvent e) {
+		        String[] selectedItems = allSongs.getSelection();
+		        for (String item : selectedItems) {
+		            songsToAdd.add(item);
+		            allSongs.remove(item);
+		        }
+		    }
+		});
+		
+		leftArrow.addSelectionListener(new SelectionAdapter() {
+		    @Override
+		    public void widgetSelected(SelectionEvent e) {
+		        String[] selectedItems = songsToAdd.getSelection();
+		        for (String item : selectedItems) {
+		            allSongs.add(item);
+		            songsToAdd.remove(item);
+		        }
+		    }
+		});
+		
+		Text playlistNameField = new Text(composite_2, SWT.BORDER);
+		playlistNameField.setText("");
+		playlistNameField.setBounds(280, 10, 100, 20);
 		//add listener to move song selected on left off of the list
 		
 		Button createPlaylistButton = new Button(composite_2, SWT.NONE);
 		createPlaylistButton.setText("create playlist");
 		createPlaylistButton.setBounds(240, 279, 105, 35);
-		//add listener to generate new playlist and add it to the list of playlists located on tab 2
 		
-		Label playlistNameLabel = new Label(composite_2, SWT.NONE);
-		playlistNameLabel.setText("Playlist Name: ");
-		playlistNameLabel.setBounds(195, 10, 80, 25);
+		//creates playlist and adds it to the list on tab 2
+		createPlaylistButton.addSelectionListener(new SelectionAdapter() {
+		    @Override
+		    public void widgetSelected(SelectionEvent e) {
+		        String playlistName = playlistNameField.getText();
+		        String[] songs = songsToAdd.getItems();
+		        Playlist newPlaylist = new Playlist(playlistName);
+		        boolean playlistExists = false;
+
+		        if (playlistName.isEmpty()) {
+		            MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
+		            messageBox.setText("Invalid playlist name");
+		            messageBox.setMessage("Playlist name cannot be empty. Please enter a valid name.");
+		            messageBox.open();
+		        } else {
+		            // Check if playlist name already exists
+		            for (int i = 0; i < playlistList.getItemCount(); i++) {
+		                if (playlistList.getItem(i).equals(playlistName)) {
+		                    playlistExists = true;
+		                    break;
+		                }
+		            }
+
+		            if (!playlistExists) {
+		                // add the new playlist to the playlist list on tab 2
+		                playlistList.add(playlistName); 
+		                // add songs to the new playlist
+		                for (String songName : songs) {
+		                    for (Song song : songList) {
+		                        if (song.getName().equals(songName)) {
+		                            newPlaylist.addSong(song);
+		                            break;
+		                        }
+		                    }
+		                }
+		                // clear the songsToAdd list
+		                songsToAdd.removeAll();
+		                playlistNameField.setText("");
+		                
+		                // Add the new playlist to the playlistCollections
+		                playlistCollections.addPlaylist(newPlaylist);
+		                
+		                // Debug output
+		                System.out.println("Playlist '" + newPlaylist.getName() + "' added with songs:");
+		                for (Song song : newPlaylist.getSongs()) {
+		                    System.out.println(song.getName());
+		                }
+		            } else {
+		                MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
+		                messageBox.setText("Playlist already exists");
+		                messageBox.setMessage("A playlist with the name '" + playlistName + "' already exists. Please choose a different name.");
+		                messageBox.open();
+		            }
+		        }
+		    }
+		});
 		
-		Text playlistNameField = new Text(composite_2, SWT.BORDER);
-		playlistNameField.setText("");
-		playlistNameField.setBounds(280, 10, 100, 20);
-}
+    }
+		
 	
 	/**
 	 * Create contents of the shell.

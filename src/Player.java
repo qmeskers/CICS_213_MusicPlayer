@@ -128,27 +128,27 @@ public class Player extends Shell {
 		lblArtist.setBounds(10, 10, 81, 25);
 		lblArtist.setText("Artist:");
 		
-		Label lblWhenSongPlays = new Label(composite, SWT.NONE);
-		lblWhenSongPlays.setBounds(10, 38, 332, 25);
-		lblWhenSongPlays.setText("When song plays artist name goes here");
+		Label lblartistplaying = new Label(composite, SWT.NONE);
+		lblartistplaying.setBounds(10, 38, 332, 25);
+		lblartistplaying.setText("When song plays artist name goes here");
 		
 		Label lblAlbum = new Label(composite, SWT.NONE);
 		lblAlbum.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		lblAlbum.setBounds(10, 69, 81, 25);
 		lblAlbum.setText("Album:");
 		
-		Label lblWhenSongPlays_1 = new Label(composite, SWT.NONE);
-		lblWhenSongPlays_1.setBounds(10, 100, 332, 25);
-		lblWhenSongPlays_1.setText("When song plays album name goes here");
+		Label lblalbumplaying = new Label(composite, SWT.NONE);
+		lblalbumplaying.setBounds(10, 100, 332, 25);
+		lblalbumplaying.setText("When song plays album name goes here");
 		
 		Label lblSong = new Label(composite, SWT.NONE);
 		lblSong.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		lblSong.setBounds(10, 131, 81, 25);
 		lblSong.setText("Song:");
 		
-		Label lblNewLabel = new Label(composite, SWT.NONE);
-		lblNewLabel.setBounds(10, 162, 332, 25);
-		lblNewLabel.setText("When song plays song name goes here");
+		Label lblsongplaying = new Label(composite, SWT.NONE);
+		lblsongplaying.setBounds(10, 162, 332, 25);
+		lblsongplaying.setText("When song plays song name goes here");
 		
 		Button btnRepeat = new Button(composite, SWT.NONE);
 		btnRepeat.setBounds(36, 279, 105, 35);
@@ -196,9 +196,9 @@ public class Player extends Shell {
 	            // Update the currentSong URL if a song is selected
 	            if (selectedSong != null) {
 	                currentSong = selectedSong.getUrl();
-	                lblWhenSongPlays.setText(selectedSong.getArtist());
-	                lblWhenSongPlays_1.setText(selectedSong.getAlbum());
-	                lblNewLabel.setText(selectedSong.getName());
+	                lblartistplaying.setText(selectedSong.getArtist());
+	                lblalbumplaying.setText(selectedSong.getAlbum());
+	                lblsongplaying.setText(selectedSong.getName());
 	                  
 	            }
 	        }
@@ -267,9 +267,9 @@ public class Player extends Shell {
 		Browser browser = new Browser(this, SWT.NONE);
 		browser.setBounds(50, 50, 1, 1);
 		browser.setUrl(songList.get(i).getUrl());
-		lblWhenSongPlays.setText(songList.get(i).getArtist());
-		lblWhenSongPlays_1.setText(songList.get(i).getAlbum());
-		lblNewLabel.setText(songList.get(i).getAlbum());
+		lblartistplaying.setText(songList.get(i).getArtist());
+		lblalbumplaying.setText(songList.get(i).getAlbum());
+		lblsongplaying.setText(songList.get(i).getAlbum());
 		timer = songList.get(i).getDuration();
 		startTimer(display);
 		

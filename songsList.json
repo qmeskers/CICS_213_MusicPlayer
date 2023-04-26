@@ -269,6 +269,51 @@
       "yearReleased": 2015,
       "url": "https://www.youtube.com/watch?v=NEjF9np9_NU",
       "duration": 176
+    },
+    {
+      "artist": "Adele",
+      "album": "Easy On Me",
+      "name": "Easy On Me",
+      "yearReleased": 2021,
+      "url": "https://youtu.be/OT2YRfvOHAk",
+      "genre": "Pop",
+      "duration": 220
+    },
+    {
+      "artist": "Sam Smith",
+      "album": "Lay Me Down",
+      "name": "Lay Me Down",
+      "yearReleased": 2015,
+      "url": "https://youtu.be/wx15yVsoZDc",
+      "genre": "Pop",
+      "duration": 247
+    },
+    {
+      "artist": "Sam Smith",
+      "album": "I'm Not The Only One",
+      "name": "I'm Not The Only One",
+      "yearReleased": 2014,
+      "url": "https://youtu.be/eAjV9H4dQ8U",
+      "genre": "Pop",
+      "duration": 237
+    },
+    {
+      "artist": "Bruno Mars",
+      "album": "Grenade",
+      "name": "Grenade",
+      "yearReleased": 2010,
+      "url": "https://youtu.be/UFQGgJmjQYk",
+      "genre": "Pop",
+      "duration": 218
+    },
+    {
+      "artist": "Bruno Mars",
+      "album": "When I Was Your Man",
+      "name": "When I Was Your Man",
+      "yearReleased": 2013,
+      "url": "https://youtu.be/kON9fn01rUQ",
+      "genre": "Pop",
+      "duration": 214
     }
   ]
 }

@@ -92,7 +92,7 @@ public class Player extends Shell {
 		composite.setLayout(gl_composite);
         
      // load the songs from the JSON file
-        songList = Song.loadSongsFromJson("songsList.json");
+        songList = Songs.loadSongsFromJson("songsList.json");
 
         // create the hashmap to store songs by genre
         HashMap<String, ArrayList<Song>> songsByGenre = new HashMap<>();

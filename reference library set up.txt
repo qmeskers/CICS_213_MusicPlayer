@@ -1,0 +1,8 @@
+set up the reference library on your end
+You do that by:
+1. right clicking on the class in the package explorer on the left
+2.going to build path > configure build bath
+3.click on the libraries tab
+4.click on classpath
+5.click add external JARS
+6.select the two jar files found in the /bin folder of the project

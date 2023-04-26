@@ -1,0 +1,274 @@
+{
+  "songs": [
+	{
+      "artist": "WorkingTest",
+      "album": "WorkingTest",
+      "name": "Test",
+      "yearReleased": 1966,
+      "url": "https://www.youtube.com/embed/MgV-bCxE6ZI?autoplay=1",
+      "genre": "Test",
+      "duration": 208
+    },   
+    {
+      "artist": "Tame Impala",
+      "album": "New person, Same Old Mistakes",
+      "name": "New person, Same Old Mistakes",
+      "yearReleased": 2020,
+      "url": "https://youtu.be/embed/sNPMLCfhr38?autoplay=1",
+      "genre": "Alternative",
+      "duration": 365
+    },
+    {
+      "artist": "Tame Impala",
+      "album": "Border Line",
+      "name": "Border Line",
+      "yearReleased": 2020,
+      "url": "https://youtu.be/embed/3IclOslC-po?autoplay=1",
+      "genre": "Alternative",
+      "duration": 238
+    },
+    {
+      "artist": "Maroon 5",
+      "album": "Memories",
+      "name": "Memories",
+      "yearReleased": 2019,
+      "url": "https://youtu.be/embed/o2DXt11SMNI?autoplay=1",
+      "genre": "Pop",
+      "duration": 184
+    },
+    {
+      "artist": "Maroon 5",
+      "album": "Payphone",
+      "name": "Payphone",
+      "yearReleased": 2012,
+      "url": "https://youtu.be/embed/fuP4Lkt1vAo?autoplay=1",
+      "genre": "Pop",
+      "duration": 232
+    },   
+    {
+      "artist": "Adele",
+      "album": "Rolling in the Deep",
+      "name": "Rolling in the Deep",
+      "yearReleased": 2010,
+      "url": "https://youtu.be/embed/AIYpdjQVidc?autoplay=1",
+      "genre": "Pop",
+      "duration": 246
+    }, 
+    {
+      "artist": "The Weeknd",
+      "album": "Starboy",
+      "name": "Starboy",
+      "yearReleased": 2016,
+      "url": "https://www.youtube.com/embed/v6kJbZp4Ecs?autoplay=1",
+      "genre": "R&B",
+      "duration": 227
+    },  
+    {
+      "artist": "The Weeknd",
+      "album": "Die for you",
+      "name": "Die for you",
+      "yearReleased": 2021,
+      "url": "https://youtu.be/embed/CVw7iulcI98?autoplay=1",
+      "genre": "R&B",
+      "duration": 258
+    },
+    {
+      "artist": "The Monkees",
+      "album": "More of The Monkees",
+      "name": "I'm A Believer",
+      "yearReleased": 1967,
+      "url": "https://www.youtube.com/embed/TiQUnxNEDqk?autoplay=1",
+      "genre": "Pop",
+      "duration": 167
+    },
+    {
+      "artist": "The Monkees",
+      "album": "The Monkees",
+      "name": "Hey Hey We're The Monkees",
+      "yearReleased": 1966,
+      "url": "https://www.youtube.com/embed/ksJ6QP8BYn0?autoplay=1",
+      "genre": "Pop",
+      "duration": 145
+    },
+    {
+      "artist": "The Monkees",
+      "album": "Pleasant Valley Sunday",
+      "name": "Pleasant Valley Sunday",
+      "yearReleased": 1967,
+      "url": "https://www.youtube.com/embed/sUzs5dlLrm0?autoplay=1",
+      "genre": "Pop",
+      "duration": 177
+    },
+    {
+      "artist": "The Monkees",
+      "album": "The Monkees",
+      "name": "Last Train to Clarksville",
+      "yearReleased": 1966,
+      "url": "https://www.youtube.com/embed/kpt1QBwZGrI?autoplay=1",
+      "genre": "Pop",
+      "duration": 143
+    },
+    {
+      "artist": "The Monkees",
+      "album": "More of The Monkees",
+      "name": "Steppin' Stone",
+      "yearReleased": 1967,
+      "url": "https://www.youtube.com/embed/0Z8H6cutVRo?autoplay=1",
+      "genre": "Pop",
+      "duration": 148
+    },
+    {
+      "artist": "The Monkees",
+      "album": "More of The Monkees",
+      "name": "Mary, Mary",
+      "yearReleased": 1966,
+      "url": "https://www.youtube.com/embed/p6jVxks8M4A?autoplay=1",
+      "genre": "Pop",
+      "duration": 139
+    },
+    {
+      "artist": "The Monkees",
+      "album": "More of The Monkees",
+      "name": "Valleri",
+      "yearReleased": 1967,
+      "url": "https://www.youtube.com/embed/QWTa9CE51sA?autoplay=1",
+      "genre": "Pop",
+      "duration": 150
+    },
+    {
+      "artist": "The Weeknd",
+      "album": "Beauty Behind the Madness",
+      "name": "Can't feel my face",
+      "genre": "Pop/Dicso/funk",
+      "yearReleased": 2015,
+      "url": "https://www.youtube.com/watch?v=KEI4qSrkPAs",
+      "duration": 218
+    },
+    {
+      "artist": "The Weeknd",
+      "album": "After Hours",
+      "name": "Save Your Tears",
+      "genre": "R&b/soul",
+      "yearReleased": 2020,
+      "url": "https://www.youtube.com/watch?v=XXYlFuWEuKI",
+      "duration": 248
+    },
+    {
+      "artist": "The Weeknd",
+      "album": "Starboy",
+      "name": "I Feel It Coming",
+      "genre": "Contemprory R&B",
+      "yearReleased": 2016,
+      "url": "https://www.youtube.com/watch?v=qFLhGq0060w",
+      "duration": 297
+    },
+    {
+      "artist": "The Weeknd",
+      "album": "After Hours",
+      "name": "Blinding Lights",
+      "genre": "New wave",
+      "yearReleased": 2020,
+      "url": "https://www.youtube.com/watch?v=4NRXx6U8ABQ",
+      "duration": 262
+    },
+    {
+      "artist": "Imagine Dragons",
+      "album": "Evolve",
+      "name": "Believer",
+      "genre": "Electro",
+      "yearReleased": 2017,
+      "url": "https://www.youtube.com/watch?v=W0DM5lcj6mw",
+      "duration": 204
+    },
+    {
+      "artist": "Imagine Dragons",
+      "album": "Evolve",
+      "name": "Thunder",
+      "genre": "Alternative Rock",
+      "yearReleased": 2017,
+      "url": "https://www.youtube.com/watch?v=GtEvysh1654",
+      "duration": 183
+    },
+    {
+      "artist": "Imagine Dragons",
+      "album": "Night Visions",
+      "name": "Demons",
+      "genre": "Pop Rock",
+      "yearReleased": 2012,
+      "url": "https://www.youtube.com/watch?v=MA0aCUxItYA",
+      "duration": 174
+    },
+    {
+      "artist": "Imagine Dragons",
+      "album": "Evolve",
+      "name": "Whatever It Takes",
+      "genre": "Alternative Rock",
+      "yearReleased": 2017,
+      "url": "https://www.youtube.com/watch?v=gOsM-DYAEhY",
+      "duration": 219
+    },
+    {
+      "artist": "Pharrell Williams",
+      "album": "Girl",
+      "name": "Happy",
+      "genre": "Soul",
+      "yearReleased": 2014,
+      "url": "https://www.youtube.com/watch?v=ZbZSe6N_BXs",
+      "duration": 240
+    },
+    {
+      "artist": "Wiz Khaifa",
+      "album": "Nine Track Mind",
+      "name": "See You Again",
+      "genre": "Pop music",
+      "yearReleased": 2015,
+      "url": "https://www.youtube.com/watch?v=RgKAFK5djSk",
+      "duration": 237
+    },
+    {
+      "artist": "Timbaland",
+      "album": "Shock Value",
+      "name": "Apologize",
+      "genre": "Pop/R&B",
+      "yearReleased": 2007,
+      "url": "https://www.youtube.com/watch?v=ZSM3w1v-A_Y",
+      "duration": 188
+    },
+    {
+      "artist": "OneRepublic",
+      "album": "Native",
+      "name": "Counting Stars",
+      "genre": "pop rock",
+      "yearReleased": 2013,
+      "url": "https://www.youtube.com/watch?v=mgT0N3tMP74",
+      "duration": 257
+    },
+    {
+      "artist": "Avicii",
+      "album": "True",
+      "name": "Wake Me Up",
+      "genre": "country",
+      "yearReleased": 2013,
+      "url": "https://www.youtube.com/watch?v=SsYXnH9lzCY",
+      "duration": 242
+    },
+    {
+      "artist": "Ed Sheeran",
+      "album": "÷ (Divide)",
+      "name": "Shape Of You",
+      "genre": "Pop",
+      "yearReleased": 2017,
+      "url": "https://www.youtube.com/watch?v=Vds8ddYXYZY",
+      "duration": 235
+    },
+    {
+      "artist": "Major Lazer & DJ Snake",
+      "album": "Peace Is the Mission",
+      "name": "Lean On",
+      "genre": "Electronic",
+      "yearReleased": 2015,
+      "url": "https://www.youtube.com/watch?v=NEjF9np9_NU",
+      "duration": 176
+    }
+  ]
+}

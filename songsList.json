@@ -271,7 +271,7 @@
       "duration": 176
     },
     {
-      "artist": "Adele",
+      "artist": "Adele", X
       "album": "Easy On Me",
       "name": "Easy On Me",
       "yearReleased": 2021,
@@ -280,7 +280,7 @@
       "duration": 220
     },
     {
-      "artist": "Sam Smith",
+      "artist": "Sam Smith", X
       "album": "Lay Me Down",
       "name": "Lay Me Down",
       "yearReleased": 2015,
@@ -289,7 +289,7 @@
       "duration": 247
     },
     {
-      "artist": "Sam Smith",
+      "artist": "Sam Smith", X
       "album": "I'm Not The Only One",
       "name": "I'm Not The Only One",
       "yearReleased": 2014,
@@ -298,7 +298,7 @@
       "duration": 237
     },
     {
-      "artist": "Bruno Mars",
+      "artist": "Bruno Mars", X
       "album": "Grenade",
       "name": "Grenade",
       "yearReleased": 2010,
@@ -307,7 +307,7 @@
       "duration": 218
     },
     {
-      "artist": "Bruno Mars",
+      "artist": "Bruno Mars", X
       "album": "When I Was Your Man",
       "name": "When I Was Your Man",
       "yearReleased": 2013,

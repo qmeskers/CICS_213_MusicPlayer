@@ -10,7 +10,7 @@
       "duration": 208
     },   
     {
-      "artist": "Tame Impala",
+      "artist": "Tame Impala", X
       "album": "New person, Same Old Mistakes",
       "name": "New person, Same Old Mistakes",
       "yearReleased": 2020,
@@ -19,7 +19,7 @@
       "duration": 365
     },
     {
-      "artist": "Tame Impala",
+      "artist": "Tame Impala", X
       "album": "Border Line",
       "name": "Border Line",
       "yearReleased": 2020,
@@ -28,7 +28,7 @@
       "duration": 238
     },
     {
-      "artist": "Maroon 5",
+      "artist": "Maroon 5", X
       "album": "Memories",
       "name": "Memories",
       "yearReleased": 2019,
@@ -37,7 +37,7 @@
       "duration": 184
     },
     {
-      "artist": "Maroon 5",
+      "artist": "Maroon 5", X
       "album": "Payphone",
       "name": "Payphone",
       "yearReleased": 2012,
@@ -46,7 +46,7 @@
       "duration": 232
     },   
     {
-      "artist": "Adele",
+      "artist": "Adele", X
       "album": "Rolling in the Deep",
       "name": "Rolling in the Deep",
       "yearReleased": 2010,
@@ -55,7 +55,7 @@
       "duration": 246
     }, 
     {
-      "artist": "The Weeknd",
+      "artist": "The Weeknd", X
       "album": "Starboy",
       "name": "Starboy",
       "yearReleased": 2016,
@@ -64,7 +64,7 @@
       "duration": 227
     },  
     {
-      "artist": "The Weeknd",
+      "artist": "The Weeknd", X
       "album": "Die for you",
       "name": "Die for you",
       "yearReleased": 2021,
@@ -73,7 +73,7 @@
       "duration": 258
     },
     {
-      "artist": "The Monkees",
+      "artist": "The Monkees", X
       "album": "More of The Monkees",
       "name": "I'm A Believer",
       "yearReleased": 1967,
@@ -82,7 +82,7 @@
       "duration": 167
     },
     {
-      "artist": "The Monkees",
+      "artist": "The Monkees",X
       "album": "The Monkees",
       "name": "Hey Hey We're The Monkees",
       "yearReleased": 1966,
@@ -91,7 +91,7 @@
       "duration": 145
     },
     {
-      "artist": "The Monkees",
+      "artist": "The Monkees", X
       "album": "Pleasant Valley Sunday",
       "name": "Pleasant Valley Sunday",
       "yearReleased": 1967,
@@ -100,7 +100,7 @@
       "duration": 177
     },
     {
-      "artist": "The Monkees",
+      "artist": "The Monkees", X
       "album": "The Monkees",
       "name": "Last Train to Clarksville",
       "yearReleased": 1966,
@@ -109,7 +109,7 @@
       "duration": 143
     },
     {
-      "artist": "The Monkees",
+      "artist": "The Monkees", X
       "album": "More of The Monkees",
       "name": "Steppin' Stone",
       "yearReleased": 1967,
@@ -118,7 +118,7 @@
       "duration": 148
     },
     {
-      "artist": "The Monkees",
+      "artist": "The Monkees", X
       "album": "More of The Monkees",
       "name": "Mary, Mary",
       "yearReleased": 1966,
@@ -127,7 +127,7 @@
       "duration": 139
     },
     {
-      "artist": "The Monkees",
+      "artist": "The Monkees", X
       "album": "More of The Monkees",
       "name": "Valleri",
       "yearReleased": 1967,
@@ -136,7 +136,7 @@
       "duration": 150
     },
     {
-      "artist": "The Weeknd",
+      "artist": "The Weeknd", X
       "album": "Beauty Behind the Madness",
       "name": "Can't feel my face",
       "genre": "Pop/Dicso/funk",
@@ -144,8 +144,8 @@
       "url": "https://www.youtube.com/watch?v=KEI4qSrkPAs",
       "duration": 218
     },
-    {
-      "artist": "The Weeknd",
+    { 
+      "artist": "The Weeknd", X
       "album": "After Hours",
       "name": "Save Your Tears",
       "genre": "R&b/soul",
@@ -154,7 +154,7 @@
       "duration": 248
     },
     {
-      "artist": "The Weeknd",
+      "artist": "The Weeknd", X
       "album": "Starboy",
       "name": "I Feel It Coming",
       "genre": "Contemprory R&B",
@@ -163,7 +163,7 @@
       "duration": 297
     },
     {
-      "artist": "The Weeknd",
+      "artist": "The Weeknd", X
       "album": "After Hours",
       "name": "Blinding Lights",
       "genre": "New wave",
@@ -172,7 +172,7 @@
       "duration": 262
     },
     {
-      "artist": "Imagine Dragons",
+      "artist": "Imagine Dragons", X
       "album": "Evolve",
       "name": "Believer",
       "genre": "Electro",
@@ -181,7 +181,7 @@
       "duration": 204
     },
     {
-      "artist": "Imagine Dragons",
+      "artist": "Imagine Dragons", X
       "album": "Evolve",
       "name": "Thunder",
       "genre": "Alternative Rock",
@@ -190,7 +190,7 @@
       "duration": 183
     },
     {
-      "artist": "Imagine Dragons",
+      "artist": "Imagine Dragons", X
       "album": "Night Visions",
       "name": "Demons",
       "genre": "Pop Rock",
@@ -199,7 +199,7 @@
       "duration": 174
     },
     {
-      "artist": "Imagine Dragons",
+      "artist": "Imagine Dragons", X
       "album": "Evolve",
       "name": "Whatever It Takes",
       "genre": "Alternative Rock",
@@ -208,7 +208,7 @@
       "duration": 219
     },
     {
-      "artist": "Pharrell Williams",
+      "artist": "Pharrell Williams", X
       "album": "Girl",
       "name": "Happy",
       "genre": "Soul",
@@ -217,7 +217,7 @@
       "duration": 240
     },
     {
-      "artist": "Wiz Khaifa",
+      "artist": "Wiz Khaifa", X
       "album": "Nine Track Mind",
       "name": "See You Again",
       "genre": "Pop music",
@@ -226,7 +226,7 @@
       "duration": 237
     },
     {
-      "artist": "Timbaland",
+      "artist": "Timbaland", X
       "album": "Shock Value",
       "name": "Apologize",
       "genre": "Pop/R&B",
@@ -235,7 +235,7 @@
       "duration": 188
     },
     {
-      "artist": "OneRepublic",
+      "artist": "OneRepublic", X
       "album": "Native",
       "name": "Counting Stars",
       "genre": "pop rock",
@@ -244,7 +244,7 @@
       "duration": 257
     },
     {
-      "artist": "Avicii",
+      "artist": "Avicii", X
       "album": "True",
       "name": "Wake Me Up",
       "genre": "country",
@@ -253,7 +253,7 @@
       "duration": 242
     },
     {
-      "artist": "Ed Sheeran",
+      "artist": "Ed Sheeran", X
       "album": "÷ (Divide)",
       "name": "Shape Of You",
       "genre": "Pop",
@@ -267,8 +267,180 @@
       "name": "Lean On",
       "genre": "Electronic",
       "yearReleased": 2015,
-      "url": "https://www.youtube.com/watch?v=NEjF9np9_NU",
+      "url": "https://www.youtube.com/embed/NEjF9np9_NU?autoplay=1",
       "duration": 176
-    }
+    },
+	 {
+      "artist": "Opeth",
+      "album": "Watershed",
+      "name": "Lotus Eater",
+      "genre": "Metal",
+      "yearReleased": 2008,
+      "url": "https://www.youtube.com/embed/MgV-bCxE6ZI?autoplay=1",
+      "duration": 686
+    },
+	 {
+      "artist": "Elegy",
+      "album": "State of Mind",
+      "name": "Visual Vortex",
+      "genre": "Metal",
+      "yearReleased": 1997,
+      "url": "https://www.youtube.com/embed/8L496n7hw0M?autoplay=1",
+      "duration": 285
+    },
+	 {
+      "artist": "King Gizzard & The Lizard Wizard",
+      "album": "Polygondwanaland",
+      "name": "Crumbling Castle",
+      "genre": "Psychedelic Rock",
+      "yearReleased": 2017,
+      "url": "https://www.youtube.com/embed/uLP8rFrL1W0?autoplay=1",
+      "duration": 645
+    },
+	 {
+      "artist": "AIGEL",
+      "album": "1190",
+      "name": "Tartarin",
+      "genre": "Electronic",
+      "yearReleased": 2017,
+      "url": "https://www.youtube.com/embed/uD914FCVZ08?autoplay=1",
+      "duration": 194
+    },
+		 {
+      "artist": "Masayoshi Takanaka",
+      "album": "Rainbow Goblins",
+      "name": "Thunderstorm",
+      "genre": "Fusion",
+      "yearReleased": 1981,
+      "url": "https://www.youtube.com/embed/SHb8GcLfRps?autoplay=1",
+      "duration": 195
+    },
+		 {
+      "artist": "Sergei Prokofiev",
+      "album": "Alexander Nevsky - Chicago Symphony",
+      "name": "Battle on the Ice",
+      "genre": "Classical",
+      "yearReleased": 1960,
+      "url": "https://www.youtube.com/embed/xyDKezDLGTM?autoplay=1",
+      "duration": 730
+    },
+		 {
+      "artist": "Giuseppe Verdi",
+      "album": "Il trovatore",
+      "name": "Anvil Chorus",
+      "genre": "Classical",
+      "yearReleased": 1853,
+      "url": "https://www.youtube.com/embed/xyDKezDLGTM?autoplay=1",
+      "duration": 184
+    },
+		 {
+      "artist": "Shambara",
+      "album": "Shambara",
+      "name": "Solid Dance",
+      "genre": "Funk",
+      "yearReleased": 1989,
+      "url": "https://www.youtube.com/embed/MaaBzxdCBuo?autoplay=1",
+      "duration": 353
+    },
+		 {
+      "artist": "Machine Girl",
+      "album": "WLFGRL",
+      "name": "Night Saber",
+      "genre": "Electronic",
+      "yearReleased": 1989,
+      "url": "https://www.youtube.com/embed/zZQWpoKztIQ?autoplay=1",
+      "duration": 252
+    },
+	 {
+      "artist": "Return to Forever",
+      "album": "Romantic Warrior",
+      "name": "Sorceress (Live)",
+      "yearReleased": 1976,
+      "url": "https://www.youtube.com/embed/787OXgsVMYM?autoplay=1",
+      "genre": "Fusion",
+      "duration": 457
+    },
+	 {
+      "artist": "Ryo Kawasaki",
+      "album": "Juice",
+      "name": "The Breeze and I",
+      "yearReleased": 1976,
+      "url": "https://www.youtube.com/embed/fPGmWC6oQKU?autoplay=1",
+      "genre": "Fusion",
+      "duration": 346
+    },
+	 {
+      "artist": "Arktida",
+      "album": "Through the Centuries",
+      "name": "Halfway to Immortality",
+      "yearReleased": 2011,
+      "url": "https://www.youtube.com/embed/Wst9_gbKjRo?autoplay=1",
+      "genre": "Metal",
+      "duration": 216
+    },
+	 {
+      "artist": "Arch Enemy",
+      "album": "Decievers",
+      "name": "Deciever, Deciever",
+      "yearReleased": 2022,
+      "url": "https://www.youtube.com/embed/m_m2oYJkx1A?autoplay=1",
+      "genre": "Metal",
+      "duration": 234
+    },
+	 {
+      "artist": "Artillery",
+      "album": "By Inheritence",
+      "name": "By Inheritence",
+      "yearReleased": 1990,
+      "url": "https://www.youtube.com/embed/U5nl4P4CUkI?autoplay=1",
+      "genre": "Metal",
+      "duration": 344
+    },
+	 {
+      "artist": "Globus",
+      "album": "Epicon",
+      "name": "Mighty Rivers Run",
+      "yearReleased": 2007,
+      "url": "https://www.youtube.com/embed/aaS3E-6uq7g?autoplay=1",
+      "genre": "Neo-Classical",
+      "duration": 313
+    },
+	 {
+      "artist": "Globus",
+      "album": "Epicon",
+      "name": "Diem Ex Dei",
+      "yearReleased": 2007,
+      "url": "https://www.youtube.com/embed/6xCCAs8iglY?autoplay=1",
+      "genre": "Neo-Classical",
+      "duration": 358
+    },
+	 {
+      "artist": "Angela & Jeff van Dyck",
+      "album": "Medieval II: Total War",
+      "name": "We Are All One",
+      "yearReleased": 2006,
+      "url": "https://www.youtube.com/embed/EqU_85dp4MM?autoplay=1",
+      "genre": "Neo-Classical",
+      "duration": 246
+    },
+	 {
+      "artist": "Kaoru Akimoto",
+      "album": "Cologne",
+      "name": "我がままなハイヒール",
+      "yearReleased": 1986,
+      "url": "https://www.youtube.com/embed/FTnJVhGhLS0?autoplay=1",
+      "genre": "Funk",
+      "duration": 303
+    },
+	{
+      "artist": "Adriano Celentano",
+      "album": "Nostalrock",
+      "name": "Prisencolinensinainciusol",
+      "yearReleased": 1973,
+      "url": "https://www.youtube.com/embed/bQDY3HFkh_Y?autoplay=1",
+      "genre": "Rock",
+      "duration": 231
+    },
+	
   ]
 }

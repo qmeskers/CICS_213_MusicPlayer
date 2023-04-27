@@ -531,5 +531,113 @@
       "genre": "Country",
       "duration": 167
     },
+    {
+      "artist": "Self Defense Family",
+      "album": "have you considered punk music",
+      "name": "have you considered punk music",
+      "yearReleased": 2018,
+      "url": "https://www.youtube.com/embed/AR0MrMaodNo?autoplay=1",
+      "genre": "Alternative",
+      "duration": 283
+    },
+    {
+      "artist": "Title Fight",
+      "album": "Floral Green",
+      "name": "Numb but I Still Feel It",
+      "yearReleased": 2012,
+      "url": "https://www.youtube.com/embed/WIbndxFYsSU?autoplay=1",
+      "genre": "Alternative",
+      "duration": 190
+    },
+    {
+      "artist": Self Defense Family",
+      "album": "Have You Considered Punk Music",
+      "name": "The Supremacy of Pure Artistic Feeling",
+      "yearReleased": 2018,
+      "url": "https://www.youtube.com/embed/GXFpijwLOEg?autoplay=1",
+      "genre": "Alternative",
+      "duration": 320
+    },
+    {
+      "artist": "Title Fight",
+      "album": "Hyperview",
+      "name": "Chlorine",
+      "yearReleased": 2015,
+      "url": "https://www.youtube.com/embed/77IzqSJ8CBc?autoplay=1",
+      "genre": "Alternative",
+      "duration": 173
+    }, 
+    {
+      "artist": "Self Defense Family",
+      "album": "Performative Guilt",
+      "name": "Rest in Peace for the Error Shall Not Be Repeated",
+      "yearReleased": 2019,
+      "url": "https://www.youtube.com/embed/M-G9J64DxA4?autoplay=1",
+      "genre": "Alternative",
+      "duration": 146
+    },    
+    {
+      "artist": "Joyce Manor",
+      "album": "Joyce Manor",
+      "name": "Constant Headache",
+      "yearReleased": 2013,
+      "url": "https://www.youtube.com/embed/Kz8W_SL2vyQ?autoplay=1",
+      "genre": "Punk",
+      "duration": 167
+    },    
+    {
+      "artist": "End of a Year",
+      "album": "You Are Beneath Me",
+      "name": "Marissa Wendolovske",
+      "yearReleased": 2010,
+      "url": "https://www.youtube.com/embed/grP6G9cnhEk?autoplay=1",
+      "genre": "Alternative",
+      "duration": 149
+    },    
+    {
+      "artist": "Joyce Manor",
+      "album": "Never Hung Over Again",
+      "name": "Catalina Fight Song",
+      "yearReleased": 2014,
+      "url": "https://www.youtube.com/embed/STD5weTn18E?autoplay=1",
+      "genre": "Punk",
+      "duration": 67
+    },
+    {
+      "artist": "Drug Church",
+      "album": "Paul Walker",
+      "name": "Thinking About Joining Drug Church",
+      "yearReleased": 2013,
+      "url": "https://www.youtube.com/embed/GooS5f1YDc4?autoplay=1",
+      "genre": "Punk",
+      "duration": 92
+    },
+    {
+      "artist": "American Football",
+      "album": "American Football",
+      "name": "Never Meant",
+      "yearReleased": 1999,
+      "url": "https://www.youtube.com/embed/_NfnXdXpjL0?autoplay=1",
+      "genre": "Alternative",
+      "duration": 283
+    },
+    {
+      "artist": "Drug Church",
+      "album": "Cheer",
+      "name": "Avoidarama",
+      "yearReleased": 2018,
+      "url": "https://www.youtube.com/embed/HK0CimKdh6Q?autoplay=1",
+      "genre": "Punk",
+      "duration": 193
+    },
+    {
+      "artist": "Turnover",
+      "album": "Peripheral Vision",
+      "name": "Dizzy on the Comedown",
+      "yearReleased": 2015,
+      "url": "https://www.youtube.com/embed/Q34dZ6VmI04?autoplay=1",
+      "genre": "Alternative",
+      "duration": 258
+    }
   ]
 }

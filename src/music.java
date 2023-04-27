@@ -22,7 +22,7 @@ public class music {
 	public static void main(String[] args) throws ParseException {
 		//tests for song json loader
 		 String filename = "songsList.json";
-		 List<Song> songs = Song.loadSongsFromJson(filename);
+		 List<Song> songs = Songs.loadSongsFromJson(filename);
 
 	        // Print out some values from the song list
 	        for (Song song : songs) {

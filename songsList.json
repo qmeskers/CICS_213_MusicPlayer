@@ -191,7 +191,7 @@
     },
 	{
       "artist": "The Boswell Sisters",
-      "album": "The Boswell Sisters",
+      "album": "The Boswell Sisters Collection",
       "name": "Old Yazoo",
       "yearReleased": 1932,
       "url": "https://www.youtube.com/embed/lEljQnL3UI8?autoplay=1",
@@ -343,8 +343,8 @@
       "duration": 258
     },
     {
-      "artist": "Early Jimmie Davis",
-      "album": "Early Jimmie Davis",
+      "artist": "Jimmie Davis",
+      "album": "Jimmie Davis",
       "name": "My Dixie Sweetheart",
       "yearReleased": 1930,
       "url": "https://www.youtube.com/embed/V7NZF0VeVZA?autoplay=1",
@@ -352,8 +352,8 @@
       "duration": 180
     },
     {
-      "artist": "Early Jimmie Davis",
-      "album": "Early Jimmie Davis",
+      "artist": "Jimmie Davis",
+      "album": "Jimmie Davis",
       "name": "A Woman's Blues",
       "yearReleased": 1930,
       "url": "https://www.youtube.com/embed/lJmeED7s1uk?autoplay=1",
@@ -361,8 +361,8 @@
       "duration": 188
     },
     {
-      "artist": "Early Jimmie Davis",
-      "album": "Early Jimmie Davis",
+      "artist": "Jimmie Davis",
+      "album": "Jimmie Davis",
       "name": "Where The Old Red River Flows",
       "yearReleased": 1930,
       "url": "https://www.youtube.com/embed/eqwTl0_sa4Q?autoplay=1",
@@ -377,6 +377,15 @@
       "url": "https://www.youtube.com/embed/-JB1Ea7Wnhk?autoplay=1",
       "genre": "Country",
       "duration": 191
+    },
+    {
+      "artist": "The Boswell Sisters",
+      "album": "The Boswell Sisters Collection",
+      "name": "The Music Goes 'Round and Around",
+      "yearReleased": 1936,
+      "url": "https://www.youtube.com/embed/11rchzXPU6g?autoplay=1",
+      "genre": "Jazz",
+      "duration": 190
     }
   ]
 }

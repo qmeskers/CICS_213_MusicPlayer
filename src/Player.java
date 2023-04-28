@@ -25,18 +25,22 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.layout.GridData;
-
+/**
+ * This class contains the user interface, within that there are three tabs, a music player tab, a create playlist tab, and view song tab
+ * @author CISC213.N81
+ *
+ */
 @SuppressWarnings("unused")
 public class Player extends Shell {
     /*for the timer we might want to do something like timer += 2 after we set it when the video loads to account for load 
     times in the youtube player so the song doesn't cut off early */
-    private int timer;  //this number will be replaced with the song lengths
-    private int stopTime; //used for pause button
-    private int resumeTime; //used for pausing and resuming
-    private boolean paused = false; //used to stop timer when song is paused
+    private int timer;  //Used in the StartTimer method, gets decremented by 1 every second when a song is playing
+    private int stopTime; //Is the time left in the song when the song is paused
+    private int resumeTime; //Is equal to song duration minus timer, used when resuming song
+    private boolean paused = false; //used to stop timer when song is paused in the StartTimer method
 	private boolean repeat = false;//used tell if song has been repeated
-    private int i = 0; //used to track location in Arraylist
-    private java.util.List<Song> songList = new ArrayList<Song>();// this is the arraylist for the song list-brian
+    private int i = 0; //used to track location in ArrayList
+    private java.util.List<Song> songList = new ArrayList<Song>();// this is the ArrayList for the song list-brian
     private Song song;
 
     public Player(String artist, String album, String name, String url, int yearReleased, String genre, int duration) {
@@ -65,6 +69,7 @@ public class Player extends Shell {
     }
 
     /**
+     * All button events are contained within this method
      * Create the shell.
      * @param display
      * @throws IOException 
@@ -97,7 +102,7 @@ public class Player extends Shell {
 		        new Label(composite, SWT.NONE);
 		        new Label(composite, SWT.NONE);
 		        new Label(composite, SWT.NONE);
-		        
+		        	
 		        		Label lblArtist = new Label(composite, SWT.NONE);
 		        		lblArtist.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		        		lblArtist.setBounds(10, 10, 81, 25);
@@ -106,7 +111,7 @@ public class Player extends Shell {
 		        		new Label(composite, SWT.NONE);
 		        		new Label(composite, SWT.NONE);
 		        		new Label(composite, SWT.NONE);
-		        		
+		        		//label that displays the artist of the song that's currently playing
 		        		Label lblartistplaying = new Label(composite, SWT.NONE);
 		        		lblartistplaying.setBounds(10, 38, 332, 25);
 		        		lblartistplaying.setText("When song plays artist name goes here");
@@ -123,7 +128,7 @@ public class Player extends Shell {
 		        		new Label(composite, SWT.NONE);
 		        		new Label(composite, SWT.NONE);
 		        		new Label(composite, SWT.NONE);
-		        		
+		        		//label that displays the album of the song that's currently playing
 		        		Label lblalbumplaying = new Label(composite, SWT.NONE);
 		        		lblalbumplaying.setBounds(10, 100, 332, 25);
 		        		lblalbumplaying.setText("When song plays album name goes here");
@@ -140,7 +145,7 @@ public class Player extends Shell {
 		        		new Label(composite, SWT.NONE);
 		        		new Label(composite, SWT.NONE);
 		        		new Label(composite, SWT.NONE);
-		        		
+		        		//label that displays the song name of the song that's currently playing
 		        		Label lblsongplaying = new Label(composite, SWT.NONE);
 		        		lblsongplaying.setBounds(10, 162, 332, 25);
 		        		lblsongplaying.setText("When song plays song name goes here");
@@ -257,13 +262,16 @@ public class Player extends Shell {
 	            }
 	        }
 	    });
-		        		
+		        	/*button used to pause the song that is currently playing, uses a sentinel trigger to pause the StartTimer method which is recursive
+		    		because YouTube only allows you to load a video at the start of a specific second, the song will not resume at the exact time it was paused but
+		    		will be within the same second it was paused */
 		        		Button btnPause = new Button(composite, SWT.NONE);
 		        		btnPause.setBounds(299, 279, 105, 35);
 		        		btnPause.setText("Pause");
 		        		btnPause.addListener(SWT.Selection, event -> {
-		        			/* pauses the video */
+		        			/* resumes the video */
 		        			if(paused == true) {
+		        				//generates a new browser at the time the song was paused
 		        				Browser browser = new Browser(this, SWT.NONE);
 		        				browser.setBounds(50, 50, 200, 200);
 		        				browser.setUrl(songList.get(i).getUrl() + "&start=" + resumeTime);
@@ -271,9 +279,11 @@ public class Player extends Shell {
 		        				paused = false;
 		        				}//end if
 		        			else {
+		        				//pauses the video
 		        				paused = true;
 		        				stopTime = timer;
 		        				resumeTime = songList.get(i).getDuration() - stopTime;
+		        				//deletes the browser
 		        				Control[] controls = Player.this.getChildren();
 		        				for (Control control : controls) {
 		        					if (control instanceof Browser) {
@@ -284,7 +294,7 @@ public class Player extends Shell {
 		        			startTimer(display,progressBar);}//end else
 		        			});
 		        		
-		        		
+		        		//button that skips the current song, done by setting the timer variable to 0, if song is last in the list it simply removes the browser
 		        		Button btnSkip = new Button(composite, SWT.NONE);
 		        		btnSkip.setBounds(429, 279, 105, 35);
 		        		btnSkip.setText("Skip");
@@ -309,7 +319,6 @@ public class Player extends Shell {
 
         // create the hashmap to store songs by genre
         HashMap<String, ArrayList<Song>> songsByGenre = new HashMap<>();
-
         for (Song song : songList) {
         	
             String genre = song.getGenre();
@@ -317,7 +326,7 @@ public class Player extends Shell {
                 songsByGenre.put(genre, new ArrayList<Song>());
             }
             songsByGenre.get(genre).add(song);
-        }
+        }//end for loop to populate HashMap
 
         // populate the tree with genres as top-level items
         for (String genre : songsByGenre.keySet()) {
@@ -329,8 +338,8 @@ public class Player extends Shell {
                 TreeItem songItem = new TreeItem(genreItem, SWT.NONE);
                 songItem.setText(song.getName());
                 songItem.setData(song);
-            }
-        }
+            }//end  nested for loop
+        }//end for loop
 		createContents(); 
 		PlaylistCollections playlistCollections = new PlaylistCollections();
 		//add listener to play the selected playlist from the list
@@ -342,30 +351,30 @@ public class Player extends Shell {
 		
 		Composite composite_2 = new Composite(tabFolder, SWT.NONE);
 		playlistBuilderTab.setControl(composite_2);
-		
+		//List containing all songs
 		List allSongs = new List(composite_2, SWT.BORDER | SWT.V_SCROLL);
 		allSongs.setBounds(10, 25, 150, 268);//spacing TBD
 		for (Song song : songList) {
 		    allSongs.add(song.getName());
-		}
+		}//end for loop
 		
 		List songsToAdd = new List(composite_2, SWT.BORDER);
 		songsToAdd.setBounds(410, 25, 150, 268);//spacing TBD
-		
+		//button to add song to new playlist
 		Button rightArrow = new Button(composite_2, SWT.NONE);
 		rightArrow.setText(">");
 		rightArrow.setBounds(280, 95, 35, 35);
 		//add listener to add song selected on right to left list
 		
 		
-		
+		//button to remove song from playlist
 		Button leftArrow = new Button(composite_2, SWT.NONE);
 		leftArrow.setText("<");
 		leftArrow.setBounds(280, 140, 35, 35);
 		Label playlistNameLabel = new Label(composite_2, SWT.NONE);
 		playlistNameLabel.setText("Playlist Name: ");
 		playlistNameLabel.setBounds(195, 10, 80, 25);
-		
+		//listener event for right arrow
 		rightArrow.addSelectionListener(new SelectionAdapter() {
 		    @Override
 		    public void widgetSelected(SelectionEvent e) {
@@ -376,7 +385,7 @@ public class Player extends Shell {
 		        }
 		    }
 		});
-		
+		//listener event for left arrow
 		leftArrow.addSelectionListener(new SelectionAdapter() {
 		    @Override
 		    public void widgetSelected(SelectionEvent e) {

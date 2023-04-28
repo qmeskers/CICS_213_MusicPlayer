@@ -5,7 +5,13 @@ import java.util.List;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
+/**
+ * This class loads the songs from the songlist.json file and loads them into one large ArrayList 
+ * 
+ * Contains an unused method to add a song to the songlist.json file
+ * @author CISC213.N81
+ *
+ */
 public class Songs extends Song {
 	 public Songs(String artist, String album, String name, String url, int yearReleased, String genre, int duration) {
 		super(artist, album, name, url, yearReleased, genre, duration);
@@ -51,7 +57,7 @@ public class Songs extends Song {
 
         return songList;
     }
-
+    //Method that adds a song object to the json file. currently unused
     private static Song createSongFromJson(JSONObject songJson) {
         try {
             String artist = (String) songJson.get("artist");

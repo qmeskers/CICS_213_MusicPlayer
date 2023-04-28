@@ -341,6 +341,42 @@
       "url": "https://www.youtube.com/embed/Q34dZ6VmI04?autoplay=1",
       "genre": "Alternative",
       "duration": 258
+    },
+    {
+      "artist": "Early Jimmie Davis",
+      "album": "Early Jimmie Davis",
+      "name": "My Dixie Sweetheart",
+      "yearReleased": 1930,
+      "url": "https://www.youtube.com/embed/V7NZF0VeVZA?autoplay=1",
+      "genre": "Country",
+      "duration": 180
+    },
+    {
+      "artist": "Early Jimmie Davis",
+      "album": "Early Jimmie Davis",
+      "name": "A Woman's Blues",
+      "yearReleased": 1930,
+      "url": "https://www.youtube.com/embed/lJmeED7s1uk?autoplay=1",
+      "genre": "Country",
+      "duration": 188
+    },
+    {
+      "artist": "Early Jimmie Davis",
+      "album": "Early Jimmie Davis",
+      "name": "Where The Old Red River Flows",
+      "yearReleased": 1930,
+      "url": "https://www.youtube.com/embed/eqwTl0_sa4Q?autoplay=1",
+      "genre": "Country",
+      "duration": 184
+    },
+    {
+      "artist": "The Blue Sky Boys",
+      "album": "The Blue Sky Boys",
+      "name": "No Home",
+      "yearReleased": 1936,
+      "url": "https://www.youtube.com/embed/-JB1Ea7Wnhk?autoplay=1",
+      "genre": "Country",
+      "duration": 191
     }
   ]
 }

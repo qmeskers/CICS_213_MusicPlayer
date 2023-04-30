@@ -78,7 +78,7 @@ public class Player extends Shell {
         setSize(709, 474);
         
         TabFolder tabFolder = new TabFolder(this, SWT.NONE);
-		tabFolder.setBounds(0, 0, 576, 457);
+		tabFolder.setBounds(2, 0, 576, 457);
 		
 		//Now playing tab controls:
 		TabItem playerTab = new TabItem(tabFolder, SWT.NONE);
@@ -344,27 +344,58 @@ public class Player extends Shell {
 		playlistBuilderTab.setControl(composite_2);
 		
 		List allSongs = new List(composite_2, SWT.BORDER | SWT.V_SCROLL);
-		allSongs.setBounds(10, 25, 150, 268);//spacing TBD
-		for (Song song : songList) {
-		    allSongs.add(song.getName());
+		allSongs.setBounds(10, 45, 200, 268);//spacing TBD
+		
+		Text songSearchField = new Text(composite_2, SWT.BORDER);
+		songSearchField.setText("");
+		songSearchField.setBounds(65, 10, 110, 30);
+		
+		Label songSearchLabel = new Label(composite_2, SWT.NONE);
+		songSearchLabel.setText("Seach: ");
+		songSearchLabel.setBounds(10, 10, 110, 26);
+		
+		for (Song song : songList) {	
+			allSongs.add(song.getName());	    
 		}
 		
 		List songsToAdd = new List(composite_2, SWT.BORDER);
-		songsToAdd.setBounds(410, 25, 150, 268);//spacing TBD
+		songsToAdd.setBounds(360, 45, 200, 268);//spacing TBD
+		
+		Button searchSong = new Button(composite_2, SWT.NONE);
+		searchSong.setText(">");
+		searchSong.setBounds(179, 9, 32, 32);
 		
 		Button rightArrow = new Button(composite_2, SWT.NONE);
 		rightArrow.setText(">");
-		rightArrow.setBounds(280, 95, 35, 35);
+		rightArrow.setBounds(267, 125, 35, 35);
 		//add listener to add song selected on right to left list
-		
 		
 		
 		Button leftArrow = new Button(composite_2, SWT.NONE);
 		leftArrow.setText("<");
-		leftArrow.setBounds(280, 140, 35, 35);
+		leftArrow.setBounds(267, 170, 35, 35);
 		Label playlistNameLabel = new Label(composite_2, SWT.NONE);
 		playlistNameLabel.setText("Playlist Name: ");
-		playlistNameLabel.setBounds(195, 10, 80, 25);
+		playlistNameLabel.setBounds(360, 10, 110, 26);
+		
+		searchSong.addSelectionListener(new SelectionAdapter() {
+		    @Override
+		    public void widgetSelected(SelectionEvent e) {
+		    	allSongs.removeAll();
+		    	for (Song song : songList) {
+		    		//if search field isn't empty
+		    		if (!songSearchField.getText().toLowerCase().equals("")) {
+		    			if (song.getName().toLowerCase().contains(songSearchField.getText().toLowerCase()) || 
+		    					song.getArtist().toLowerCase().contains(songSearchField.getText().toLowerCase())) {
+		    				allSongs.add(song.getName());
+		    			}
+		    		}
+		    		else {
+		    			allSongs.add(song.getName());
+		    		}
+		    	}
+		    }
+		});
 		
 		rightArrow.addSelectionListener(new SelectionAdapter() {
 		    @Override
@@ -390,12 +421,12 @@ public class Player extends Shell {
 		
 		Text playlistNameField = new Text(composite_2, SWT.BORDER);
 		playlistNameField.setText("");
-		playlistNameField.setBounds(280, 10, 100, 20);
+		playlistNameField.setBounds(475, 10, 85, 30);
 		//add listener to move song selected on left off of the list
 		
 		Button createPlaylistButton = new Button(composite_2, SWT.NONE);
-		createPlaylistButton.setText("create playlist");
-		createPlaylistButton.setBounds(240, 279, 105, 35);
+		createPlaylistButton.setText("Create Playlist");
+		createPlaylistButton.setBounds(225, 279, 120, 35);
 		
 		//Playlist tab controls:
 		TabItem playlistTab = new TabItem(tabFolder, SWT.NONE);
@@ -566,4 +597,5 @@ public class Player extends Shell {
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
 	}
+	
 }

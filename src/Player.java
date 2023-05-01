@@ -487,6 +487,7 @@ public class Player extends Shell {
 							currentSongJson.put("genre", song.getGenre());
 							currentSongJson.put("duration", song.getDuration());
 							songJsonArray.add(currentSongJson);
+							//testlineforgit
 						}
 						currentPlaylistJson.put("songs", songJsonArray);
 						playlistsJsonArray.add(currentPlaylistJson);

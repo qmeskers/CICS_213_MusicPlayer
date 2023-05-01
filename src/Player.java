@@ -466,7 +466,7 @@ public class Player extends Shell {
 		Button createPlaylistButton = new Button(composite_2, SWT.NONE);
 		createPlaylistButton.setText("Create Playlist");
 		createPlaylistButton.setBounds(225, 279, 120, 35);
-
+		
 		//Playlist tab controls:
 		TabItem playlistTab = new TabItem(tabFolder, SWT.NONE);
 		playlistTab.setText("Playlists");
@@ -504,6 +504,8 @@ public class Player extends Shell {
 				JSONArray playlistsJsonArray = new JSONArray();
 				for (Playlist playlist : playlists) {
 					if (playlist.getName().equalsIgnoreCase(currentSelection)) {
+						//TODO: this will become a call to removePlaylist method in currentuserplaylist once user class is done
+						//at that time, get rid of else as that method is contained in the other class
 						continue;
 					} else {
 						JSONObject currentPlaylistJson = new JSONObject();
@@ -524,7 +526,6 @@ public class Player extends Shell {
 						playlistsJsonArray.add(currentPlaylistJson);
 					}					
 					//sampleObject.put("playlists", *need to make the playlist first*);
-					//playlistList.add(playlist.getName());THIS IS OLD
 				}				
 				newUserPlaylistsJson.put("playlists", playlistsJsonArray);
 				try {
@@ -542,6 +543,7 @@ public class Player extends Shell {
 
 		//Buttons:
 		//creates playlist and adds it to the list on playlist tab
+		//TODO: make sure this is tied to the user's playlistCollections field/object so that the json file for that user is updated correctly
 		createPlaylistButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {

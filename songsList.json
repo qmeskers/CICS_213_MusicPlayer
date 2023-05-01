@@ -386,6 +386,51 @@
       "url": "https://www.youtube.com/embed/11rchzXPU6g?autoplay=1",
       "genre": "Jazz",
       "duration": 190
+    },
+    {
+      "artist": "mewithoutYou",
+      "album": "Brother, Sister",
+      "name": "In a Sweater Poorly Knit",
+      "yearReleased": 2006,
+      "url": "https://www.youtube.com/embed/Pi9R7vZh-Bc",
+      "genre": "alternative",
+      "duration": 284
+    },
+    {
+      "artist": "Single Mothers",
+      "album": "Negative Qualities",
+      "name": "Half Lit",
+      "yearReleased": 2014,
+      "url": "https://www.youtube.com/embed/m8XbNmxgYWQ",
+      "genre": "alternative",
+      "duration": 148
+    },
+    {
+      "artist": "Propagandhi",
+      "album": "Less Talk, More Rock",
+      "name": "Rio De San Atlanta, Manitoba",
+      "yearReleased": 1996,
+      "url": "https://www.youtube.com/embed/bNVFewWAcFk",
+      "genre": "punk",
+      "duration": 40
+    },
+    {
+      "artist": "Ben Quad",
+      "album": "You're Part of It",
+      "name": "You're Part of It",
+      "yearReleased": 2022,
+      "url": "https://www.youtube.com/embed/Rz0BON9d_7g",
+      "genre": "alternative",
+      "duration": 177
+    },
+    {
+      "artist": "Bay Faction",
+      "album": "Bay Faction",
+      "name": "Beach Book",
+      "yearReleased": 2015,
+      "url": "https://www.youtube.com/embed/e6ayfPEurSU",
+      "genre": "alternative",
+      "duration": 191
     }
   ]
 }

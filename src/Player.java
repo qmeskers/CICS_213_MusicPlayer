@@ -103,7 +103,7 @@ public class Player extends Shell {
 
 		// create the tree widget
 		Tree tree = new Tree(composite, SWT.BORDER);
-		tree.setBounds(333, 31, 150, 200);
+		tree.setBounds(333, 31, 181, 229);
 
 		Label lblArtist = new Label(composite, SWT.NONE);
 		lblArtist.setBounds(10, 10, 81, 25);
@@ -303,6 +303,7 @@ public class Player extends Shell {
 				}//end for
 			}//end if
 			i++; //(Quinn) I added this and got the skip kinda working if you press play afterwards might be too simplistic though
+			UpdateLabels(lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
 		});
 
 		// load the songs from the JSON file

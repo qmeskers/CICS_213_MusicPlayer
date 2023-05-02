@@ -7,6 +7,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.browser.Browser;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -84,6 +85,10 @@ public class Player extends Shell {
         setMaximumSize(new Point(600, 500));
         setMinimumSize(new Point(600, 500));
         setSize(709, 474);
+        
+        //adds the icon to the top corner of the window
+        Image play = new Image(display, "play.png");
+		this.setImage(play);
         
         TabFolder tabFolder = new TabFolder(this, SWT.NONE);
 		tabFolder.setBounds(2, 0, 576, 457);

@@ -1,4 +1,6 @@
 {
+  "playlists":[
+    {
   "playlist name": "2 test songs",
   "songs": [
     {
@@ -19,7 +21,9 @@
       "genre": "Alternative",
       "duration": 190
     }
-  ],
+  ]
+},
+{
   "playlist name": "A second test playlist",
   "songs": [
     {
@@ -40,5 +44,7 @@
       "genre": "Punk",
       "duration": 167
     }
+  ]
+}
   ]
 }

@@ -643,7 +643,48 @@ public class Player extends Shell {
 		    }
 		});
 	
-		//TODO add shuffle functionality 
+		shuffleButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+			   // Get the selected playlist
+			   TreeItem[] selection = playlistList.getSelection();
+			   if (selection.length == 0) {
+				  // No playlist has been selected, do nothing
+				   MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
+					 messageBox.setText("No play list Selected.");
+					 messageBox.setMessage("Please select a play list to shuffle");
+					 messageBox.open();
+				  return;
+			   }
+			   TreeItem selectedPlaylist = selection[0];
+			   
+			   // Get the child items (songs) of the selected playlist
+			   TreeItem[] songs = selectedPlaylist.getItems();
+			   
+			   // Create a list to hold the song objects
+			   ArrayList<Song> songList = new ArrayList<Song>();
+			   
+			   // Add each song object to the list
+			   for (TreeItem song : songs) {
+				  songList.add((Song) song.getData());
+			   }
+			   
+			   // Shuffle the list
+			   Collections.shuffle(songList);
+			   
+			   // Clear the existing child items from the selected playlist
+			   selectedPlaylist.removeAll();
+			   
+			   // Add the shuffled songs back to the playlist as child items
+			   for (Song song : songList) {
+				  TreeItem songItem = new TreeItem(selectedPlaylist, SWT.NONE);
+				  songItem.setText(song.getName());
+				  songItem.setData(song);
+			   }
+			   
+			   // Update the tree widget
+			   tree.update();
+			}
+		 });
 		//TODO add skip song in play list functionality
 		//User Management Tab Login Button Listener:
 		//TODO: update the below per block comment

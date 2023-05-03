@@ -86,12 +86,14 @@ public class Player extends Shell {
         setMinimumSize(new Point(600, 500));
         setSize(709, 474);
         
+        
         //adds the icon to the top corner of the window
         Image play = new Image(display, "play.png");
 		this.setImage(play);
         
         TabFolder tabFolder = new TabFolder(this, SWT.NONE);
 		tabFolder.setBounds(2, 0, 576, 457);
+		
 		
 		//Now playing tab controls:
 		TabItem playerTab = new TabItem(tabFolder, SWT.NONE);
@@ -101,18 +103,14 @@ public class Player extends Shell {
 		playerTab.setControl(composite);
 		composite.setLayout(null);
 
-		// create the tree widget
-		Tree tree = new Tree(composite, SWT.BORDER);
-		tree.setBounds(333, 31, 181, 229);
-
 		Label lblArtist = new Label(composite, SWT.NONE);
 		lblArtist.setBounds(10, 10, 81, 25);
 		lblArtist.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		lblArtist.setText("Artist:");
 
 		Label lblartistplaying = new Label(composite, SWT.NONE);
-		lblartistplaying.setBounds(10, 38, 332, 25);
-		lblartistplaying.setText("When song plays artist name goes here");
+		lblartistplaying.setBounds(10, 38, 307, 25);
+		lblartistplaying.setText(" ");
 
 		Label lblAlbum = new Label(composite, SWT.NONE);
 		lblAlbum.setBounds(10, 69, 81, 25);
@@ -120,8 +118,8 @@ public class Player extends Shell {
 		lblAlbum.setText("Album:");
 
 		Label lblalbumplaying = new Label(composite, SWT.NONE);
-		lblalbumplaying.setBounds(10, 100, 332, 25);
-		lblalbumplaying.setText("When song plays album name goes here");
+		lblalbumplaying.setBounds(10, 100, 307, 25);
+		lblalbumplaying.setText(" ");
 
 		Label lblSong = new Label(composite, SWT.NONE);
 		lblSong.setBounds(10, 131, 81, 25);
@@ -129,23 +127,29 @@ public class Player extends Shell {
 		lblSong.setText("Song:");
 
 		Label lblsongplaying = new Label(composite, SWT.NONE);
-		lblsongplaying.setBounds(10, 162, 332, 25);
-		lblsongplaying.setText("When song plays song name goes here");
+		lblsongplaying.setBounds(10, 162, 307, 25);
+		lblsongplaying.setText(" ");
 		
 		Label lblGenre = new Label(composite, SWT.NONE);
 		lblGenre.setText("Genre:");
 		lblGenre.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
-		lblGenre.setBounds(10, 188, 81, 25);
+		lblGenre.setBounds(10, 204, 81, 25);
 		
 		Label lblgenreplaying = new Label(composite, SWT.NONE);
-		lblgenreplaying.setText("When song plays song genre goes here");
-		lblgenreplaying.setBounds(10, 219, 332, 25);
+		lblgenreplaying.setText(" ");
+		lblgenreplaying.setBounds(10, 235, 307, 25);
+		
+		
+		// create the tree widget
+		Tree tree = new Tree(composite, SWT.BORDER);
+		tree.setBounds(333, 31, 181, 229);
 
 		//ProgressBar used to track location within song
 		ProgressBar progressBar = new ProgressBar(composite, SWT.NONE);
-		progressBar.setBounds(36, 317, 478, 19);
+		progressBar.setBounds(35, 301, 478, 19);
 		progressBar.setMinimum(0);
 
+		
 		//button used to restart the current song
 		Button btnRestart = new Button(composite, SWT.NONE);
 		btnRestart.setBounds(132, 349, 91, 39);
@@ -164,6 +168,7 @@ public class Player extends Shell {
 
 		});//end btnRestart event
 		
+		
 		//button used to start playing the playlist
 		Button btnPlay = new Button(composite, SWT.NONE);
 		btnPlay.setBounds(229, 349, 91, 39);
@@ -177,6 +182,7 @@ public class Player extends Shell {
 			startTimer(display, progressBar);
 			UpdateLabels(lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
 		});//end btnPlay event
+		
 		
 		//button used to repeat the current song once it's finished playing
 		Button btnRepeat = new Button(composite, SWT.NONE);
@@ -194,36 +200,7 @@ public class Player extends Shell {
 			}
 			songList.add(i+1, songList.get(i));
 		});//end btnRepeat event
-
-		/*Note from Nick C - I don't understand the purpose of this event if the person who wrote it could explain
-		        	why it's using btnRepeat that would be wonderful */
-		btnRepeat.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				// Get the selected item in the tree
-				TreeItem selectedItem = tree.getSelection()[0];
-
-				// Get the Song object associated with the selected item
-				Song selectedSong = (Song) selectedItem.getData();
-
-				// Update the currentSong URL if a song is selected
-				if (selectedSong != null) {
-					Control[] controls = Player.this.getChildren();
-					if (selectedSong != null) {
-						for (Control control : controls) {
-							if (control instanceof Browser) {
-								((Browser) control).setUrl(selectedSong.getUrl());
-							}//end if
-						}//end for loop
-						timer = selectedSong.getDuration();
-						startTimer(display,progressBar);
-						System.out.println("Playing " + selectedSong.getUrl());
-					}
-				}
-			}
-		});
-
-
+	
 		tree.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
@@ -232,9 +209,15 @@ public class Player extends Shell {
 
 				// Get the Song object associated with the selected item
 				Song selectedSong = (Song) selectedItem.getData();
-				songList.add(selectedSong);
-
-				// Update the currentSong URL if a song is selected
+				
+				//looks for the index of the song you click and sets the current index as its number
+				for(int j = 0; j < songList.size(); j++) {
+					if(songList.get(j).equals(selectedSong)) {
+						i = j;
+					}
+				}
+				
+				 //Update the currentSong URL if a song is selected
 				Control[] controls = Player.this.getChildren();
 				if (selectedSong != null) {
 					for (Control control : controls) {
@@ -242,11 +225,6 @@ public class Player extends Shell {
 							control.dispose();
 						}//end if
 					}//end for loop
-					Browser browser = new Browser(Player.this, SWT.NONE);
-					browser.setBounds(50, 50, 1, 1);
-					browser.setUrl(songList.get(i).getUrl());
-					timer = selectedSong.getDuration();
-					startTimer(display,progressBar);
 					lblartistplaying.setText(selectedSong.getArtist());
 					lblalbumplaying.setText(selectedSong.getAlbum());
 					lblsongplaying.setText(selectedSong.getName());
@@ -302,16 +280,13 @@ public class Player extends Shell {
 					}//end if
 				}//end for
 			}//end if
-			i++; //(Quinn) I added this and got the skip kinda working if you press play afterwards might be too simplistic though
+			i++; //(Quinn) I added this and got the skip kinda working if you press play afterwards (might be too simplistic though)
 			UpdateLabels(lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
 		});
 
 		// load the songs from the JSON file
 		songList = Songs.loadSongsFromJson("songsList.json");
-		lblartistplaying.setText(songList.get(i).getArtist());
-		lblalbumplaying.setText(songList.get(i).getAlbum());
-		lblsongplaying.setText(songList.get(i).getName());
-		lblgenreplaying.setText(songList.get(i).getGenre());
+		
 
 		// create the hashmap to store songs by genre
 		HashMap<String, ArrayList<Song>> songsByGenre = new HashMap<>();

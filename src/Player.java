@@ -41,6 +41,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import java.util.*;
+
 @SuppressWarnings("unused")
 public class Player extends Shell {
     /*for the timer we might want to do something like timer += 2 after we set it when the video loads to account for load 
@@ -210,6 +211,10 @@ public class Player extends Shell {
 			songList.add(i+1, songList.get(i));
 		});//end btnRepeat event
 	
+		/*
+		 * This listens to the tree and when a song is pressed, it will chenge the index(i) to the location of 
+		 * the song in the songList or the json file to play that song
+		 */
 		tree.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent event) {
@@ -478,8 +483,8 @@ public class Player extends Shell {
 		playlistTab.setControl(composite_1);
 
 		Tree playlistList = new Tree(composite_1, SWT.BORDER);
-		playlistList.setBounds(220, 70, 150, 150); 
-
+		playlistList.setBounds(220, 70, 150, 150);
+		
 		Label playlistListLabel = new Label(composite_1, SWT.NONE);
 		playlistListLabel.setText("Playlists");
 		playlistListLabel.setBounds(270, 25, 150, 30);
@@ -552,7 +557,6 @@ public class Player extends Shell {
 		    }
 		});
 		
-		
 		//Buttons:
 		//creates play list and adds it to the list on playlist tab
 		//TODO: make sure this is tied to the user's playlistCollections field/object so that the json file for that user is updated correctly
@@ -617,6 +621,7 @@ public class Player extends Shell {
 				}
 			}
 		});
+		
 		
 
 		playButton.addListener(SWT.Selection, event -> {

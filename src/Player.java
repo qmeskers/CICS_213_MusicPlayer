@@ -5,10 +5,17 @@ import java.net.http.WebSocket.Listener;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.ProgressEvent;
+import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Display;
@@ -31,8 +38,9 @@ import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-
+import java.util.*;
 @SuppressWarnings("unused")
 public class Player extends Shell {
     /*for the timer we might want to do something like timer += 2 after we set it when the video loads to account for load 
@@ -154,6 +162,7 @@ public class Player extends Shell {
 		Button btnRestart = new Button(composite, SWT.NONE);
 		btnRestart.setBounds(132, 349, 91, 39);
 		btnRestart.setText("Restart");
+		
 		btnRestart.addListener(SWT.Selection, event -> {
 			Control[] controls = Player.this.getChildren();
 			for (Control control : controls) {
@@ -225,10 +234,7 @@ public class Player extends Shell {
 							control.dispose();
 						}//end if
 					}//end for loop
-					lblartistplaying.setText(selectedSong.getArtist());
-					lblalbumplaying.setText(selectedSong.getAlbum());
-					lblsongplaying.setText(selectedSong.getName());
-					lblgenreplaying.setText(selectedSong.getGenre());
+					UpdateLabels(lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
 
 				}
 			}
@@ -262,8 +268,8 @@ public class Player extends Shell {
 					}//end if
 				}//end for loop
 				btnPause.setText("Resume");
-				startTimer(display,progressBar);}//end else
-		});
+				startTimer(display, progressBar);//end else
+			}});
 
 
 		Button btnSkip = new Button(composite, SWT.NONE);
@@ -471,75 +477,84 @@ public class Player extends Shell {
 		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
 		playlistTab.setControl(composite_1);
 
-		List playlistList = new List(composite_1, SWT.BORDER);
+		Tree playlistList = new Tree(composite_1, SWT.BORDER);
 		playlistList.setBounds(220, 70, 150, 150); 
 
 		Label playlistListLabel = new Label(composite_1, SWT.NONE);
 		playlistListLabel.setText("Playlists");
 		playlistListLabel.setBounds(270, 25, 150, 30);
 
-		Button selectButton = new Button(composite_1, SWT.NONE);
-		selectButton.setText("Play");
-		selectButton.setBounds(300, 279, 105, 35);
+		Button playButton = new Button(composite_1, SWT.NONE);
+		playButton.setText("Play Playlist");
+		playButton.setBounds(300, 279, 105, 35);
 		
 		Button deleteButton = new Button(composite_1, SWT.NONE);
 		deleteButton.setText("Delete");
 		deleteButton.setBounds(180, 279, 105, 35);
+		
+		Button shuffleButton = new Button(composite_1, SWT.NONE);
+		shuffleButton.setText("Shuffle");
+		shuffleButton.setBounds(420, 279, 105, 35);
+		
+		Button skipButton = new Button(composite_1, SWT.NONE);
+		skipButton.setText("Skip Song");
+		skipButton.setBounds(50, 279, 105, 35);
 
 		/**
 		 * This button iterates over the current user's collection of playlists and rewrites it to exclude the playlist the user selected to delete
 		 * it then repopulates the playlistList with the new user playlists
 		 */
 		deleteButton.addSelectionListener(new SelectionAdapter() {
-			@SuppressWarnings("unchecked")
-			public void widgetSelected(SelectionEvent e) {
-				String currentSelection = playlistList.getSelection()[0];
-				//TODO: get rid of this first line below, replace it with an iteration over the currentUserPlaylist
-				//TODO: probably add a line for file output filename creation user.getUsername + "playlist.json" or something
-				java.util.List<Playlist> playlists = PlaylistCollections.loadPlaylistsFromJson("UserPlaylistTest.json");
-				JSONObject newUserPlaylistsJson = new JSONObject();
-				JSONArray playlistsJsonArray = new JSONArray();
-				for (Playlist playlist : playlists) {
-					if (playlist.getName().equalsIgnoreCase(currentSelection)) {
-						//TODO: this will become a call to removePlaylist method in currentuserplaylist once user class is done
-						//at that time, get rid of else as that method is contained in the other class
-						continue;
-					} else {
-						JSONObject currentPlaylistJson = new JSONObject();
-						currentPlaylistJson.put("playlist name", playlist.getName());
-						JSONArray songJsonArray = new JSONArray();
-						for (Song song : playlist.getSongs()) {
-							JSONObject currentSongJson = new JSONObject();
-							currentSongJson.put("artist", song.getArtist());
-							currentSongJson.put("album",  song.getAlbum());
-							currentSongJson.put("name", song.getName());
-							currentSongJson.put("yearReleased", song.getYearReleased());
-							currentSongJson.put("url", song.getUrl());
-							currentSongJson.put("genre", song.getGenre());
-							currentSongJson.put("duration", song.getDuration());
-							songJsonArray.add(currentSongJson);
-						}
-						currentPlaylistJson.put("songs", songJsonArray);
-						playlistsJsonArray.add(currentPlaylistJson);
-					}					
-					//sampleObject.put("playlists", *need to make the playlist first*);
-				}				
-				newUserPlaylistsJson.put("playlists", playlistsJsonArray);
-				try {
-					Files.write(Paths.get("UserPlaylistTest.json"), newUserPlaylistsJson.toJSONString().getBytes());
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				playlistList.removeAll();
-				java.util.List<Playlist> playlistsUpdatedAfterDeletion = PlaylistCollections.loadPlaylistsFromJson("UserPlaylistTest.json");
-				for (Playlist playlist : playlistsUpdatedAfterDeletion) {
-					playlistList.add(playlist.getName());
-				}
-			}
+		    @SuppressWarnings("unchecked")
+		    public void widgetSelected(SelectionEvent e) {
+		        TreeItem[] currentSelection = playlistList.getSelection();
+		        if (currentSelection.length > 0) {
+		            TreeItem selectedPlaylist = currentSelection[0];
+		            String playlistName = selectedPlaylist.getText();
+		            //TODO: get rid of this first line below, replace it with an iteration over the currentUserPlaylist
+		            //TODO: probably add a line for file output filename creation user.getUsername + "playlist.json" or something
+		            java.util.List<Playlist> playlists = PlaylistCollections.loadPlaylistsFromJson("UserPlaylistTest.json");
+		            JSONObject newUserPlaylistsJson = new JSONObject();
+		            JSONArray playlistsJsonArray = new JSONArray();
+		            for (Playlist playlist : playlists) {
+		                if (playlist.getName().equalsIgnoreCase(playlistName)) {
+		                    //TODO: this will become a call to removePlaylist method in currentuserplaylist once user class is done
+		                    //at that time, get rid of else as that method is contained in the other class
+		                    continue;
+		                } else {
+		                    JSONObject currentPlaylistJson = new JSONObject();
+		                    currentPlaylistJson.put("playlist name", playlist.getName());
+		                    JSONArray songJsonArray = new JSONArray();
+		                    for (Song song : playlist.getSongs()) {
+		                        JSONObject currentSongJson = new JSONObject();
+		                        currentSongJson.put("artist", song.getArtist());
+		                        currentSongJson.put("album",  song.getAlbum());
+		                        currentSongJson.put("name", song.getName());
+		                        currentSongJson.put("yearReleased", song.getYearReleased());
+		                        currentSongJson.put("url", song.getUrl());
+		                        currentSongJson.put("genre", song.getGenre());
+		                        currentSongJson.put("duration", song.getDuration());
+		                        songJsonArray.add(currentSongJson);
+		                    }
+		                    currentPlaylistJson.put("songs", songJsonArray);
+		                    playlistsJsonArray.add(currentPlaylistJson);
+		                }                   
+		                //sampleObject.put("playlists", *need to make the playlist first*);
+		            }                
+		            newUserPlaylistsJson.put("playlists", playlistsJsonArray);
+		            try {
+		                Files.write(Paths.get("UserPlaylistTest.json"), newUserPlaylistsJson.toJSONString().getBytes());
+		            } catch (IOException e1) {
+		                e1.printStackTrace();
+		            }
+		            selectedPlaylist.dispose();
+		        }
+		    }
 		});
-
+		
+		
 		//Buttons:
-		//creates playlist and adds it to the list on playlist tab
+		//creates play list and adds it to the list on playlist tab
 		//TODO: make sure this is tied to the user's playlistCollections field/object so that the json file for that user is updated correctly
 		createPlaylistButton.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -556,8 +571,8 @@ public class Player extends Shell {
 					messageBox.open();
 				} else {
 					// Check if playlist name already exists
-					for (int i = 0; i < playlistList.getItemCount(); i++) {
-						if (playlistList.getItem(i).equals(playlistName)) {
+					for (TreeItem item : playlistList.getItems()) {
+						if (item.getText().equals(playlistName)) {
 							playlistExists = true;
 							break;
 						}
@@ -565,16 +580,22 @@ public class Player extends Shell {
 
 					if (!playlistExists) {
 						// add the new playlist to the playlist list on tab 2
-						playlistList.add(playlistName); 
+						TreeItem newPlaylistItem = new TreeItem(playlistList, SWT.NONE);
+						newPlaylistItem.setText(playlistName);
+
 						// add songs to the new playlist
 						for (String songName : songs) {
 							for (Song song : songList) {
 								if (song.getName().equals(songName)) {
 									newPlaylist.addSong(song);
+									TreeItem songItem = new TreeItem(newPlaylistItem, SWT.NONE);
+									songItem.setText(songName);
+									songItem.setData(song);
 									break;
 								}
 							}
 						}
+
 						// clear the songsToAdd list
 						songsToAdd.removeAll();
 						playlistNameField.setText("");
@@ -596,11 +617,30 @@ public class Player extends Shell {
 				}
 			}
 		});
+		
 
-
+		playButton.addListener(SWT.Selection, event -> {
+		    TreeItem[] selectedItems = playlistList.getSelection();
+		    if (selectedItems.length > 0) {
+		        // Only play songs if a playlist is selected
+		        ArrayList<Song> songs = new ArrayList<>();
+		        TreeItem playlistItem = selectedItems[0];
+		        for (TreeItem songItem : playlistItem.getItems()) {
+		            Song song = (Song) songItem.getData();
+		            songs.add(song);
+		        }
+		        if (!songs.isEmpty()) {
+		            Browser browser = new Browser(getShell(), SWT.NONE);
+		            ProgressBar progress = new ProgressBar(getShell(), SWT.NONE);
+		            Queue<Song> songQueue = new LinkedList<>(songs);
+		            startTimerPlaylist(getDisplay(), progress, songQueue, browser);
+		        }
+		    }
+		});
+	
+		//TODO add shuffle functionality 
+		//TODO add skip song in play list functionality
 		//User Management Tab Login Button Listener:
-		//TODO: replace the listbox with a tree with the playlist names as headers on the Playlist tab (noted here because its
-		//contents will respond to actions taken on the user management tab)
 		//TODO: update the below per block comment
 		loginButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
@@ -616,14 +656,19 @@ public class Player extends Shell {
 				 */
 				java.util.List<Playlist> playlists = PlaylistCollections.loadPlaylistsFromJson("UserPlaylistTest.json");
 				for (Playlist playlist : playlists) {
-					playlistList.add(playlist.getName());
+					((Collection) playlistList).add(playlist.getName());
 				}
 			}
 		});
 
     }
 
-    protected void createNewUserFile(String fileName) {
+	private void populateTree(Tree playlistList) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	protected void createNewUserFile(String fileName) {
     	File newUserFile = new File(fileName);
     	FileWriter fileWriter;
     	try {
@@ -657,6 +702,44 @@ public class Player extends Shell {
 	 * before we call the startTimer method
 	 * @param display
 	 */
+	
+	//this method gives the start timer attributes but for the queue
+	private void startTimerPlaylist(Display display, ProgressBar progress, Queue<Song> songQueue, Browser browser) {
+	    if (songQueue == null || songQueue.isEmpty()) {
+	        browser.setUrl("");
+	        return;
+	    }
+
+	    Song currentSong = songQueue.peek();
+	    browser.setUrl(currentSong.getUrl());
+	    progress.setMaximum(currentSong.getDuration());
+	    progress.setSelection(0);
+
+	    browser.addProgressListener(new ProgressListener() {
+	        @Override
+	        public void completed(ProgressEvent event) {}
+
+	        @Override
+	        public void changed(ProgressEvent event) {}
+	    });
+
+	    final int[] timer = { currentSong.getDuration() };
+	    display.timerExec(1000, new Runnable() {
+	        public void run() {
+	            if (timer[0] > 0) {
+	                progress.setSelection(currentSong.getDuration() - timer[0]);
+	                timer[0]--;
+	                display.timerExec(1000, this);
+	            } else {
+	                songQueue.poll();
+	                startTimerPlaylist(display, progress, songQueue, browser);
+	            }
+	        }
+	    });
+	}
+
+//end StartTimerPlaylist method
+	
 	public void startTimer(Display display, ProgressBar progress) {
 		if(paused == false) {
 			display.timerExec(1000, new Runnable() {
@@ -697,6 +780,8 @@ public class Player extends Shell {
 			}//end if
 		}//end StartTimer method
 	
+	
+	
 	public void UpdateLabels(Label song, Label album, Label artist, Label genre) {
 		song.setText(songList.get(i).getName());
 		album.setText(songList.get(i).getAlbum());
@@ -704,7 +789,7 @@ public class Player extends Shell {
 		genre.setText(songList.get(i).getGenre());
 	}//end updatelables method
 
-
+	
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components

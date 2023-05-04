@@ -421,6 +421,7 @@ public class Player extends Shell {
 		Button leftArrow = new Button(composite_2, SWT.NONE);
 		leftArrow.setText("<");
 		leftArrow.setBounds(267, 170, 35, 35);
+		
 		Label playlistNameLabel = new Label(composite_2, SWT.NONE);
 		playlistNameLabel.setText("Playlist Name: ");
 		playlistNameLabel.setBounds(360, 10, 110, 26);
@@ -444,13 +445,16 @@ public class Player extends Shell {
 			}
 		});
 
+		/**
+		 * I removed the line which cleared the song from the list on the right after it is selected to make a playlist because the song will not repopulate after hitting "create playlist"
+		 * so the same song could not be in more than one playlist at once (or in multiple spots on the same playlist)
+		 */
 		rightArrow.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				String[] selectedItems = allSongs.getSelection();
 				for (String item : selectedItems) {
 					songsToAdd.add(item);
-					allSongs.remove(item);
 				}
 			}
 		});
@@ -583,7 +587,7 @@ public class Player extends Shell {
 					}
 
 					if (!playlistExists) {
-						// add the new playlist to the playlist list on tab 2
+						// add the new playlist to the playlist list on playlist tab
 						TreeItem newPlaylistItem = new TreeItem(playlistList, SWT.NONE);
 						newPlaylistItem.setText(playlistName);
 
@@ -605,6 +609,10 @@ public class Player extends Shell {
 						playlistNameField.setText("");
 
 						// Add the new playlist to the playlistCollections
+						//TODO: this is where to impliment the todo above
+						//currently, by adding the playlist to playlistCollections 
+						//statically rather than to the current users instance of palylistcollections, the below line is erasing the json test 
+						//playlist file
 						playlistCollections.addPlaylist(newPlaylist);
 
 						// Debug output
@@ -702,7 +710,16 @@ public class Player extends Shell {
 				 */
 				java.util.List<Playlist> playlists = PlaylistCollections.loadPlaylistsFromJson("UserPlaylistTest.json");
 				for (Playlist playlist : playlists) {
-					((Collection) playlistList).add(playlist.getName());
+					TreeItem newPlaylistItem = new TreeItem(playlistList, SWT.NONE);
+					newPlaylistItem.setText(playlist.getName());
+					
+					java.util.List<Song> songs = playlist.getSongs();
+					for (Song song : songs) {
+						TreeItem songItem = new TreeItem(newPlaylistItem, SWT.NONE);
+						songItem.setText(song.getName());
+						songItem.setData(song);		
+					}
+					//((Collection) playlistList).add(playlist.getName());
 				}
 			}
 		});

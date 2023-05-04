@@ -23,6 +23,11 @@ public class PlaylistCollections {
 
     public void addPlaylist(Playlist playlist) {
         playlists.add(playlist);
+        for (Playlist playlistTest : playlists) {
+        	for (Song song : playlist.getSongs()) {
+        		System.out.println(song.getName());
+        	}
+        }
         updateJsonFile();
     }
 

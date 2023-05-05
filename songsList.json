@@ -476,6 +476,15 @@
       "url": "https://www.youtube.com/embed/Nj6aM9ljdQU?autoplay=1",
       "genre": "Punk",
       "duration": 202
+    },
+    {
+      "artist": "Rick Astley",
+      "album": "Rick Rollin' All of the People",
+      "name": "Never Gonna Give You Up",
+      "yearReleased": 1987,
+      "url": "https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1",
+      "genre": "Dance-pop",
+      "duration": 212
     }
   ]
 }

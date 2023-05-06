@@ -67,7 +67,7 @@ public class Player extends Shell {
 	public static PlaylistCollections currentUserPlaylist; //used to track which playlist has been selected
 	public static Tree playlistList; //treemap of playlists
 	public static loginWindow loginwindow; //object for the login window
-	public Stack<Song> playQueue = new Stack<>(); 
+	public LinkedList<Song> playQueue = new LinkedList<>(); 
 
 
 	public Player(String artist, String album, String name, String url, int yearReleased, String genre, int duration) {
@@ -235,7 +235,8 @@ public class Player extends Shell {
 		lblArtist.setText("Artist:");
 		//label that shows the current artist playing
 		Label lblartistplaying = new Label(composite, SWT.NONE);
-		lblartistplaying.setBounds(10, 38, 307, 25);
+		lblartistplaying.setFont(SWTResourceManager.getFont("Segoe UI", 7, SWT.NORMAL));
+		lblartistplaying.setBounds(10, 38, 192, 25);
 		lblartistplaying.setText(" ");
 		//label that acts as a header for the album
 		Label lblAlbum = new Label(composite, SWT.NONE);
@@ -244,7 +245,8 @@ public class Player extends Shell {
 		lblAlbum.setText("Album:");
 		//label that shows the current album playing
 		Label lblalbumplaying = new Label(composite, SWT.NONE);
-		lblalbumplaying.setBounds(10, 100, 307, 25);
+		lblalbumplaying.setFont(SWTResourceManager.getFont("Segoe UI", 7, SWT.NORMAL));
+		lblalbumplaying.setBounds(10, 100, 192, 25);
 		lblalbumplaying.setText(" ");
 		//label that acts as a header for the song
 		Label lblSong = new Label(composite, SWT.NONE);
@@ -253,7 +255,8 @@ public class Player extends Shell {
 		lblSong.setText("Song:");
 		//label that shows the current song playing
 		Label lblsongplaying = new Label(composite, SWT.NONE);
-		lblsongplaying.setBounds(10, 162, 307, 25);
+		lblsongplaying.setFont(SWTResourceManager.getFont("Segoe UI", 7, SWT.NORMAL));
+		lblsongplaying.setBounds(10, 162, 192, 25);
 		lblsongplaying.setText(" ");
 		//label that acts as a header for the genre
 		Label lblGenre = new Label(composite, SWT.NONE);
@@ -262,15 +265,17 @@ public class Player extends Shell {
 		lblGenre.setBounds(10, 204, 81, 25);
 		//label that shows the current genre playing
 		Label lblgenreplaying = new Label(composite, SWT.NONE);
+		lblgenreplaying.setFont(SWTResourceManager.getFont("Segoe UI", 7, SWT.NORMAL));
 		lblgenreplaying.setText(" ");
-		lblgenreplaying.setBounds(10, 235, 307, 25);
+		lblgenreplaying.setBounds(10, 235, 192, 25);
 		//list of the queue
 		List lstQueue = new List(composite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
-		lstQueue.setBounds(159, 10, 109, 250);
+		lstQueue.setFont(SWTResourceManager.getFont("Segoe UI", 7, SWT.NORMAL));
+		lstQueue.setBounds(208, 38, 109, 201);
 
 		// create the tree widget
 		Tree tree = new Tree(composite, SWT.BORDER);
-		tree.setBounds(332, 10, 181, 229);
+		tree.setBounds(332, 38, 181, 201);
 
 		//ProgressBar used to track location within song
 		ProgressBar progressBar = new ProgressBar(composite, SWT.NONE);
@@ -403,17 +408,29 @@ public class Player extends Shell {
 		Button btnAddToQueue = new Button(composite, SWT.NONE);
 		btnAddToQueue.setBounds(396, 245, 117, 35);
 		btnAddToQueue.setText("Add to Queue");
+		
+		Label lblUpNext = new Label(composite, SWT.NONE);
+		lblUpNext.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		lblUpNext.setBounds(208, 10, 81, 25);
+		lblUpNext.setText("Up Next:");
+		
+		Label lblAllSongs = new Label(composite, SWT.NONE);
+		lblAllSongs.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		lblAllSongs.setBounds(332, 10, 81, 25);
+		lblAllSongs.setText("All Songs:");
 		//event for adding a song to the queue
 		btnAddToQueue.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				playQueue.addElement(songList.get(i));
+				playQueue.add(songList.get(i));
+				updateQueueList(lstQueue);
+				if(playQueue.size()<=1) {
+					UpdateLabels(lblsongplaying, lblalbumplaying,lblartistplaying,lblgenreplaying);
+				}//end if
 			}
 		});//end event to add single song to event
 		//listener event for btnSkip that sets the timer to 0 so the next song immediately loads in the timer method
 		btnSkip.addListener(SWT.Selection, event -> {
-			playQueue.pop(); 
-			UpdateLabels(lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
 			timer = 0;
 			//if statement to check if Queue is empty
 			if (playQueue.isEmpty()) {
@@ -674,7 +691,7 @@ public class Player extends Shell {
 				TreeItem playlistItem = selectedItems[0];
 				for (TreeItem songItem : playlistItem.getItems()) {
 					Song song = (Song) songItem.getData();
-					playQueue.push(song);
+					playQueue.add(song);
 					updateQueueList(lstQueue);
 				}//end if
 			}
@@ -706,7 +723,7 @@ public class Player extends Shell {
 				}
 				
 				//clear the Queue
-				playQueue.removeAllElements();
+				playQueue.clear();
 
 				// Shuffle the list
 				Collections.shuffle(songList);
@@ -824,7 +841,7 @@ public class Player extends Shell {
 					} else {
 						// Stop the timer
 						display.timerExec(-1, this);
-						playQueue.pop();
+						playQueue.poll();
 						// Remove the Browser widget so we can load the second one
 						Control[] controls = Player.this.getChildren();
 						for (Control control : controls) {
@@ -868,8 +885,8 @@ public class Player extends Shell {
 	 */
 	public void updateQueueList(List list) {
 		list.removeAll();
-		for(int i=0; i<playQueue.size(); i++) {
-			list.add(playQueue.elementAt(i).getName());
+		for(int i=1; i<playQueue.size(); i++) {
+			list.add(playQueue.get(i).getName());
 		}//end for loop
 	}//end updateQueueList method
 

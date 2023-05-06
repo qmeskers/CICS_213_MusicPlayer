@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.border.EmptyBorder;
 
 import org.eclipse.swt.SWT;
@@ -28,7 +29,7 @@ public class loginWindow extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField usernameField;
-	private JTextField passwordField;
+	private JPasswordField passwordField;
 
 	/**
 	 * Create the dialog.
@@ -63,7 +64,7 @@ public class loginWindow extends JDialog {
 					passwordBox.add(lblNewLabel_1);
 				}
 				{
-					passwordField = new JTextField();
+					passwordField = new JPasswordField();
 					passwordBox.add(passwordField);
 					passwordField.setColumns(10);
 				}

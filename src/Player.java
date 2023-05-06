@@ -165,7 +165,7 @@ public class Player extends Shell {
 		lastNameField.setText("");
 		lastNameField.setBounds(145, 100, 100, 20);
 
-		Text passwordField = new Text(userTabComposite, SWT.BORDER);
+		Text passwordField = new Text(userTabComposite, SWT.BORDER | SWT.PASSWORD);
 		passwordField.setText("");
 		passwordField.setBounds(145, 130, 100, 20);
 		

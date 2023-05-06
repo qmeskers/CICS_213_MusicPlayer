@@ -31,6 +31,7 @@ public class User {
 		playlistFileName = username + "Playlists.json";
 		usersPlaylist = new PlaylistCollections();
 		Player.userList.add(this);
+		userListIO.updateUserJsonFile();
 	}
 	/**
 	 * @return the firstname

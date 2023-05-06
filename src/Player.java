@@ -202,7 +202,6 @@ public class Player extends Shell {
 				User newUser = new User(firstNameField.getText(), lastNameField.getText(), 
 						emailField.getText(), passwordField.getText(), usernameField.getText(), 0);
 				currentUser = newUser;
-				reloadPlaylists();
 			}
 		});//end create new user button listener
 		
@@ -735,7 +734,7 @@ public class Player extends Shell {
 
 	public static void reloadPlaylists() {
 		if (playlistList != null) {
-			reloadPlaylists();
+			playlistList.clearAll(true);
 		}
 		java.util.List<Playlist> playlists = PlaylistCollections.loadPlaylistsFromJson(currentUser.getPlaylistFileName());
 		for (Playlist playlist : playlists) {

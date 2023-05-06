@@ -1,14 +1,5 @@
 {
-  "songs": [
-	{
-      "artist": "WorkingTest",
-      "album": "WorkingTest",
-      "name": "Test",
-      "yearReleased": 1966,
-      "url": "https://www.youtube.com/embed/MgV-bCxE6ZI?autoplay=1",
-      "genre": "Test",
-      "duration": 208
-    },   
+  "songs": [ 
     {
       "artist": "Major Lazer & DJ Snake",
       "album": "Peace Is the Mission",
@@ -78,8 +69,8 @@
       "name": "Anvil Chorus",
       "genre": "Classical",
       "yearReleased": 1853,
-      "url": "https://www.youtube.com/embed/xyDKezDLGTM?autoplay=1",
-      "duration": 184
+      "url": "https://www.youtube.com/embed/UGtCTH2C8RE?autoplay=1",
+      "duration": 180
     },
 		 {
       "artist": "Shambara",
@@ -476,6 +467,141 @@
       "url": "https://www.youtube.com/embed/Nj6aM9ljdQU?autoplay=1",
       "genre": "Punk",
       "duration": 202
+    },
+		{
+      "artist": "Sphinx",
+      "album": "Here We Are",
+      "name": "Sphere of Life",
+      "yearReleased": 1981,
+      "url": "https://www.youtube.com/embed/BNyh7JMjUKU?autoplay=1",
+      "genre": "Rock",
+      "duration": 460
+    },
+	{
+      "artist": "Sphinx",
+      "album": "Here We Are",
+      "name": "Jane",
+      "yearReleased": 1981,
+      "url": "https://www.youtube.com/embed/5GSqB28iEAg?autoplay=1",
+      "genre": "Rock",
+      "duration": 334
+    },
+	{
+      "artist": "Silent Winter",
+      "album": "The Circles of Hell",
+      "name": "Follow the Night",
+      "yearReleased": 2019,
+      "url": "https://www.youtube.com/embed/KVFIqn5sFkw?autoplay=1",
+      "genre": "Metal",
+      "duration": 246
+    },
+	{
+      "artist": "Eisbrecher",
+      "album": "Die Hölle Muss Warten",
+      "name": "Verrückt",
+      "yearReleased": 2012,
+      "url": "https://www.youtube.com/embed/e-x3cQDIVR8?autoplay=1",
+      "genre": "Metal",
+      "duration": 201
+    },
+	{
+      "artist": "The Scepter",
+      "album": "Shadows in the Tower",
+      "name": "Shadows in the Tower",
+      "yearReleased": 2023,
+      "url": "https://www.youtube.com/embed/KALY_QqC9PI?autoplay=1",
+      "genre": "Metal",
+      "duration": 249
+    },
+	{
+      "artist": "King Gizzard & the Lizard Wizard",
+      "album": "Nonagon Infinity",
+      "name": "People-Vultures",
+      "yearReleased": 2016,
+      "url": "https://www.youtube.com/embed/6f78_Tf4Tdk?autoplay=1",
+      "genre": "Psychedelic Rock",
+      "duration": 285
+    },
+	{
+      "artist": "King Gizzard & the Lizard Wizard",
+      "album": "Flying Microtonal Banana",
+      "name": "Billabong Valley",
+      "yearReleased": 2017,
+      "url": "https://www.youtube.com/embed/It7LM0bPi48?autoplay=1",
+      "genre": "Psychedelic Rock",
+      "duration": 214
+    },
+	{
+      "artist": "Akira Ishikawa & Count Buffalos",
+      "album": "Get Up!",
+      "name": "Get Up!",
+      "yearReleased": 1975,
+      "url": "https://www.youtube.com/embed/CJVNIt_8Fj0?autoplay=1",
+      "genre": "Jazz",
+      "duration": 326
+    },
+	{
+      "artist": "Therion",
+      "album": "Vovin",
+      "name": "Opening",
+      "yearReleased": 1998,
+      "url": "https://www.youtube.com/embed/dYbp8vH_xRQ?autoplay=1",
+      "genre": "Neo-Classical",
+      "duration": 91
+    },
+	{
+      "artist": "Betoken",
+      "album": "The Gate of Nothing",
+      "name": "The Gate of Nothing",
+      "yearReleased": 2004,
+      "url": "https://www.youtube.com/embed/oykWgVWyctM?autoplay=1",
+      "genre": "Metal",
+      "duration": 280
+    },
+	{
+      "artist": "Mystic Prophecy",
+      "album": "Vengeance",
+      "name": "Sky's Burning",
+      "yearReleased": 2001,
+      "url": "https://www.youtube.com/embed/OwOZXlS11YI?autoplay=1",
+      "genre": "Metal",
+      "duration": 405
+    },
+	{
+      "artist": "Gesaffelstein",
+      "album": "Conspiracy PT. II",
+      "name": "Opr",
+      "yearReleased": 2011,
+      "url": "https://www.youtube.com/embed/_XhLIXjUtFg?autoplay=1",
+      "genre": "Electronic",
+      "duration": 234
+    },
+	{
+      "artist": "Justice",
+      "album": "†",
+      "name": "Let there be Light",
+      "yearReleased": 2007,
+      "url": "https://www.youtube.com/embed/_0-tWLi0Kp4?autoplay=1",
+      "genre": "Electronic",
+      "duration": 295
+    },
+	{
+      "artist": "Gesaffelstein",
+      "album": "Variations",
+      "name": "Selected Faces",
+      "yearReleased": 2010,
+      "url": "https://www.youtube.com/embed/NFDABRi7yMw?autoplay=1",
+      "genre": "Electronic",
+      "duration": 431
+    },
+	{
+      "artist": "Ryo Kawasaki",
+      "album": "Juice",
+      "name": "Sometimes",
+      "yearReleased": 1976,
+      "url": "https://www.youtube.com/embed/Ru1cFmflgY4?autoplay=1",
+      "genre": "Jazz",
+      "duration": 282
     }
   ]
 }

@@ -5,26 +5,71 @@
         "songs": []
       },
       {
-        "playlist name": "A second test playlist",
+        "playlist name": "Metal and Jazz mix",
         "songs": [
-          {
-            "artist": "Self Defense Family",
-            "album": "Performative Guilt",
-            "name": "Rest in Peace for the Error Shall Not Be Repeated",
-            "yearReleased": 2019,
-            "url": "https://www.youtube.com/embed/M-G9J64DxA4?autoplay=1",
-            "genre": "Alternative",
-            "duration": 146
-          },
-          {
-            "artist": "Joyce Manor",
-            "album": "Joyce Manor",
-            "name": "Constant Headache",
-            "yearReleased": 2013,
-            "url": "https://www.youtube.com/embed/Kz8W_SL2vyQ?autoplay=1",
-            "genre": "Punk",
-            "duration": 167
-          }
+    {
+		"artist": "Elegy",
+		"album": "State of Mind",
+		"name": "Visual Vortex",
+		"genre": "Metal",
+		"yearReleased": 1997,
+		"url": "https://www.youtube.com/embed/8L496n7hw0M?autoplay=1",
+		"duration": 285
+	},
+    {
+      "artist": "Masayoshi Takanaka",
+      "album": "Rainbow Goblins",
+      "name": "Thunderstorm",
+      "genre": "Fusion",
+      "yearReleased": 1981,
+      "url": "https://www.youtube.com/embed/SHb8GcLfRps?autoplay=1",
+      "duration": 195
+    },
+	 {
+      "artist": "Shambara",
+      "album": "Shambara",
+      "name": "Solid Dance",
+      "genre": "Funk",
+      "yearReleased": 1989,
+      "url": "https://www.youtube.com/embed/MaaBzxdCBuo?autoplay=1",
+      "duration": 353
+    },
+	 {
+      "artist": "Arch Enemy",
+      "album": "Decievers",
+      "name": "Deciever, Deciever",
+      "yearReleased": 2022,
+      "url": "https://www.youtube.com/embed/m_m2oYJkx1A?autoplay=1",
+      "genre": "Metal",
+      "duration": 234
+    },
+	{
+      "artist": "Kaoru Akimoto",
+      "album": "Cologne",
+      "name": "我がままなハイヒール",
+      "yearReleased": 1986,
+      "url": "https://www.youtube.com/embed/FTnJVhGhLS0?autoplay=1",
+      "genre": "Funk",
+      "duration": 303
+    },
+	{
+      "artist": "Eisbrecher",
+      "album": "Die Hölle Muss Warten",
+      "name": "Verrückt",
+      "yearReleased": 2012,
+      "url": "https://www.youtube.com/embed/e-x3cQDIVR8?autoplay=1",
+      "genre": "Metal",
+      "duration": 201
+    },
+	{
+      "artist": "Ryo Kawasaki",
+      "album": "Juice",
+      "name": "Sometimes",
+      "yearReleased": 1976,
+      "url": "https://www.youtube.com/embed/Ru1cFmflgY4?autoplay=1",
+      "genre": "Jazz",
+      "duration": 282
+		}
         ]
       }
     ]

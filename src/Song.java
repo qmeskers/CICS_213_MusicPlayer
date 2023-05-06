@@ -5,13 +5,13 @@
  */
 public class Song {
 	//private fields to hold attributes
-    private String artist;
-    private String album;
-    private String name;
-    private int yearReleased;
-    private String url;
-    private String genre;
-    private int duration;
+    private String artist; //artist name
+    private String album; //album name
+    private String name; //song name
+    private int yearReleased; //release year
+    private String url; //YouTube embed link. All URL variables are structured like "www.youtube.com/embed/ |song id| ?autoplay=1"
+    private String genre; //song genre
+    private int duration; //song duration
     
 
     //constructor

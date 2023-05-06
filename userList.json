@@ -14,7 +14,7 @@
             "First name": "Nick",
             "Last Name": "C",
             "Email": "anyemail@whatever.gov",
-            "Password": "password2",
+            "Password": "password",
             "userID": 1,
             "playlistFileName": "NickCPlaylists.json"
         },
@@ -23,7 +23,7 @@
             "First name": "Timur",
             "Last Name": "A",
             "Email": "words@address.domain",
-            "Password": "password3",
+            "Password": "password",
             "userID": 2,
             "playlistFileName": "TimurAPlaylists.json"
         },
@@ -32,7 +32,7 @@
             "First name": "Quinn",
             "Last Name": "M",
             "Email": "typing@im.typing",
-            "Password": "password4",
+            "Password": "password",
             "userID": 3,
             "playlistFileName": "QuinnMPlaylists.json"
         },
@@ -40,8 +40,8 @@
             "Username": "BrianN",
             "First name": "Brian",
             "Last Name": "N",
-            "Email": "stillhave@toomuch.todo",
-            "Password": "password5",
+            "Email": "Istillhave@toomuch.todo",
+            "Password": "password",
             "userID": 4,
             "playlistFileName": "BrianNPlaylists.json"
         },
@@ -50,9 +50,18 @@
             "First name": "Dominik",
             "Last Name": "T",
             "Email": "tired@of.json",
-            "Password": "password6",
+            "Password": "password",
             "userID": 5,
             "playlistFileName": "DominikTPlaylists.json"
+        },
+        {
+            "Username": "guest",
+            "First name": "guest",
+            "Last Name": "guest",
+            "Email": "almost@done.makingthesefiles",
+            "Password": "guest",
+            "userID": 6,
+            "playlistFileName": ""
         }
     ]
 }

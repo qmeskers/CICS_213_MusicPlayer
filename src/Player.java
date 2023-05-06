@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.http.WebSocket.Listener;
@@ -10,7 +11,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
-
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.browser.Browser;
@@ -34,6 +36,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.wb.swt.SWTResourceManager;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
@@ -44,71 +47,184 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 public class Player extends Shell {
-    /*for the timer we might want to do something like timer += 2 after we set it when the video loads to account for load 
+	/*for the timer we might want to do something like timer += 2 after we set it when the video loads to account for load 
     times in the youtube player so the song doesn't cut off early */
-    private int timer;  //this number will be replaced with the song lengths
-    private int stopTime; //used for pause button
-    private int resumeTime; //used for pausing and resuming
-    private boolean paused = false; //used to stop timer when song is paused
+	private int timer;  //this number will be replaced with the song lengths
+	private int stopTime; //used for pause button
+	private int resumeTime; //used for pausing and resuming
+	private boolean paused = false; //used to stop timer when song is paused
 	private boolean repeat = false;//used tell if song has been repeated
-    private int i = 0; //used to track location in Arraylist
-    private java.util.List<Song> songList = new ArrayList<Song>();// this is the arraylist for the song list-brian
-    private Song song;
-    //TODO: private User currentUser; This will be set by the login button on the User Management tab
-  	//TODO: private PlaylistCollections currentUserPlaylist; This may or may not be needed, tbd
+	private int i = 0; //used to track location in Arraylist
+	private java.util.List<Song> songList = new ArrayList<Song>();// this is the arraylist for the song list-brian
+	public static java.util.List<User> userList = new ArrayList<User>();//this is the list of users
+	private Song song;
+	public static User currentUser;
+	public static PlaylistCollections currentUserPlaylist;
+	public static Tree playlistList;
+	public static loginWindow loginwindow;
 
-    public Player(String artist, String album, String name, String url, int yearReleased, String genre, int duration) {
-        this.song = new Song(artist, album, name, url, yearReleased, genre, duration);
-    }
+	/**
+	 * This class contains the user interface, within that there are four tabs: a music player tab, a create playlist tab, a user management tab, and view song tab
+	 * @author CISC213.N81
+	 *
+	 */
+	public Player(String artist, String album, String name, String url, int yearReleased, String genre, int duration) {
+		this.song = new Song(artist, album, name, url, yearReleased, genre, duration);
+	}
 
-    /**
-     * Launch the application.
-     * @param args
-     */
-    public static void main(String args[]) {
-        try {
-            Display display = Display.getDefault();
-            Player shell = new Player(display);
-            shell.open();
-            shell.layout();
-            while (!shell.isDisposed()) {
-                if (!display.readAndDispatch()) {
-                    display.sleep();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-    }
+	/**
+	 * Launch the application.
+	 * @param args
+	 */
+	public static void main(String args[]) {
+		//before launching the login window, read into memory a list of users and their credentials
+		userListIO.loadUsersFromJson();
+		//before launching the player, launch the login window
+		loginwindow = new loginWindow();
+		try {
+			loginWindow dialog = new loginWindow();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+	}
 
-    /**
-     * Create the shell.
-     * @param display
-     * @throws IOException 
-     * @wbp.parser.constructor
-     */
-    @SuppressWarnings("static-access")
+	/**
+	 * Create the shell.
+	 * @param display
+	 * @throws IOException 
+	 * @wbp.parser.constructor
+	 */
+	@SuppressWarnings("static-access")
 	public Player(Display display) throws IOException {
-        super(display, SWT.SHELL_TRIM);
-        setMaximumSize(new Point(600, 500));
-        setMinimumSize(new Point(600, 500));
-        setSize(709, 474);
-        
-        
-        //adds the icon to the top corner of the window
-        Image play = new Image(display, "play.png");
-		this.setImage(play);
-        
-        TabFolder tabFolder = new TabFolder(this, SWT.NONE);
+		super(display, SWT.SHELL_TRIM);
+		setMaximumSize(new Point(600, 500));
+		setMinimumSize(new Point(600, 500));
+		setSize(709, 474);
+		
+		//Create the tabs
+		TabFolder tabFolder = new TabFolder(this, SWT.NONE);
 		tabFolder.setBounds(2, 0, 576, 457);
 		
+		//Create the composites to hold items within each tab
+		Composite userTabComposite = new Composite(tabFolder, SWT.NONE);
+		Composite composite = new Composite(tabFolder, SWT.NONE);
+		Composite composite_2 = new Composite(tabFolder, SWT.NONE);
+		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
 		
+		//load the playlistList with initial user data from login
+		playlistList = new Tree(composite_1, SWT.BORDER);
+		initialPlaylistLoad();
+
+		//adds the icon to the top corner of the window
+		Image play = new Image(display, "play.png");
+		this.setImage(play);
+
+		
+		
+		//User Management Controls:
+		
+		//TODO: sign out button
+		TabItem userManagementTab = new TabItem(tabFolder, SWT.NONE);
+		userManagementTab.setText("User Management");
+		userManagementTab.setControl(userTabComposite);
+		
+		Label currentUserLabel = new Label(userTabComposite, SWT.NONE);
+		currentUserLabel.setBounds(50, 10, 80, 25);
+
+		Label usernameLabel = new Label(userTabComposite, SWT.NONE);
+		usernameLabel.setText("Username: ");
+		usernameLabel.setBounds(50, 40, 80, 25);
+
+		Label firstNameLabel = new Label(userTabComposite, SWT.NONE);
+		firstNameLabel.setText("First Name: ");
+		firstNameLabel.setBounds(50, 70, 80, 25);
+
+		Label lastNameLabel = new Label(userTabComposite, SWT.NONE);
+		lastNameLabel.setText("Last Name: ");
+		lastNameLabel.setBounds(50, 100, 80, 25);
+
+		Label passwordLabel = new Label(userTabComposite, SWT.NONE);
+		passwordLabel.setText("Password: ");
+		passwordLabel.setBounds(50, 130, 80, 25);
+		
+		Label emailLabel = new Label(userTabComposite, SWT.NONE);
+		emailLabel.setText("Email: ");
+		emailLabel.setBounds(50, 160, 80, 25);
+
+		Text usernameField = new Text(userTabComposite, SWT.BORDER);
+		usernameField.setText("");
+		usernameField.setBounds(145, 40, 100, 20);
+
+		Text firstNameField = new Text(userTabComposite, SWT.BORDER);
+		firstNameField.setText("");
+		firstNameField.setBounds(145, 70, 100, 20);
+
+		Text lastNameField = new Text(userTabComposite, SWT.BORDER);
+		lastNameField.setText("");
+		lastNameField.setBounds(145, 100, 100, 20);
+
+		Text passwordField = new Text(userTabComposite, SWT.BORDER);
+		passwordField.setText("");
+		passwordField.setBounds(145, 130, 100, 20);
+		
+		Text emailField = new Text(userTabComposite, SWT.BORDER);
+		emailField.setText("");
+		emailField.setBounds(145, 160, 100, 20);
+
+		/**
+		 * The create new user button first verifies that all required fields are filled out, 
+		 * then verifies that the username is available, 
+		 * and if so it creates a new user.
+		 * 
+		 * If those checks are failed then a popup comes up with instructions for how to proceed.
+		 * 
+		 * A user file is also created for the new user here
+		 */
+		Button createUserButton = new Button(userTabComposite, SWT.NONE);
+		createUserButton.setText("Create User");
+		createUserButton.setBounds(50, 190, 85, 25);	
+		createUserButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if (usernameField.getText().isBlank() || firstNameField.getText().isBlank() || 
+						lastNameField.getText().isBlank() || passwordField.getText().isBlank() || emailField.getText().isBlank()) {
+					JOptionPane.showMessageDialog(null, "Please fill out all fields to continue");
+				}
+				String fileName = usernameField.getText() + "Playlists.json";
+				createNewUserFile(fileName);
+				//test whether username is available (other fields do not need to be unique)
+				for (User user : userList) {
+					if (usernameField.getText().equals(user.getUsername())) {
+						JOptionPane.showMessageDialog(null, "This username is not available");
+					}
+				}
+				User newUser = new User(firstNameField.getText(), lastNameField.getText(), 
+						emailField.getText(), passwordField.getText(), usernameField.getText(), 0);
+				currentUser = newUser;
+				reloadPlaylists();
+			}
+		});//end create new user button listener
+		
+		/**
+		 * Sign out button: This removes the current user , reloads playlists, and re-prompts for sign in. 
+		 * It does so by closing the program and re-calling main
+		 */
+		Button signoutButton = new Button(userTabComposite, SWT.NONE);
+		signoutButton.setText("Sign Out");
+		signoutButton.setBounds(135, 190, 85, 25);
+		signoutButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				dispose();
+				Player.main(null);
+			}
+		});
+
 		//Now playing tab controls:
 		TabItem playerTab = new TabItem(tabFolder, SWT.NONE);
 		playerTab.setText("Now Playing");
+
 		
-		Composite composite = new Composite(tabFolder, SWT.NONE);
 		playerTab.setControl(composite);
 		composite.setLayout(null);
 
@@ -138,17 +254,17 @@ public class Player extends Shell {
 		Label lblsongplaying = new Label(composite, SWT.NONE);
 		lblsongplaying.setBounds(10, 162, 307, 25);
 		lblsongplaying.setText(" ");
-		
+
 		Label lblGenre = new Label(composite, SWT.NONE);
 		lblGenre.setText("Genre:");
 		lblGenre.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		lblGenre.setBounds(10, 204, 81, 25);
-		
+
 		Label lblgenreplaying = new Label(composite, SWT.NONE);
 		lblgenreplaying.setText(" ");
 		lblgenreplaying.setBounds(10, 235, 307, 25);
-		
-		
+
+
 		// create the tree widget
 		Tree tree = new Tree(composite, SWT.BORDER);
 		tree.setBounds(333, 31, 181, 229);
@@ -158,12 +274,12 @@ public class Player extends Shell {
 		progressBar.setBounds(35, 301, 478, 19);
 		progressBar.setMinimum(0);
 
-		
+
 		//button used to restart the current song
 		Button btnRestart = new Button(composite, SWT.NONE);
 		btnRestart.setBounds(132, 349, 91, 39);
 		btnRestart.setText("Restart");
-		
+
 		btnRestart.addListener(SWT.Selection, event -> {
 			Control[] controls = Player.this.getChildren();
 			for (Control control : controls) {
@@ -177,8 +293,8 @@ public class Player extends Shell {
 			timer = songList.get(i).getDuration();
 
 		});//end btnRestart event
-		
-		
+
+
 		//button used to start playing the playlist
 		Button btnPlay = new Button(composite, SWT.NONE);
 		btnPlay.setBounds(229, 349, 91, 39);
@@ -192,8 +308,8 @@ public class Player extends Shell {
 			startTimer(display, progressBar);
 			UpdateLabels(lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
 		});//end btnPlay event
-		
-		
+
+
 		//button used to repeat the current song once it's finished playing
 		Button btnRepeat = new Button(composite, SWT.NONE);
 		btnRepeat.setBounds(35, 348, 91, 40);
@@ -210,7 +326,7 @@ public class Player extends Shell {
 			}
 			songList.add(i+1, songList.get(i));
 		});//end btnRepeat event
-	
+
 		/*
 		 * This listens to the tree and when a song is pressed, it will chenge the index(i) to the location of 
 		 * the song in the songList or the json file to play that song
@@ -223,15 +339,15 @@ public class Player extends Shell {
 
 				// Get the Song object associated with the selected item
 				Song selectedSong = (Song) selectedItem.getData();
-				
+
 				//looks for the index of the song you click and sets the current index as its number
 				for(int j = 0; j < songList.size(); j++) {
 					if(songList.get(j).equals(selectedSong)) {
 						i = j;
 					}
 				}
-				
-				 //Update the currentSong URL if a song is selected
+
+				//Update the currentSong URL if a song is selected
 				Control[] controls = Player.this.getChildren();
 				if (selectedSong != null) {
 					for (Control control : controls) {
@@ -297,7 +413,7 @@ public class Player extends Shell {
 
 		// load the songs from the JSON file
 		songList = Songs.loadSongsFromJson("songsList.json");
-		
+
 
 		// create the hashmap to store songs by genre
 		HashMap<String, ArrayList<Song>> songsByGenre = new HashMap<>();
@@ -325,71 +441,10 @@ public class Player extends Shell {
 		}
 		createContents(); 
 		PlaylistCollections playlistCollections = new PlaylistCollections();
-		//add listener to play the selected playlist from the list
 
-		//User Management Controls:
-		TabItem userManagementTab = new TabItem(tabFolder, SWT.NONE);
-		userManagementTab.setText("User Management");
-
-		Composite userTabComposite = new Composite(tabFolder, SWT.NONE);
-		userManagementTab.setControl(userTabComposite);
-
-		Label currentUserLabel = new Label(userTabComposite, SWT.NONE);
-		currentUserLabel.setText("Current User: ");//Regularly Updated Label Text
-		currentUserLabel.setBounds(50, 10, 150, 25);
-
-		Label usernameLabel = new Label(userTabComposite, SWT.NONE);
-		usernameLabel.setText("Username: ");
-		usernameLabel.setBounds(50, 40, 80, 25);
-
-		Label firstNameLabel = new Label(userTabComposite, SWT.NONE);
-		firstNameLabel.setText("First Name: ");
-		firstNameLabel.setBounds(50, 70, 80, 25);
-
-		Label lastNameLabel = new Label(userTabComposite, SWT.NONE);
-		lastNameLabel.setText("Last Name: ");
-		lastNameLabel.setBounds(50, 100, 80, 25);
-
-		Label passwordLabel = new Label(userTabComposite, SWT.NONE);
-		passwordLabel.setText("Password: ");
-		passwordLabel.setBounds(50, 130, 80, 25);
-
-		Text usernameField = new Text(userTabComposite, SWT.BORDER);
-		usernameField.setText("");
-		usernameField.setBounds(145, 40, 100, 20);
-
-		Text firstNameField = new Text(userTabComposite, SWT.BORDER);
-		firstNameField.setText("");
-		firstNameField.setBounds(145, 70, 100, 20);
-
-		Text lastNameField = new Text(userTabComposite, SWT.BORDER);
-		lastNameField.setText("");
-		lastNameField.setBounds(145, 100, 100, 20);
-
-		Text passwordField = new Text(userTabComposite, SWT.BORDER);
-		passwordField.setText("");
-		passwordField.setBounds(145, 130, 100, 20);
-
-		Button loginButton = new Button(userTabComposite, SWT.NONE);
-		loginButton.setText("Login");
-		loginButton.setBounds(50, 170, 80, 25);
-
-		Button createUserButton = new Button(userTabComposite, SWT.NONE);
-		createUserButton.setText("Create User");
-		createUserButton.setBounds(160, 170, 85, 25);	
-		createUserButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				String fileName = usernameField.getText() + "Playlists.json";
-				createNewUserFile(fileName);
-				//TODO: add constructor for new user
-			}
-		});
-		
 		//Playlist Builder Tab Controls:
 		TabItem playlistBuilderTab = new TabItem(tabFolder, SWT.NONE);
 		playlistBuilderTab.setText("Create Playlists");
-
-		Composite composite_2 = new Composite(tabFolder, SWT.NONE);
 		playlistBuilderTab.setControl(composite_2);
 
 		List allSongs = new List(composite_2, SWT.BORDER | SWT.V_SCROLL);
@@ -421,7 +476,7 @@ public class Player extends Shell {
 		Button leftArrow = new Button(composite_2, SWT.NONE);
 		leftArrow.setText("<");
 		leftArrow.setBounds(267, 170, 35, 35);
-		
+
 		Label playlistNameLabel = new Label(composite_2, SWT.NONE);
 		playlistNameLabel.setText("Playlist Name: ");
 		playlistNameLabel.setBounds(360, 10, 110, 26);
@@ -478,17 +533,15 @@ public class Player extends Shell {
 		Button createPlaylistButton = new Button(composite_2, SWT.NONE);
 		createPlaylistButton.setText("Create Playlist");
 		createPlaylistButton.setBounds(225, 279, 120, 35);
-		
+
 		//Playlist tab controls:
 		TabItem playlistTab = new TabItem(tabFolder, SWT.NONE);
 		playlistTab.setText("Playlists");
 
-		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
 		playlistTab.setControl(composite_1);
 
-		Tree playlistList = new Tree(composite_1, SWT.BORDER);
 		playlistList.setBounds(220, 70, 150, 150);
-		
+
 		Label playlistListLabel = new Label(composite_1, SWT.NONE);
 		playlistListLabel.setText("Playlists");
 		playlistListLabel.setBounds(270, 25, 150, 30);
@@ -496,15 +549,15 @@ public class Player extends Shell {
 		Button playButton = new Button(composite_1, SWT.NONE);
 		playButton.setText("Play Playlist");
 		playButton.setBounds(300, 279, 105, 35);
-		
+
 		Button deleteButton = new Button(composite_1, SWT.NONE);
 		deleteButton.setText("Delete");
 		deleteButton.setBounds(180, 279, 105, 35);
-		
+
 		Button shuffleButton = new Button(composite_1, SWT.NONE);
 		shuffleButton.setText("Shuffle");
 		shuffleButton.setBounds(420, 279, 105, 35);
-		
+
 		Button skipButton = new Button(composite_1, SWT.NONE);
 		skipButton.setText("Skip Song");
 		skipButton.setBounds(50, 279, 105, 35);
@@ -514,56 +567,27 @@ public class Player extends Shell {
 		 * it then repopulates the playlistList with the new user playlists
 		 */
 		deleteButton.addSelectionListener(new SelectionAdapter() {
-		    @SuppressWarnings("unchecked")
-		    public void widgetSelected(SelectionEvent e) {
-		        TreeItem[] currentSelection = playlistList.getSelection();
-		        if (currentSelection.length > 0) {
-		            TreeItem selectedPlaylist = currentSelection[0];
-		            String playlistName = selectedPlaylist.getText();
-		            //TODO: get rid of this first line below, replace it with an iteration over the currentUserPlaylist
-		            //TODO: probably add a line for file output filename creation user.getUsername + "playlist.json" or something
-		            java.util.List<Playlist> playlists = PlaylistCollections.loadPlaylistsFromJson("UserPlaylistTest.json");
-		            JSONObject newUserPlaylistsJson = new JSONObject();
-		            JSONArray playlistsJsonArray = new JSONArray();
-		            for (Playlist playlist : playlists) {
-		                if (playlist.getName().equalsIgnoreCase(playlistName)) {
-		                    //TODO: this will become a call to removePlaylist method in currentuserplaylist once user class is done
-		                    //at that time, get rid of else as that method is contained in the other class
-		                    continue;
-		                } else {
-		                    JSONObject currentPlaylistJson = new JSONObject();
-		                    currentPlaylistJson.put("playlist name", playlist.getName());
-		                    JSONArray songJsonArray = new JSONArray();
-		                    for (Song song : playlist.getSongs()) {
-		                        JSONObject currentSongJson = new JSONObject();
-		                        currentSongJson.put("artist", song.getArtist());
-		                        currentSongJson.put("album",  song.getAlbum());
-		                        currentSongJson.put("name", song.getName());
-		                        currentSongJson.put("yearReleased", song.getYearReleased());
-		                        currentSongJson.put("url", song.getUrl());
-		                        currentSongJson.put("genre", song.getGenre());
-		                        currentSongJson.put("duration", song.getDuration());
-		                        songJsonArray.add(currentSongJson);
-		                    }
-		                    currentPlaylistJson.put("songs", songJsonArray);
-		                    playlistsJsonArray.add(currentPlaylistJson);
-		                }                   
-		                //sampleObject.put("playlists", *need to make the playlist first*);
-		            }                
-		            newUserPlaylistsJson.put("playlists", playlistsJsonArray);
-		            try {
-		                Files.write(Paths.get("UserPlaylistTest.json"), newUserPlaylistsJson.toJSONString().getBytes());
-		            } catch (IOException e1) {
-		                e1.printStackTrace();
-		            }
-		            selectedPlaylist.dispose();
-		        }
-		    }
-		});
-		
-		//Buttons:
+			public void widgetSelected(SelectionEvent e) {
+				TreeItem[] currentSelection = playlistList.getSelection();
+				if (currentSelection.length > 0) {
+					TreeItem selectedPlaylist = currentSelection[0];
+					String playlistName = selectedPlaylist.getText();
+					java.util.List<Playlist> playlists = PlaylistCollections.loadPlaylistsFromJson(currentUser.getPlaylistFileName());
+					JSONObject newUserPlaylistsJson = new JSONObject();
+					JSONArray playlistsJsonArray = new JSONArray();
+					for (Playlist playlist : playlists) {
+						if (playlist.getName().equalsIgnoreCase(playlistName)) {
+							currentUser.getUsersPlaylist().removePlaylist(playlist);
+						} else {
+							currentUser.getUsersPlaylist().updateJsonFile();
+						}
+					}
+					selectedPlaylist.dispose();
+				}
+			}
+		});//end delete playlist button listener
+
 		//creates play list and adds it to the list on playlist tab
-		//TODO: make sure this is tied to the user's playlistCollections field/object so that the json file for that user is updated correctly
 		createPlaylistButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -608,12 +632,8 @@ public class Player extends Shell {
 						songsToAdd.removeAll();
 						playlistNameField.setText("");
 
-						// Add the new playlist to the playlistCollections
-						//TODO: this is where to impliment the todo above
-						//currently, by adding the playlist to playlistCollections 
-						//statically rather than to the current users instance of palylistcollections, the below line is erasing the json test 
-						//playlist file
-						playlistCollections.addPlaylist(newPlaylist);
+						// Add the new playlist to the playlistCollections for the current user
+						currentUser.getUsersPlaylist().addPlaylist(newPlaylist);
 
 						// Debug output
 						System.out.println("Playlist '" + newPlaylist.getName() + "' added with songs:");
@@ -629,106 +649,106 @@ public class Player extends Shell {
 				}
 			}
 		});
-		
-		
+
+
 
 		playButton.addListener(SWT.Selection, event -> {
-		    TreeItem[] selectedItems = playlistList.getSelection();
-		    if (selectedItems.length > 0) {
-		        // Only play songs if a playlist is selected
-		        ArrayList<Song> songs = new ArrayList<>();
-		        TreeItem playlistItem = selectedItems[0];
-		        for (TreeItem songItem : playlistItem.getItems()) {
-		            Song song = (Song) songItem.getData();
-		            songs.add(song);
-		        }
-		        if (!songs.isEmpty()) {
-		            Browser browser = new Browser(getShell(), SWT.NONE);
-		            ProgressBar progress = new ProgressBar(getShell(), SWT.NONE);
-		            Queue<Song> songQueue = new LinkedList<>(songs);
-		            startTimerPlaylist(getDisplay(), progress, songQueue, browser);
-		        }
-		    }
-		});
-	
-		shuffleButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent event) {
-			   // Get the selected playlist
-			   TreeItem[] selection = playlistList.getSelection();
-			   if (selection.length == 0) {
-				  // No playlist has been selected, do nothing
-				   MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
-					 messageBox.setText("No play list Selected.");
-					 messageBox.setMessage("Please select a play list to shuffle");
-					 messageBox.open();
-				  return;
-			   }
-			   TreeItem selectedPlaylist = selection[0];
-			   
-			   // Get the child items (songs) of the selected playlist
-			   TreeItem[] songs = selectedPlaylist.getItems();
-			   
-			   // Create a list to hold the song objects
-			   ArrayList<Song> songList = new ArrayList<Song>();
-			   
-			   // Add each song object to the list
-			   for (TreeItem song : songs) {
-				  songList.add((Song) song.getData());
-			   }
-			   
-			   // Shuffle the list
-			   Collections.shuffle(songList);
-			   
-			   // Clear the existing child items from the selected playlist
-			   selectedPlaylist.removeAll();
-			   
-			   // Add the shuffled songs back to the playlist as child items
-			   for (Song song : songList) {
-				  TreeItem songItem = new TreeItem(selectedPlaylist, SWT.NONE);
-				  songItem.setText(song.getName());
-				  songItem.setData(song);
-			   }
-			   
-			   // Update the tree widget
-			   tree.update();
-			}
-		 });
-		//TODO add skip song in play list functionality
-		//User Management Tab Login Button Listener:
-		//TODO: update the below per block comment
-		loginButton.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				currentUserLabel.setText("Current User: " + usernameField.getText());
-				//TODO: set currentUserPlaylist to the PlaylistCollections that is a field for the User object
-				reloadPlaylists();
-			}
-
-			public void reloadPlaylists() {
-				playlistList.removeAll();
-				/**
-				 * THIS WILL HAVE TO CHANGE TO PULL A NEW FILENAME FOR EACH NEW USER -- BUT THE TEST WORKS!
-				 */
-				java.util.List<Playlist> playlists = PlaylistCollections.loadPlaylistsFromJson("UserPlaylistTest.json");
-				for (Playlist playlist : playlists) {
-					TreeItem newPlaylistItem = new TreeItem(playlistList, SWT.NONE);
-					newPlaylistItem.setText(playlist.getName());
-					
-					java.util.List<Song> songs = playlist.getSongs();
-					for (Song song : songs) {
-						TreeItem songItem = new TreeItem(newPlaylistItem, SWT.NONE);
-						songItem.setText(song.getName());
-						songItem.setData(song);		
-					}
-					//((Collection) playlistList).add(playlist.getName());
+			TreeItem[] selectedItems = playlistList.getSelection();
+			if (selectedItems.length > 0) {
+				// Only play songs if a playlist is selected
+				ArrayList<Song> songs = new ArrayList<>();
+				TreeItem playlistItem = selectedItems[0];
+				for (TreeItem songItem : playlistItem.getItems()) {
+					Song song = (Song) songItem.getData();
+					songs.add(song);
+				}
+				if (!songs.isEmpty()) {
+					Browser browser = new Browser(getShell(), SWT.NONE);
+					ProgressBar progress = new ProgressBar(getShell(), SWT.NONE);
+					Queue<Song> songQueue = new LinkedList<>(songs);
+					startTimerPlaylist(getDisplay(), progress, songQueue, browser);
 				}
 			}
 		});
 
-    }
+		shuffleButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				// Get the selected playlist
+				TreeItem[] selection = playlistList.getSelection();
+				if (selection.length == 0) {
+					// No playlist has been selected, do nothing
+					MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
+					messageBox.setText("No play list Selected.");
+					messageBox.setMessage("Please select a play list to shuffle");
+					messageBox.open();
+					return;
+				}
+				TreeItem selectedPlaylist = selection[0];
 
-	private void populateTree(Tree playlistList) {
-		// TODO Auto-generated method stub
-		
+				// Get the child items (songs) of the selected playlist
+				TreeItem[] songs = selectedPlaylist.getItems();
+
+				// Create a list to hold the song objects
+				ArrayList<Song> songList = new ArrayList<Song>();
+
+				// Add each song object to the list
+				for (TreeItem song : songs) {
+					songList.add((Song) song.getData());
+				}
+
+				// Shuffle the list
+				Collections.shuffle(songList);
+
+				// Clear the existing child items from the selected playlist
+				selectedPlaylist.removeAll();
+
+				// Add the shuffled songs back to the playlist as child items
+				for (Song song : songList) {
+					TreeItem songItem = new TreeItem(selectedPlaylist, SWT.NONE);
+					songItem.setText(song.getName());
+					songItem.setData(song);
+				}
+
+				// Update the tree widget
+				tree.update();
+			}
+		});
+	}
+
+	//TODO: comment
+	private void initialPlaylistLoad() {
+		if (!(currentUser.getUsername().equals("guest"))) {
+			java.util.List<Playlist> playlists = PlaylistCollections.loadPlaylistsFromJson(currentUser.getPlaylistFileName());
+			for (Playlist playlist : playlists) {
+				TreeItem newPlaylistItem = new TreeItem(playlistList, 0);
+				newPlaylistItem.setText(playlist.getName());
+				
+				java.util.List<Song> songs = playlist.getSongs();
+				for (Song song : songs) {
+					TreeItem songItem = new TreeItem(newPlaylistItem, SWT.NONE);
+					songItem.setText(song.getName());
+					songItem.setData(song);		
+				}	
+			}
+		}		
+	}
+
+	public static void reloadPlaylists() {
+		if (playlistList != null) {
+			reloadPlaylists();
+		}
+		java.util.List<Playlist> playlists = PlaylistCollections.loadPlaylistsFromJson(currentUser.getPlaylistFileName());
+		for (Playlist playlist : playlists) {
+			TreeItem newPlaylistItem = new TreeItem(playlistList, SWT.NONE);
+			newPlaylistItem.setText(playlist.getName());
+
+			java.util.List<Song> songs = playlist.getSongs();
+			for (Song song : songs) {
+				TreeItem songItem = new TreeItem(newPlaylistItem, SWT.NONE);
+				songItem.setText(song.getName());
+				songItem.setData(song);		
+			}
+		}
 	}
 
 	protected void createNewUserFile(String fileName) {
@@ -736,7 +756,7 @@ public class Player extends Shell {
     	FileWriter fileWriter;
     	try {
     		fileWriter = new FileWriter(newUserFile, false);
-    		fileWriter.write("\n");
+    		fileWriter.write("{\n\"playlists\":[\n{\"playlist name\": \"Liked Songs\",\n\"songs\": []\n}]}");
     	} catch (IOException e) {
     		e.printStackTrace();
     	}
@@ -843,8 +863,6 @@ public class Player extends Shell {
 			}//end if
 		}//end StartTimer method
 	
-	
-	
 	public void UpdateLabels(Label song, Label album, Label artist, Label genre) {
 		song.setText(songList.get(i).getName());
 		album.setText(songList.get(i).getAlbum());
@@ -858,4 +876,9 @@ public class Player extends Shell {
 		// Disable the check that prevents subclassing of SWT components
 	}
 	
+	public static void getUserFromLogin(User user) {
+		currentUser = user;
+		currentUserPlaylist = currentUser.getUsersPlaylist();
+		loginwindow.dispose();
+	}
 }

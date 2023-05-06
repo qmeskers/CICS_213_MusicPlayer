@@ -1,4 +1,8 @@
-
+/**
+ * This class contains elements of the song object, song objects will be loaded into playlists
+ * @author CISC213.N81
+ *
+ */
 public class Song {
 	//private fields to hold attributes
     private String artist;

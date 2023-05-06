@@ -1,0 +1,31 @@
+{
+    "playlists":[
+      {
+        "playlist name": "Liked Songs",
+        "songs": []
+      },
+      {
+        "playlist name": "A second test playlist",
+        "songs": [
+          {
+            "artist": "Self Defense Family",
+            "album": "Performative Guilt",
+            "name": "Rest in Peace for the Error Shall Not Be Repeated",
+            "yearReleased": 2019,
+            "url": "https://www.youtube.com/embed/M-G9J64DxA4?autoplay=1",
+            "genre": "Alternative",
+            "duration": 146
+          },
+          {
+            "artist": "Joyce Manor",
+            "album": "Joyce Manor",
+            "name": "Constant Headache",
+            "yearReleased": 2013,
+            "url": "https://www.youtube.com/embed/Kz8W_SL2vyQ?autoplay=1",
+            "genre": "Punk",
+            "duration": 167
+          }
+        ]
+      }
+    ]
+  }

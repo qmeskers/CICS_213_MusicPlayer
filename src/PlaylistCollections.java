@@ -1,5 +1,8 @@
-/*
- * Class to keep the list of playlist objects in them
+/**
+ *  Class to keep the list of playlist objects in them
+ *  The file i/o methods for collections of playlists used by both system and user 
+ *  are contained in this class
+ *  @auhor CISC213.N81
  */
 import java.io.FileReader;
 import java.io.IOException;
@@ -32,7 +35,7 @@ public class PlaylistCollections {
     }
 
     @SuppressWarnings("unchecked")
-	private void updateJsonFile() {
+	public void updateJsonFile() {
     	JSONObject newUserPlaylistsJson = new JSONObject();
     	JSONArray playlistsJsonArray = new JSONArray();
     	for (Playlist playlist : playlists) {

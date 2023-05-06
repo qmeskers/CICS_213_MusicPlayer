@@ -6,10 +6,17 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+/**
+ * This class loads the songs from the songlist.json file and loads them into one large ArrayList 
+ * 
+ * Contains an unused method to add a song to the songlist.json file
+ * @author CISC213.N81
+ *
+ */
+
 public class Songs extends Song {
 	 public Songs(String artist, String album, String name, String url, int yearReleased, String genre, int duration) {
 		super(artist, album, name, url, yearReleased, genre, duration);
-		// TODO Auto-generated constructor stub
 	}
 
 	// Method that loads songs from a JSON file and returns a list of Song objects

@@ -9,7 +9,10 @@ public class User {
 	String lastname; //User's last name
 	String email; //User's email
 	String password; //User's password *optional
+	String username;
 	int userID;
+	String playlistFileName; //fileName for user's playlist
+	PlaylistCollections usersPlaylist; //user's collection of playlists
 	/**
 	 * @param firstname
 	 * @param lastname
@@ -17,13 +20,18 @@ public class User {
 	 * @param password
 	 * @param userID
 	 */
-	public User(String firstname, String lastname, String email, String password, int userID) {
+	public User(String firstname, String lastname, String email, String password, String username, int userID) {
 		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.email = email;
 		this.password = password;
+		this.username = username;
 		this.userID = userID;
+		playlistFileName = username + "Playlists.json";
+		usersPlaylist = new PlaylistCollections();
+		Player.userList.add(this);
+		userListIO.updateUserJsonFile();
 	}
 	/**
 	 * @return the firstname
@@ -42,6 +50,24 @@ public class User {
 	 */
 	public String getLastname() {
 		return lastname;
+	}
+	/**
+	 * @return the username
+	 */
+	public String getUsername() {
+		return username;
+	}
+	/**
+	 * @return the name of this user's playlist file
+	 */
+	public String getPlaylistFileName() {
+		return playlistFileName;
+	}
+	/**
+	 * @return the users playlist collection
+	 */
+	public PlaylistCollections getUsersPlaylist() {
+		return usersPlaylist;
 	}
 	/**
 	 * @param lastname the lastname to set
@@ -85,5 +111,22 @@ public class User {
 	public void setUserID(int userID) {
 		this.userID = userID;
 	}
-	
+	/**
+	 * @param username the username to set
+	 */
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	/**
+	 * @param playlistFileName the file name to set
+	 */
+	public void setPlaylistFileName(String playlistFileName) {
+		this.playlistFileName = playlistFileName;
+	}
+	/**
+	 * @param usersPlaylist the PlaylistCollection for this user
+	 */
+	public void setUsersPlaylist(PlaylistCollections usersPlaylist) {
+		this.usersPlaylist = usersPlaylist;
+	}
 }

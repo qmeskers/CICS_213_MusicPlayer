@@ -1,14 +1,5 @@
 {
-  "songs": [
-	{
-      "artist": "WorkingTest",
-      "album": "WorkingTest",
-      "name": "Test",
-      "yearReleased": 1966,
-      "url": "https://www.youtube.com/embed/MgV-bCxE6ZI?autoplay=1",
-      "genre": "Test",
-      "duration": 208
-    },   
+  "songs": [ 
     {
       "artist": "Major Lazer & DJ Snake",
       "album": "Peace Is the Mission",
@@ -78,7 +69,7 @@
       "name": "Anvil Chorus",
       "genre": "Classical",
       "yearReleased": 1853,
-      "url": "https://www.youtube.com/embed/UGtCTH2C8RE?autoplay=1",
+      "url": "https://www.youtube.com/embed/xyDKezDLGTM?autoplay=1",
       "duration": 184
     },
 		 {
@@ -191,7 +182,7 @@
     },
 	{
       "artist": "The Boswell Sisters",
-      "album": "The Boswell Sisters",
+      "album": "The Boswell Sisters Collection",
       "name": "Old Yazoo",
       "yearReleased": 1932,
       "url": "https://www.youtube.com/embed/lEljQnL3UI8?autoplay=1",
@@ -341,8 +332,143 @@
       "url": "https://www.youtube.com/embed/Q34dZ6VmI04?autoplay=1",
       "genre": "Alternative",
       "duration": 258
-    }
-	{
+    },
+    {
+      "artist": "Jimmie Davis",
+      "album": "Jimmie Davis",
+      "name": "My Dixie Sweetheart",
+      "yearReleased": 1930,
+      "url": "https://www.youtube.com/embed/V7NZF0VeVZA?autoplay=1",
+      "genre": "Country",
+      "duration": 180
+    },
+    {
+      "artist": "Jimmie Davis",
+      "album": "Jimmie Davis",
+      "name": "A Woman's Blues",
+      "yearReleased": 1930,
+      "url": "https://www.youtube.com/embed/lJmeED7s1uk?autoplay=1",
+      "genre": "Country",
+      "duration": 188
+    },
+    {
+      "artist": "Jimmie Davis",
+      "album": "Jimmie Davis",
+      "name": "Where The Old Red River Flows",
+      "yearReleased": 1930,
+      "url": "https://www.youtube.com/embed/eqwTl0_sa4Q?autoplay=1",
+      "genre": "Country",
+      "duration": 184
+    },
+    {
+      "artist": "The Blue Sky Boys",
+      "album": "The Blue Sky Boys",
+      "name": "No Home",
+      "yearReleased": 1936,
+      "url": "https://www.youtube.com/embed/-JB1Ea7Wnhk?autoplay=1",
+      "genre": "Country",
+      "duration": 191
+    },
+    {
+      "artist": "The Boswell Sisters",
+      "album": "The Boswell Sisters Collection",
+      "name": "The Music Goes 'Round and Around",
+      "yearReleased": 1936,
+      "url": "https://www.youtube.com/embed/11rchzXPU6g?autoplay=1",
+      "genre": "Jazz",
+      "duration": 190
+    },
+    {
+      "artist": "mewithoutYou",
+      "album": "Brother, Sister",
+      "name": "In a Sweater Poorly Knit",
+      "yearReleased": 2006,
+      "url": "https://www.youtube.com/embed/Pi9R7vZh-Bc?autoplay=1",
+      "genre": "Alternative",
+      "duration": 284
+    },
+    {
+      "artist": "Single Mothers",
+      "album": "Negative Qualities",
+      "name": "Half Lit",
+      "yearReleased": 2014,
+      "url": "https://www.youtube.com/embed/m8XbNmxgYWQ?autoplay=1",
+      "genre": "Alternative",
+      "duration": 148
+    },
+    {
+      "artist": "Propagandhi",
+      "album": "Less Talk, More Rock",
+      "name": "Rio De San Atlanta, Manitoba",
+      "yearReleased": 1996,
+      "url": "https://www.youtube.com/embed/bNVFewWAcFk?autoplay=1",
+      "genre": "Punk",
+      "duration": 40
+    },
+    {
+      "artist": "Ben Quad",
+      "album": "You're Part of It",
+      "name": "You're Part of It",
+      "yearReleased": 2022,
+      "url": "https://www.youtube.com/embed/Rz0BON9d_7g?autoplay=1",
+      "genre": "Alternative",
+      "duration": 177
+    },
+    {
+      "artist": "Bay Faction",
+      "album": "Bay Faction",
+      "name": "Beach Book",
+      "yearReleased": 2015,
+      "url": "https://www.youtube.com/embed/e6ayfPEurSU?autoplay=1",
+      "genre": "Alternative",
+      "duration": 191
+    },
+    {
+      "artist": "Король и Шут",
+      "album": "Король и Шут",
+      "name": "Лесник",
+      "yearReleased": 1997,
+      "url": "https://www.youtube.com/embed/i7R6_7e10QM?autoplay=1",
+      "genre": "Punk",
+      "duration": 210
+    },
+    {
+      "artist": "The Boswell Sisters",
+      "album": "Fabulous Thirties",
+      "name": "I found a million dollar baby",
+      "yearReleased": 1931,
+      "url": "https://www.youtube.com/embed/Olnqqo5ehCk?autoplay=1",
+      "genre": "Jazz",
+      "duration": 188
+    },
+    {
+      "artist": "Sisyfuss",
+      "album": "you’ll find it in the end EP",
+      "name": "Cleric Girl",
+      "yearReleased": 2017,
+      "url": "https://www.youtube.com/embed/kLefiQVqM4Y?autoplay=1",
+      "genre": "Alternative",
+      "duration": 132
+    },
+    {
+      "artist": "Boxcar Willie",
+      "album": "you’ll find it in the end EP",
+      "name": "Gotta Travel On",
+      "yearReleased": 1982,
+      "url": "https://www.youtube.com/embed/1zxYJVWuq28?autoplay=1",
+      "genre": "Country",
+      "duration": 151
+    },
+    {
+      "artist": "Король и Шут",
+      "album": "Акустический альбом",
+      "name": "Кукла колдуна",
+      "yearReleased": 1999,
+      "url": "https://www.youtube.com/embed/Nj6aM9ljdQU?autoplay=1",
+      "genre": "Punk",
+      "duration": 202
+    },
+		{
       "artist": "Sphinx",
       "album": "Here We Are",
       "name": "Sphere of Life",
@@ -350,7 +476,7 @@
       "url": "https://www.youtube.com/embed/BNyh7JMjUKU?autoplay=1",
       "genre": "Rock",
       "duration": 460
-    }
+    },
 	{
       "artist": "Sphinx",
       "album": "Here We Are",
@@ -359,7 +485,7 @@
       "url": "https://www.youtube.com/embed/5GSqB28iEAg?autoplay=1",
       "genre": "Rock",
       "duration": 334
-    }
+    },
 	{
       "artist": "Silent Winter",
       "album": "The Circles of Hell",
@@ -368,7 +494,7 @@
       "url": "https://www.youtube.com/embed/KVFIqn5sFkw?autoplay=1",
       "genre": "Metal",
       "duration": 246
-    }
+    },
 	{
       "artist": "Eisbrecher",
       "album": "Die Hölle Muss Warten",
@@ -377,7 +503,7 @@
       "url": "https://www.youtube.com/embed/e-x3cQDIVR8?autoplay=1",
       "genre": "Metal",
       "duration": 201
-    }
+    },
 	{
       "artist": "The Scepter",
       "album": "Shadows in the Tower",
@@ -386,7 +512,7 @@
       "url": "https://www.youtube.com/embed/KALY_QqC9PI?autoplay=1",
       "genre": "Metal",
       "duration": 249
-    }
+    },
 	{
       "artist": "King Gizzard & the Lizard Wizard",
       "album": "Nonagon Infinity",
@@ -395,7 +521,7 @@
       "url": "https://www.youtube.com/embed/6f78_Tf4Tdk?autoplay=1",
       "genre": "Psychedelic Rock",
       "duration": 285
-    }
+    },
 	{
       "artist": "King Gizzard & the Lizard Wizard",
       "album": "Flying Microtonal Banana",
@@ -404,7 +530,7 @@
       "url": "https://www.youtube.com/embed/It7LM0bPi48?autoplay=1",
       "genre": "Psychedelic Rock",
       "duration": 214
-    }
+    },
 	{
       "artist": "Akira Ishikawa & Count Buffalos",
       "album": "Get Up!",
@@ -413,7 +539,7 @@
       "url": "https://www.youtube.com/embed/CJVNIt_8Fj0?autoplay=1",
       "genre": "Jazz",
       "duration": 326
-    }
+    },
 	{
       "artist": "Therion",
       "album": "Vovin",
@@ -422,7 +548,7 @@
       "url": "https://www.youtube.com/embed/dYbp8vH_xRQ?autoplay=1",
       "genre": "Neo-Classical",
       "duration": 91
-    }
+    },
 	{
       "artist": "Betoken",
       "album": "The Gate of Nothing",
@@ -431,7 +557,7 @@
       "url": "https://www.youtube.com/embed/oykWgVWyctM?autoplay=1",
       "genre": "Metal",
       "duration": 280
-    }
+    },
 	{
       "artist": "Mystic Prophecy",
       "album": "Vengeance",
@@ -440,7 +566,7 @@
       "url": "https://www.youtube.com/embed/OwOZXlS11YI?autoplay=1",
       "genre": "Metal",
       "duration": 405
-    }
+    },
 	{
       "artist": "Gesaffelstein",
       "album": "Conspiracy PT. II",
@@ -449,7 +575,7 @@
       "url": "https://www.youtube.com/embed/_XhLIXjUtFg?autoplay=1",
       "genre": "Electronic",
       "duration": 234
-    }
+    },
 	{
       "artist": "Justice",
       "album": "†",
@@ -458,7 +584,7 @@
       "url": "https://www.youtube.com/embed/_0-tWLi0Kp4?autoplay=1",
       "genre": "Electronic",
       "duration": 295
-    }
+    },
 	{
       "artist": "Gesaffelstein",
       "album": "Variations",
@@ -467,7 +593,7 @@
       "url": "https://www.youtube.com/embed/NFDABRi7yMw?autoplay=1",
       "genre": "Electronic",
       "duration": 431
-    }
+    },
 	{
       "artist": "Ryo Kawasaki",
       "album": "Juice",

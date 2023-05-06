@@ -1,0 +1,500 @@
+{
+  "Genreplaylists":[
+{
+  "playlist name": "Pop",
+  "songs": [
+	{
+      "artist": "Cindy Walker",
+      "album": "Cindy Walker",
+      "name": "Now Or Never",
+      "yearReleased": 1942,
+      "url": "https://www.youtube.com/embed/oyHT6tIWZSo?autoplay=1",
+      "genre": "Pop",
+      "duration": 156
+    } 
+  ]
+},
+{
+  "playlist name": "Metal",
+  "songs": [
+    {
+      "artist": "Opeth",
+      "album": "Watershed",
+      "name": "Lotus Eater",
+      "genre": "Metal",
+      "yearReleased": 2008,
+      "url": "https://www.youtube.com/embed/MgV-bCxE6ZI?autoplay=1",
+      "duration": 686
+    },
+    {
+      "artist": "Elegy",
+      "album": "State of Mind",
+      "name": "Visual Vortex",
+      "genre": "Metal",
+      "yearReleased": 1997,
+      "url": "https://www.youtube.com/embed/8L496n7hw0M?autoplay=1",
+      "duration": 285
+    },
+	 {
+      "artist": "Arktida",
+      "album": "Through the Centuries",
+      "name": "Halfway to Immortality",
+      "yearReleased": 2011,
+      "url": "https://www.youtube.com/embed/Wst9_gbKjRo?autoplay=1",
+      "genre": "Metal",
+      "duration": 216
+    },
+	 {
+      "artist": "Arch Enemy",
+      "album": "Decievers",
+      "name": "Deciever, Deciever",
+      "yearReleased": 2022,
+      "url": "https://www.youtube.com/embed/m_m2oYJkx1A?autoplay=1",
+      "genre": "Metal",
+      "duration": 234
+    },
+	 {
+      "artist": "Artillery",
+      "album": "By Inheritence",
+      "name": "By Inheritence",
+      "yearReleased": 1990,
+      "url": "https://www.youtube.com/embed/U5nl4P4CUkI?autoplay=1",
+      "genre": "Metal",
+      "duration": 344
+    }
+  ]
+},
+{
+  "playlist name": "Electronic",
+  "songs": [
+    {
+      "artist": "Major Lazer & DJ Snake",
+      "album": "Peace Is the Mission",
+      "name": "Lean On",
+      "genre": "Electronic",
+      "yearReleased": 2015,
+      "url": "https://www.youtube.com/embed/NEjF9np9_NU?autoplay=1",
+      "duration": 176
+    }, 
+    {
+      "artist": "AIGEL",
+      "album": "1190",
+      "name": "Tartarin",
+      "genre": "Electronic",
+      "yearReleased": 2017,
+      "url": "https://www.youtube.com/embed/uD914FCVZ08?autoplay=1",
+      "duration": 194
+    }
+  ]
+},
+{
+  "playlist name": "Psychedelic Rock",
+  "songs": [
+    {
+      "artist": "King Gizzard & The Lizard Wizard",
+      "album": "Polygondwanaland",
+      "name": "Crumbling Castle",
+      "genre": "Psychedelic Rock",
+      "yearReleased": 2017,
+      "url": "https://www.youtube.com/embed/uLP8rFrL1W0?autoplay=1",
+      "duration": 645
+    }
+  ]
+},
+{
+  "playlist name": "Fusion",
+  "songs": [
+    {
+      "artist": "Masayoshi Takanaka",
+      "album": "Rainbow Goblins",
+      "name": "Thunderstorm",
+      "genre": "Fusion",
+      "yearReleased": 1981,
+      "url": "https://www.youtube.com/embed/SHb8GcLfRps?autoplay=1",
+      "duration": 195
+    }, 
+    {
+      "artist": "Return to Forever",
+      "album": "Romantic Warrior",
+      "name": "Sorceress (Live)",
+      "yearReleased": 1976,
+      "url": "https://www.youtube.com/embed/787OXgsVMYM?autoplay=1",
+      "genre": "Fusion",
+      "duration": 457
+    },
+	 {
+      "artist": "Ryo Kawasaki",
+      "album": "Juice",
+      "name": "The Breeze and I",
+      "yearReleased": 1976,
+      "url": "https://www.youtube.com/embed/fPGmWC6oQKU?autoplay=1",
+      "genre": "Fusion",
+      "duration": 346
+    }
+  ]
+},
+{
+  "playlist name": "Neo-Classical",
+  "songs": [
+    {
+      "artist": "Globus",
+      "album": "Epicon",
+      "name": "Mighty Rivers Run",
+      "yearReleased": 2007,
+      "url": "https://www.youtube.com/embed/aaS3E-6uq7g?autoplay=1",
+      "genre": "Neo-Classical",
+      "duration": 313
+    }, 
+    {
+      "artist": "Globus",
+      "album": "Epicon",
+      "name": "Diem Ex Dei",
+      "yearReleased": 2007,
+      "url": "https://www.youtube.com/embed/6xCCAs8iglY?autoplay=1",
+      "genre": "Neo-Classical",
+      "duration": 358
+    },
+	 {
+      "artist": "Angela & Jeff van Dyck",
+      "album": "Medieval II: Total War",
+      "name": "We Are All One",
+      "yearReleased": 2006,
+      "url": "https://www.youtube.com/embed/EqU_85dp4MM?autoplay=1",
+      "genre": "Neo-Classical",
+      "duration": 246
+    }
+  ]
+},
+{
+  "playlist name": "Funk",
+  "songs": [
+    {      "artist": "Shambara",
+      "album": "Shambara",
+      "name": "Solid Dance",
+      "genre": "Funk",
+      "yearReleased": 1989,
+      "url": "https://www.youtube.com/embed/MaaBzxdCBuo?autoplay=1",
+      "duration": 353
+    }, 
+    {
+      "artist": "Kaoru Akimoto",
+      "album": "Cologne",
+      "name": "我がままなハイヒール",
+      "yearReleased": 1986,
+      "url": "https://www.youtube.com/embed/FTnJVhGhLS0?autoplay=1",
+      "genre": "Funk",
+      "duration": 303
+    }
+  ]
+},
+{
+  "playlist name": "Rock",
+  "songs": [
+    {      
+      "artist": "Adriano Celentano",
+      "album": "Nostalrock",
+      "name": "Prisencolinensinainciusol",
+      "yearReleased": 1973,
+      "url": "https://www.youtube.com/embed/bQDY3HFkh_Y?autoplay=1",
+      "genre": "Rock",
+      "duration": 231
+    }
+  ]
+},
+{
+  "playlist name": "Jazz",
+  "songs": [
+    {      
+      "artist": "The Boswell Sisters",
+      "album": "The Boswell Sisters Collection",
+      "name": "Old Yazoo",
+      "yearReleased": 1932,
+      "url": "https://www.youtube.com/embed/lEljQnL3UI8?autoplay=1",
+      "genre": "Jazz",
+      "duration": 184
+    },
+    {
+      "artist": "The Boswell Sisters",
+      "album": "The Boswell Sisters Collection",
+      "name": "The Music Goes 'Round and Around",
+      "yearReleased": 1936,
+      "url": "https://www.youtube.com/embed/11rchzXPU6g?autoplay=1",
+      "genre": "Jazz",
+      "duration": 190
+    }
+  ]
+},
+{
+  "playlist name": "Alternative",
+  "songs": [
+    {      
+      "artist": "Self Defense Family",
+      "album": "have you considered punk music",
+      "name": "have you considered punk music",
+      "yearReleased": 2018,
+      "url": "https://www.youtube.com/embed/AR0MrMaodNo?autoplay=1",
+      "genre": "Alternative",
+      "duration": 283
+    },
+    {
+      "artist": "Title Fight",
+      "album": "Floral Green",
+      "name": "Numb but I Still Feel It",
+      "yearReleased": 2012,
+      "url": "https://www.youtube.com/embed/WIbndxFYsSU?autoplay=1",
+      "genre": "Alternative",
+      "duration": 190
+    },
+    {
+      "artist": "Self Defense Family",
+      "album": "Have You Considered Punk Music",
+      "name": "The Supremacy of Pure Artistic Feeling",
+      "yearReleased": 2018,
+      "url": "https://www.youtube.com/embed/GXFpijwLOEg?autoplay=1",
+      "genre": "Alternative",
+      "duration": 320
+    },
+    {
+      "artist": "Title Fight",
+      "album": "Hyperview",
+      "name": "Chlorine",
+      "yearReleased": 2015,
+      "url": "https://www.youtube.com/embed/77IzqSJ8CBc?autoplay=1",
+      "genre": "Alternative",
+      "duration": 173
+    }, 
+    {
+      "artist": "Self Defense Family",
+      "album": "Performative Guilt",
+      "name": "Rest in Peace for the Error Shall Not Be Repeated",
+      "yearReleased": 2019,
+      "url": "https://www.youtube.com/embed/M-G9J64DxA4?autoplay=1",
+      "genre": "Alternative",
+      "duration": 146
+    },
+    {
+      "artist": "End of a Year",
+      "album": "You Are Beneath Me",
+      "name": "Marissa Wendolovske",
+      "yearReleased": 2010,
+      "url": "https://www.youtube.com/embed/grP6G9cnhEk?autoplay=1",
+      "genre": "Alternative",
+      "duration": 149
+    }, 
+    {
+      "artist": "American Football",
+      "album": "American Football",
+      "name": "Never Meant",
+      "yearReleased": 1999,
+      "url": "https://www.youtube.com/embed/_NfnXdXpjL0?autoplay=1",
+      "genre": "Alternative",
+      "duration": 283
+    },
+    {
+      "artist": "Turnover",
+      "album": "Peripheral Vision",
+      "name": "Dizzy on the Comedown",
+      "yearReleased": 2015,
+      "url": "https://www.youtube.com/embed/Q34dZ6VmI04?autoplay=1",
+      "genre": "Alternative",
+      "duration": 258
+    },
+    {
+      "artist": "mewithoutYou",
+      "album": "Brother, Sister",
+      "name": "In a Sweater Poorly Knit",
+      "yearReleased": 2006,
+      "url": "https://www.youtube.com/embed/Pi9R7vZh-Bc",
+      "genre": "Alternative",
+      "duration": 284
+    },
+    {
+      "artist": "Single Mothers",
+      "album": "Negative Qualities",
+      "name": "Half Lit",
+      "yearReleased": 2014,
+      "url": "https://www.youtube.com/embed/m8XbNmxgYWQ",
+      "genre": "Alternative",
+      "duration": 148
+    },
+    {
+      "artist": "Ben Quad",
+      "album": "You're Part of It",
+      "name": "You're Part of It",
+      "yearReleased": 2022,
+      "url": "https://www.youtube.com/embed/Rz0BON9d_7g",
+      "genre": "Alternative",
+      "duration": 177
+    },
+    {
+      "artist": "Bay Faction",
+      "album": "Bay Faction",
+      "name": "Beach Book",
+      "yearReleased": 2015,
+      "url": "https://www.youtube.com/embed/e6ayfPEurSU",
+      "genre": "Alternative",
+      "duration": 191
+    }
+  ]
+},
+{
+  "playlist name": "Punk",
+  "songs": [
+    {      
+      "artist": "Propagandhi",
+      "album": "Less Talk, More Rock",
+      "name": "Rio De San Atlanta, Manitoba",
+      "yearReleased": 1996,
+      "url": "https://www.youtube.com/embed/bNVFewWAcFk",
+      "genre": "Punk",
+      "duration": 4
+    },
+    {
+      "artist": "Joyce Manor",
+      "album": "Joyce Manor",
+      "name": "Constant Headache",
+      "yearReleased": 2013,
+      "url": "https://www.youtube.com/embed/Kz8W_SL2vyQ?autoplay=1",
+      "genre": "Punk",
+      "duration": 167
+    },
+    {
+      "artist": "Joyce Manor",
+      "album": "Never Hung Over Again",
+      "name": "Catalina Fight Song",
+      "yearReleased": 2014,
+      "url": "https://www.youtube.com/embed/STD5weTn18E?autoplay=1",
+      "genre": "Punk",
+      "duration": 67
+    },
+    {
+      "artist": "Drug Church",
+      "album": "Paul Walker",
+      "name": "Thinking About Joining Drug Church",
+      "yearReleased": 2013,
+      "url": "https://www.youtube.com/embed/GooS5f1YDc4?autoplay=1",
+      "genre": "Punk",
+      "duration": 92
+    },
+    {
+      "artist": "Drug Church",
+      "album": "Cheer",
+      "name": "Avoidarama",
+      "yearReleased": 2018,
+      "url": "https://www.youtube.com/embed/HK0CimKdh6Q?autoplay=1",
+      "genre": "Punk",
+      "duration": 193
+    },
+    {
+      "artist": "Propagandhi",
+      "album": "Less Talk, More Rock",
+      "name": "Rio De San Atlanta, Manitoba",
+      "yearReleased": 1996,
+      "url": "https://www.youtube.com/embed/bNVFewWAcFk",
+      "genre": "Punk",
+      "duration": 40
+    }
+  ]
+},
+{
+  "playlist name": "Country",
+  "songs": [
+    {      
+      "artist": "Wilf Carter",
+      "album": "Wilf Carter",
+      "name": "The Prisoner's Song",
+      "yearReleased": 1941,
+      "url": "https://www.youtube.com/embed/Z_hlyfaZhFU?autoplay=1",
+      "genre": "Country",
+      "duration": 156
+    },
+    {
+      "artist": "Marijohn Wilkin",
+      "album": "Marijohn Wilkin",
+      "name": "When My Blue Moon Turns To Gold Again",
+      "yearReleased": 1960,
+      "url": "https://www.youtube.com/embed/X94jCb4tqnk?autoplay=1",
+      "genre": "Country",
+      "duration": 141
+    },
+    {
+      "artist": "Elton Britt",
+      "album": "Elton Britt",
+      "name": "Everybody Has The Right To Be Screwy",
+      "yearReleased": 1941,
+      "url": "https://www.youtube.com/embed/R8tRcGFftAM?autoplay=1",
+      "genre": "Country",
+      "duration": 167
+    },
+    {
+      "artist": "Jimmie Davis",
+      "album": "Jimmie Davis",
+      "name": "My Dixie Sweetheart",
+      "yearReleased": 1930,
+      "url": "https://www.youtube.com/embed/V7NZF0VeVZA?autoplay=1",
+      "genre": "Country",
+      "duration": 180
+    },
+    {
+      "artist": "Jimmie Davis",
+      "album": "Jimmie Davis",
+      "name": "A Woman's Blues",
+      "yearReleased": 1930,
+      "url": "https://www.youtube.com/embed/lJmeED7s1uk?autoplay=1",
+      "genre": "Country",
+      "duration": 188
+    },
+    {
+      "artist": "Jimmie Davis",
+      "album": "Jimmie Davis",
+      "name": "Where The Old Red River Flows",
+      "yearReleased": 1930,
+      "url": "https://www.youtube.com/embed/eqwTl0_sa4Q?autoplay=1",
+      "genre": "Country",
+      "duration": 184
+    },
+    {
+      "artist": "The Blue Sky Boys",
+      "album": "The Blue Sky Boys",
+      "name": "No Home",
+      "yearReleased": 1936,
+      "url": "https://www.youtube.com/embed/-JB1Ea7Wnhk?autoplay=1",
+      "genre": "Country",
+      "duration": 191
+    }
+  ]
+},
+{
+  "playlist name": "Classical",
+  "songs": [
+    {
+      "artist": "Globus",
+      "album": "Epicon",
+      "name": "Mighty Rivers Run",
+      "yearReleased": 2007,
+      "url": "https://www.youtube.com/embed/aaS3E-6uq7g?autoplay=1",
+      "genre": "Neo-Classical",
+      "duration": 313
+    }, 
+    {
+      "artist": "Sergei Prokofiev",
+      "album": "Alexander Nevsky - Chicago Symphony",
+      "name": "Battle on the Ice",
+      "genre": "Classical",
+      "yearReleased": 1960,
+      "url": "https://www.youtube.com/embed/xyDKezDLGTM?autoplay=1",
+      "duration": 730
+    },
+	 {
+      "artist": "Giuseppe Verdi",
+      "album": "Il trovatore",
+      "name": "Anvil Chorus",
+      "genre": "Classical",
+      "yearReleased": 1853,
+      "url": "https://www.youtube.com/embed/xyDKezDLGTM?autoplay=1",
+      "duration": 184
+     }
+  ]
+  }
+ ]
+}

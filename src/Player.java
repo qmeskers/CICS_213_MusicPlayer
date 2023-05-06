@@ -1,9 +1,23 @@
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.http.WebSocket.Listener;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.browser.Browser;
+import org.eclipse.swt.browser.ProgressEvent;
+import org.eclipse.swt.browser.ProgressListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Display;
@@ -20,487 +34,752 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.wb.swt.SWTResourceManager;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
+import java.util.*;
 /**
- * This class contains the user interface, within that there are three tabs, a music player tab, a create playlist tab, and view song tab
+ * This class contains the user interface, within that there are four tabs: a music player tab, a create playlist tab, a user management tab, and 
+ * a view playlist tab
  * @author CISC213.N81
  *
  */
 @SuppressWarnings("unused")
 public class Player extends Shell {
-    /*for the timer we might want to do something like timer += 2 after we set it when the video loads to account for load 
+	/*for the timer we might want to do something like timer += 2 after we set it when the video loads to account for load 
     times in the youtube player so the song doesn't cut off early */
-    private int timer;  //Used in the StartTimer method, gets decremented by 1 every second when a song is playing
-    private int stopTime; //Is the time left in the song when the song is paused
-    private int resumeTime; //Is equal to song duration minus timer, used when resuming song
-    private boolean paused = false; //used to stop timer when song is paused in the StartTimer method
+	private int timer;  //this number will be replaced with the song lengths
+	private int stopTime; //used for pause button
+	private int resumeTime; //used for pausing and resuming
+	private boolean paused = false; //used to stop timer when song is paused
 	private boolean repeat = false;//used tell if song has been repeated
-    private int i = 0; //used to track location in ArrayList
-    private java.util.List<Song> songList = new ArrayList<Song>();// this is the ArrayList for the song list-brian
-    private Song song;
+	private int i = 0; //used to track location in Arraylist
+	private java.util.List<Song> songList = new ArrayList<Song>();// this is the arraylist for the song list-brian
+	public static java.util.List<User> userList = new ArrayList<User>();//this is the list of users
+	private Song song; //song object
+	public static User currentUser; //used to track which user is logged in
+	public static PlaylistCollections currentUserPlaylist; //used to track which playlist has been selected
+	public static Tree playlistList; //treemap of playlists
+	public static loginWindow loginwindow; //object for the login window
+	public Stack<Song> playQueue = new Stack<>(); 
 
-    public Player(String artist, String album, String name, String url, int yearReleased, String genre, int duration) {
-        this.song = new Song(artist, album, name, url, yearReleased, genre, duration);
-    }
 
-    /**
-     * Launch the application.
-     * @param args
-     */
-    public static void main(String args[]) {
-        try {
-            Display display = Display.getDefault();
-            Player shell = new Player(display);
-            shell.open();
-            shell.layout();
-            while (!shell.isDisposed()) {
-                if (!display.readAndDispatch()) {
-                    display.sleep();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        
-    }
+	public Player(String artist, String album, String name, String url, int yearReleased, String genre, int duration) {
+		this.song = new Song(artist, album, name, url, yearReleased, genre, duration);
+	}
 
-    /**
-     * All button events are contained within this method
-     * Create the shell.
-     * @param display
-     * @throws IOException 
-     * @wbp.parser.constructor
-     */
-    @SuppressWarnings("static-access")
+	/**
+	 * Launch the application.
+	 * @param args
+	 */
+	public static void main(String args[]) {
+		//before launching the login window, read into memory a list of users and their credentials
+		userListIO.loadUsersFromJson();
+		//before launching the player, launch the login window
+		loginwindow = new loginWindow();
+		try {
+			loginWindow dialog = new loginWindow();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}	
+	}
+
+	/**
+	 * Create the shell.
+	 * @param display
+	 * @throws IOException 
+	 * @wbp.parser.constructor
+	 */
+	@SuppressWarnings("static-access")
 	public Player(Display display) throws IOException {
-        super(display, SWT.SHELL_TRIM);
-        setMaximumSize(new Point(600, 500));
-        setMinimumSize(new Point(600, 500));
-        setSize(709, 474);
-        
-        TabFolder tabFolder = new TabFolder(this, SWT.NONE);
-		tabFolder.setBounds(0, 0, 576, 457);
+		super(display, SWT.SHELL_TRIM);
+		setMaximumSize(new Point(600, 500));
+		setMinimumSize(new Point(600, 500));
+		setSize(709, 474);
 		
+		//Create the tabs
+		TabFolder tabFolder = new TabFolder(this, SWT.NONE);
+		tabFolder.setBounds(2, 0, 576, 457);
+		
+		//Create the composites to hold items within each tab
+		Composite userTabComposite = new Composite(tabFolder, SWT.NONE);
+		Composite composite = new Composite(tabFolder, SWT.NONE);
+		Composite composite_2 = new Composite(tabFolder, SWT.NONE);
+		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
+		
+		//load the playlistList with initial user data from login
+		playlistList = new Tree(composite_1, SWT.BORDER);
+		initialPlaylistLoad();
+
+		//adds the icon to the top corner of the window
+		Image play = new Image(display, "play.png");
+		this.setImage(play);
+
+		
+		
+		//User Management Controls:
+		
+		//TODO: sign out button
+		TabItem userManagementTab = new TabItem(tabFolder, SWT.NONE);
+		userManagementTab.setText("User Management");
+		userManagementTab.setControl(userTabComposite);
+		
+		Label currentUserLabel = new Label(userTabComposite, SWT.NONE);
+		currentUserLabel.setBounds(50, 10, 80, 25);
+
+		Label usernameLabel = new Label(userTabComposite, SWT.NONE);
+		usernameLabel.setText("Username: ");
+		usernameLabel.setBounds(50, 40, 80, 25);
+
+		Label firstNameLabel = new Label(userTabComposite, SWT.NONE);
+		firstNameLabel.setText("First Name: ");
+		firstNameLabel.setBounds(50, 70, 80, 25);
+
+		Label lastNameLabel = new Label(userTabComposite, SWT.NONE);
+		lastNameLabel.setText("Last Name: ");
+		lastNameLabel.setBounds(50, 100, 80, 25);
+
+		Label passwordLabel = new Label(userTabComposite, SWT.NONE);
+		passwordLabel.setText("Password: ");
+		passwordLabel.setBounds(50, 130, 80, 25);
+		
+		Label emailLabel = new Label(userTabComposite, SWT.NONE);
+		emailLabel.setText("Email: ");
+		emailLabel.setBounds(50, 160, 80, 25);
+
+		Text usernameField = new Text(userTabComposite, SWT.BORDER);
+		usernameField.setText("");
+		usernameField.setBounds(145, 40, 100, 20);
+
+		Text firstNameField = new Text(userTabComposite, SWT.BORDER);
+		firstNameField.setText("");
+		firstNameField.setBounds(145, 70, 100, 20);
+
+		Text lastNameField = new Text(userTabComposite, SWT.BORDER);
+		lastNameField.setText("");
+		lastNameField.setBounds(145, 100, 100, 20);
+
+		Text passwordField = new Text(userTabComposite, SWT.BORDER | SWT.PASSWORD);
+		passwordField.setText("");
+		passwordField.setBounds(145, 130, 100, 20);
+		
+		Text emailField = new Text(userTabComposite, SWT.BORDER);
+		emailField.setText("");
+		emailField.setBounds(145, 160, 100, 20);
+
+		/**
+		 * The create new user button first verifies that all required fields are filled out, 
+		 * then verifies that the username is available, 
+		 * and if so it creates a new user.
+		 * 
+		 * If those checks are failed then a popup comes up with instructions for how to proceed.
+		 * 
+		 * A user file is also created for the new user here
+		 */
+		Button createUserButton = new Button(userTabComposite, SWT.NONE);
+		createUserButton.setText("Create User");
+		createUserButton.setBounds(50, 190, 85, 25);	
+		createUserButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if (usernameField.getText().isBlank() || firstNameField.getText().isBlank() || 
+						lastNameField.getText().isBlank() || passwordField.getText().isBlank() || emailField.getText().isBlank()) {
+					JOptionPane.showMessageDialog(null, "Please fill out all fields to continue");
+				}
+				String fileName = usernameField.getText() + "Playlists.json";
+				createNewUserFile(fileName);
+				//test whether username is available (other fields do not need to be unique)
+				for (User user : userList) {
+					if (usernameField.getText().equals(user.getUsername())) {
+						JOptionPane.showMessageDialog(null, "This username is not available");
+					}
+				}
+				User newUser = new User(firstNameField.getText(), lastNameField.getText(), 
+						emailField.getText(), passwordField.getText(), usernameField.getText(), 0);
+				currentUser = newUser;
+			}
+		});//end create new user button listener
+		
+		/**
+		 * Sign out button: This removes the current user , reloads playlists, and re-prompts for sign in. 
+		 * It does so by closing the program and re-calling main
+		 */
+		Button signoutButton = new Button(userTabComposite, SWT.NONE);
+		signoutButton.setText("Sign Out");
+		signoutButton.setBounds(135, 190, 85, 25);
+		signoutButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				dispose();
+				Player.main(null);
+			}
+		});
+
 		//Now playing tab controls:
 		TabItem playerTab = new TabItem(tabFolder, SWT.NONE);
 		playerTab.setText("Now Playing");
+
 		
-		Composite composite = new Composite(tabFolder, SWT.NONE);
 		playerTab.setControl(composite);
-		GridLayout gl_composite = new GridLayout(5, false);
-		gl_composite.verticalSpacing = 10;
-		composite.setLayout(gl_composite);
+		composite.setLayout(null);
+		//label that acts as a header for the artist
+		Label lblArtist = new Label(composite, SWT.NONE);
+		lblArtist.setBounds(10, 10, 81, 25);
+		lblArtist.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		lblArtist.setText("Artist:");
+		//label that shows the current artist playing
+		Label lblartistplaying = new Label(composite, SWT.NONE);
+		lblartistplaying.setBounds(10, 38, 307, 25);
+		lblartistplaying.setText(" ");
+		//label that acts as a header for the album
+		Label lblAlbum = new Label(composite, SWT.NONE);
+		lblAlbum.setBounds(10, 69, 81, 25);
+		lblAlbum.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		lblAlbum.setText("Album:");
+		//label that shows the current album playing
+		Label lblalbumplaying = new Label(composite, SWT.NONE);
+		lblalbumplaying.setBounds(10, 100, 307, 25);
+		lblalbumplaying.setText(" ");
+		//label that acts as a header for the song
+		Label lblSong = new Label(composite, SWT.NONE);
+		lblSong.setBounds(10, 131, 81, 25);
+		lblSong.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		lblSong.setText("Song:");
+		//label that shows the current song playing
+		Label lblsongplaying = new Label(composite, SWT.NONE);
+		lblsongplaying.setBounds(10, 162, 307, 25);
+		lblsongplaying.setText(" ");
+		//label that acts as a header for the genre
+		Label lblGenre = new Label(composite, SWT.NONE);
+		lblGenre.setText("Genre:");
+		lblGenre.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
+		lblGenre.setBounds(10, 204, 81, 25);
+		//label that shows the current genre playing
+		Label lblgenreplaying = new Label(composite, SWT.NONE);
+		lblgenreplaying.setText(" ");
+		lblgenreplaying.setBounds(10, 235, 307, 25);
+		//list of the queue
+		List lstQueue = new List(composite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
+		lstQueue.setBounds(159, 10, 109, 250);
+
+		// create the tree widget
+		Tree tree = new Tree(composite, SWT.BORDER);
+		tree.setBounds(332, 10, 181, 229);
+
+		//ProgressBar used to track location within song
+		ProgressBar progressBar = new ProgressBar(composite, SWT.NONE);
+		progressBar.setBounds(35, 301, 478, 19);
+		progressBar.setMinimum(0);
+
+
+		//button used to restart the current song
+		Button btnRestart = new Button(composite, SWT.NONE);
+		btnRestart.setBounds(132, 349, 91, 39);
+		btnRestart.setText("Restart");
+		//listener event for btnRestart that restarts the song by removing the browser then generating a new one
+		btnRestart.addListener(SWT.Selection, event -> {
+			Control[] controls = Player.this.getChildren();
+			for (Control control : controls) {
+				if (control instanceof Browser) {
+					control.dispose();
+				}//end if
+			}//end for loop to dispose of browser
+			Browser browser = new Browser(this, SWT.NONE);
+			browser.setBounds(50, 50, 1, 1);
+			browser.setUrl(playQueue.peek().getUrl());
+			timer = playQueue.peek().getDuration();
+		});//end btnRestart listener event
+
+		//button used to start playing the playlist
+		Button btnPlay = new Button(composite, SWT.NONE);
+		btnPlay.setBounds(229, 349, 91, 39);
+		btnPlay.setText("Play");
+		//listener event for btnPlay that generates a browser and embeds a youtube video into it, also starts the timer
+		btnPlay.addListener(SWT.Selection, event -> {
+			//for loop to dispose of browser in case something is already playing
+			Control[] controls = Player.this.getChildren();
+			for (Control control : controls) {
+				if (control instanceof Browser) {
+					control.dispose();
+				}//end if
+			}//end for loop to dispose of browser
+			if(playQueue.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "No songs selected, please add a song to the Queue");
+				return;
+			}//end if statement to check for empty Queue
+			Browser browser = new Browser(this, SWT.NONE);
+			browser.setBounds(50, 50, 1, 1);
+			browser.setUrl(playQueue.peek().getUrl());
+			timer = playQueue.peek().getDuration();
+			progressBar.setMaximum(playQueue.peek().getDuration());
+			startTimer(display, progressBar, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
+			UpdateLabels(lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
+		});//end btnPlay listener event
+
+
+		//button used to repeat the current song once it's finished playing
+		Button btnRepeat = new Button(composite, SWT.NONE);
+		btnRepeat.setBounds(35, 348, 91, 40);
+		btnRepeat.setText("Repeat");
+		//listener event for btnRepeat that adds the current song to the next index in the ArrayList
+		btnRepeat.addListener(SWT.Selection, event -> {
+			//adds current song to the next index on the ArrayList
+			if (repeat = false) {
+				repeat = true;
+				btnRepeat.setText("UnRepeat");
+			}//end if
+			else {
+				repeat = false; 
+				btnRepeat.setText("Repeat");
+			}//end else
+			playQueue.push(playQueue.peek());
+			updateQueueList(lstQueue);
+		});//end btnRepeat listener event
+
+		/**
+		 * This listens to the tree and when a song is pressed, it will change the index(i) to the location of 
+		 * the song in the songList or the json file to play that song
+		 */
+		tree.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent event) {
+				// Get the selected item in the tree
+				TreeItem selectedItem = (TreeItem) event.item;
+				// Get the Song object associated with the selected item
+				Song selectedSong = (Song) selectedItem.getData();
+				//looks for the index of the song you click and sets the current index as its number
+				for(int j = 0; j < songList.size(); j++) {
+					if(songList.get(j).equals(selectedSong)) {
+						i = j;
+					}//end if
+				}//end for loop to look for song index
+			}
+		});//end of listener event for the tree
+		//button used to pause the song that is currently playing
+		Button btnPause = new Button(composite, SWT.NONE);
+		btnPause.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			}
+		});
+		btnPause.setBounds(326, 349, 91, 39);
+		btnPause.setText("Pause");
+		//listener event for btnPause that pauses or resumes a song depending on the paused boolean value
+		btnPause.addListener(SWT.Selection, event -> {
+			//generates a new browser if the song is already paused, resumes the song at the paused location
+			if(paused == true) {
+				Browser browser = new Browser(this, SWT.NONE);
+				browser.setBounds(50, 50, 200, 200);
+				browser.setUrl(playQueue.peek().getUrl() + "&start=" + resumeTime);
+				btnPause.setText("Pause");
+				paused = false;
+			}//end if to resume song
+			else { //takes the pause time and then disposes of the broswer
+				paused = true;
+				stopTime = timer;
+				resumeTime = playQueue.peek().getDuration() - stopTime - 2; //subtracting an additional 2 seconds to account for loading times
+				//remove the current browser
+				Control[] controls = Player.this.getChildren();
+				for (Control control : controls) {
+					if (control instanceof Browser) {
+						control.dispose();
+					}//end if
+				}//end for loop to dispose browser objects
+				btnPause.setText("Resume");
+				startTimer(display, progressBar, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);//end else  for pausing the song
+			}});//end selection listener event for btnPause
+
+		//button used to skip the current song that's playing
+		Button btnSkip = new Button(composite, SWT.NONE);
+		btnSkip.setBounds(423, 349, 91, 39);
+		btnSkip.setText("Skip");
+		//button that adds selected song in treemap to queue
+		Button btnAddToQueue = new Button(composite, SWT.NONE);
+		btnAddToQueue.setBounds(396, 245, 117, 35);
+		btnAddToQueue.setText("Add to Queue");
+		//event for adding a song to the queue
+		btnAddToQueue.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				playQueue.addElement(songList.get(i));
+			}
+		});//end event to add single song to event
+		//listener event for btnSkip that sets the timer to 0 so the next song immediately loads in the timer method
+		btnSkip.addListener(SWT.Selection, event -> {
+			playQueue.pop(); 
+			UpdateLabels(lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
+			timer = 0;
+			//if statement to check if Queue is empty
+			if (playQueue.isEmpty()) {
+				Control[] controls = Player.this.getChildren();
+				for (Control control : controls) {
+					if (control instanceof Browser) {
+						control.dispose();
+					}//end if
+				}//end for loop to dispose of browser
+			}//end if
+		});//end listener event for btnSkip
+
+		// load the songs from the JSON file
+		songList = Songs.loadSongsFromJson("songsList.json");
+
+
+		// create the hashmap to store songs by genre
+		HashMap<String, ArrayList<Song>> songsByGenre = new HashMap<>();
+		for (Song song : songList) {
+			String genre = song.getGenre();
+			if (!songsByGenre.containsKey(genre)) {
+				songsByGenre.put(genre, new ArrayList<Song>());
+			}//end if
+			songsByGenre.get(genre).add(song);
+		}//end for loop that adds genres to the hashmap
+
+		// populate the tree with genres as top-level items
+		for (String genre : songsByGenre.keySet()) {
+			TreeItem genreItem = new TreeItem(tree, SWT.NONE);
+			genreItem.setText(genre);
+			// nested for loop add the songs for this genre as children of the genre item
+			for (Song song : songsByGenre.get(genre)) {
+				TreeItem songItem = new TreeItem(genreItem, SWT.NONE);
+				songItem.setText(song.getName());
+				songItem.setData(song);
+			}//end nested for loop that adds songs to their respective genre
+		}//end outer for loop that loops through the genres
 		
-		        // create the tree widget
-		        Tree tree = new Tree(composite, SWT.BORDER);
-		        tree.setBounds(285, 20, 150, 200);
-		        new Label(composite, SWT.NONE);
-		        new Label(composite, SWT.NONE);
-		        new Label(composite, SWT.NONE);
-		        new Label(composite, SWT.NONE);
-		        	
-		        		Label lblArtist = new Label(composite, SWT.NONE);
-		        		lblArtist.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
-		        		lblArtist.setBounds(10, 10, 81, 25);
-		        		lblArtist.setText("Artist:");
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		//label that displays the artist of the song that's currently playing
-		        		Label lblartistplaying = new Label(composite, SWT.NONE);
-		        		lblartistplaying.setBounds(10, 38, 332, 25);
-		        		lblartistplaying.setText("When song plays artist name goes here");
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		
-		        		Label lblAlbum = new Label(composite, SWT.NONE);
-		        		lblAlbum.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
-		        		lblAlbum.setBounds(10, 69, 81, 25);
-		        		lblAlbum.setText("Album:");
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		//label that displays the album of the song that's currently playing
-		        		Label lblalbumplaying = new Label(composite, SWT.NONE);
-		        		lblalbumplaying.setBounds(10, 100, 332, 25);
-		        		lblalbumplaying.setText("When song plays album name goes here");
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		
-		        		Label lblSong = new Label(composite, SWT.NONE);
-		        		lblSong.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
-		        		lblSong.setBounds(10, 131, 81, 25);
-		        		lblSong.setText("Song:");
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		//label that displays the song name of the song that's currently playing
-		        		Label lblsongplaying = new Label(composite, SWT.NONE);
-		        		lblsongplaying.setBounds(10, 162, 332, 25);
-		        		lblsongplaying.setText("When song plays song name goes here");
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		new Label(composite, SWT.NONE);
-		        		//ProgressBar used to track location within song
-		        		ProgressBar progressBar = new ProgressBar(composite, SWT.NONE);
-		        		progressBar.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 5, 1));
-		        		progressBar.setMinimum(0);
-		        		//button used to restart the current song
-		        		Button btnRestart = new Button(composite, SWT.NONE);
-		        		btnRestart.setBounds(168, 279, 105, 35);
-		        		btnRestart.setText("Restart");
-		        		btnRestart.addListener(SWT.Selection, event -> {
-		        			Control[] controls = Player.this.getChildren();
-		        			for (Control control : controls) {
-		        				if (control instanceof Browser) {
-		        					control.dispose();
-		        					}//end if
-		        			}//end for loop
-		        			Browser browser = new Browser(this, SWT.NONE);
-		        			browser.setBounds(50, 50, 1, 1);
-		        			browser.setUrl(songList.get(i).getUrl());
-		        			timer = songList.get(i).getDuration();
-		        		
-		        		});//end btnRestart event
-		        		//button used to start playing the playlist
-		        		Button btnPlay = new Button(composite, SWT.NONE);
-		        		btnPlay.setText("Play");
-		        		btnPlay.addListener(SWT.Selection, event -> {
-		        			Browser browser = new Browser(this, SWT.NONE);
-		        			browser.setBounds(50, 50, 1, 1);
-		        			browser.setUrl(songList.get(i).getUrl());
-		        			timer = songList.get(i).getDuration();
-		        			progressBar.setMaximum(songList.get(i).getDuration());
-		        			startTimer(display, progressBar);
-		        			UpdateLabels(lblsongplaying, lblalbumplaying, lblartistplaying);
-		        		});//end btnPlay event
-		        		//button used to repeat the current song once it's finished playing
-		        		Button btnRepeat = new Button(composite, SWT.NONE);
-		        		btnRepeat.setBounds(36, 279, 105, 35);
-		        		btnRepeat.setText("Repeat");
-		        		btnRepeat.addListener(SWT.Selection, event -> {
-		        			//adds current song to the next index on the Arraylist
-		        			if (repeat = false) {
-		        				repeat = true;
-		        				btnRepeat.setText("UnRepeat");
-		        			}
-		        			else {
-		        				repeat = false; 
-		        				btnRepeat.setText("Repeat");
-		        			}
-		        			songList.add(i+1, songList.get(i));
-		        		});//end btnRepeat event
-		        		
-		        	/*Note from Nick C - I don't understand the purpose of this event if the person who wrote it could explain
-		        	why it's using btnRepeat that would be wonderful */
-		        		btnRepeat.addSelectionListener(new SelectionAdapter() {
-		        		    @Override
-		        		    public void widgetSelected(SelectionEvent e) {
-		        		        // Get the selected item in the tree
-		        		        TreeItem selectedItem = tree.getSelection()[0];
-		        		        
-		        		        // Get the Song object associated with the selected item
-		        		        Song selectedSong = (Song) selectedItem.getData();
-		        		        
-		        		        // Update the currentSong URL if a song is selected
-		        		        if (selectedSong != null) {
-		        		        	Control[] controls = Player.this.getChildren();
-		        		            if (selectedSong != null) {
-		        		            	for (Control control : controls) {
-		        	    					if (control instanceof Browser) {
-		        	    						((Browser) control).setUrl(selectedSong.getUrl());
-		        	    						}//end if
-		        	    				}//end for loop
-		        		            	timer = selectedSong.getDuration();
-		        		            	startTimer(display,progressBar);
-		        		            System.out.println("Playing " + selectedSong.getUrl());
-		        		        }
-		        		    }
-		        		    }
-		        		});
-		        		
-		        		
-		    tree.addSelectionListener(new SelectionAdapter() {
-	        @Override
-	        public void widgetSelected(SelectionEvent event) {
-	            // Get the selected item in the tree
-	            TreeItem selectedItem = (TreeItem) event.item;
-	            
-	            // Get the Song object associated with the selected item
-	            Song selectedSong = (Song) selectedItem.getData();
-	            songList.add(selectedSong);
-	            
-	            // Update the currentSong URL if a song is selected
-	            Control[] controls = Player.this.getChildren();
-	            if (selectedSong != null) {
-	            	for (Control control : controls) {
-    					if (control instanceof Browser) {
-    						control.dispose();
-    						}//end if
-    				}//end for loop
-	            	Browser browser = new Browser(Player.this, SWT.NONE);
-					browser.setBounds(50, 50, 1, 1);
-					browser.setUrl(songList.get(i).getUrl());
-	            	timer = selectedSong.getDuration();
-	            	startTimer(display,progressBar);
-	                lblartistplaying.setText(selectedSong.getArtist());
-	                lblalbumplaying.setText(selectedSong.getAlbum());
-	                lblsongplaying.setText(selectedSong.getName());
-	                  
-	            }
-	        }
-	    });
-		        	/*button used to pause the song that is currently playing, uses a sentinel trigger to pause the StartTimer method which is recursive
-		    		because YouTube only allows you to load a video at the start of a specific second, the song will not resume at the exact time it was paused but
-		    		will be within the same second it was paused */
-		        		Button btnPause = new Button(composite, SWT.NONE);
-		        		btnPause.setBounds(299, 279, 105, 35);
-		        		btnPause.setText("Pause");
-		        		btnPause.addListener(SWT.Selection, event -> {
-		        			/* resumes the video */
-		        			if(paused == true) {
-		        				//generates a new browser at the time the song was paused
-		        				Browser browser = new Browser(this, SWT.NONE);
-		        				browser.setBounds(50, 50, 200, 200);
-		        				browser.setUrl(songList.get(i).getUrl() + "&start=" + resumeTime);
-		        				btnPause.setText("Pause");
-		        				paused = false;
-		        				}//end if
-		        			else {
-		        				//pauses the video
-		        				paused = true;
-		        				stopTime = timer;
-		        				resumeTime = songList.get(i).getDuration() - stopTime;
-		        				//deletes the browser
-		        				Control[] controls = Player.this.getChildren();
-		        				for (Control control : controls) {
-		        					if (control instanceof Browser) {
-		        						control.dispose();
-		        						}//end if
-		        				}//end for loop
-		        			btnPause.setText("Resume");
-		        			startTimer(display,progressBar);}//end else
-		        			});
-		        		
-		        		//button that skips the current song, done by setting the timer variable to 0, if song is last in the list it simply removes the browser
-		        		Button btnSkip = new Button(composite, SWT.NONE);
-		        		btnSkip.setBounds(429, 279, 105, 35);
-		        		btnSkip.setText("Skip");
-		        		btnSkip.addListener(SWT.Selection, event -> {
-		        			/* skips the current song */
-		        			timer = 0;
-		        			if (i == songList.size()-1) {
-		        				Control[] controls = Player.this.getChildren();
-		        				for (Control control : controls) {
-		        					if (control instanceof Browser) {
-		        						control.dispose();
-		        					}//end if
-		        				}//end for
-		        			}//end if
-		        			});
-        
-     // load the songs from the JSON file
-        songList = Songs.loadSongsFromJson("songsList.json");
-    	lblartistplaying.setText(songList.get(i).getArtist());
-		lblalbumplaying.setText(songList.get(i).getAlbum());
-		lblsongplaying.setText(songList.get(i).getAlbum());
-
-        // create the hashmap to store songs by genre
-        HashMap<String, ArrayList<Song>> songsByGenre = new HashMap<>();
-        for (Song song : songList) {
-        	
-            String genre = song.getGenre();
-            if (!songsByGenre.containsKey(genre)) {
-                songsByGenre.put(genre, new ArrayList<Song>());
-            }
-            songsByGenre.get(genre).add(song);
-        }//end for loop to populate HashMap
-
-        // populate the tree with genres as top-level items
-        for (String genre : songsByGenre.keySet()) {
-            TreeItem genreItem = new TreeItem(tree, SWT.NONE);
-            genreItem.setText(genre);
-
-            // add the songs for this genre as children of the genre item
-            for (Song song : songsByGenre.get(genre)) {
-                TreeItem songItem = new TreeItem(genreItem, SWT.NONE);
-                songItem.setText(song.getName());
-                songItem.setData(song);
-            }//end  nested for loop
-        }//end for loop
 		createContents(); 
 		PlaylistCollections playlistCollections = new PlaylistCollections();
-		//add listener to play the selected playlist from the list
-		
-		
+
 		//Playlist Builder Tab Controls:
 		TabItem playlistBuilderTab = new TabItem(tabFolder, SWT.NONE);
 		playlistBuilderTab.setText("Create Playlists");
-		
-		Composite composite_2 = new Composite(tabFolder, SWT.NONE);
 		playlistBuilderTab.setControl(composite_2);
-		//List containing all songs
+
 		List allSongs = new List(composite_2, SWT.BORDER | SWT.V_SCROLL);
-		allSongs.setBounds(10, 25, 150, 268);//spacing TBD
-		for (Song song : songList) {
-		    allSongs.add(song.getName());
+		allSongs.setBounds(10, 45, 200, 268);
+
+		Text songSearchField = new Text(composite_2, SWT.BORDER);
+		songSearchField.setText("");
+		songSearchField.setBounds(65, 10, 110, 30);
+
+		Label songSearchLabel = new Label(composite_2, SWT.NONE);
+		songSearchLabel.setText("Seach: ");
+		songSearchLabel.setBounds(10, 10, 110, 26);
+		//for loop to add songs to list box
+		for (Song song : songList) {	
+			allSongs.add(song.getName());	    
 		}//end for loop
-		
+
 		List songsToAdd = new List(composite_2, SWT.BORDER);
-		songsToAdd.setBounds(410, 25, 150, 268);//spacing TBD
-		//button to add song to new playlist
+		songsToAdd.setBounds(360, 45, 200, 268);
+
+		Button searchSong = new Button(composite_2, SWT.NONE);
+		searchSong.setText(">");
+		searchSong.setBounds(179, 9, 32, 32);
+
 		Button rightArrow = new Button(composite_2, SWT.NONE);
 		rightArrow.setText(">");
-		rightArrow.setBounds(280, 95, 35, 35);
-		//add listener to add song selected on right to left list
-		
-		
-		//button to remove song from playlist
+		rightArrow.setBounds(267, 125, 35, 35);
+
 		Button leftArrow = new Button(composite_2, SWT.NONE);
 		leftArrow.setText("<");
-		leftArrow.setBounds(280, 140, 35, 35);
+		leftArrow.setBounds(267, 170, 35, 35);
+
 		Label playlistNameLabel = new Label(composite_2, SWT.NONE);
 		playlistNameLabel.setText("Playlist Name: ");
-		playlistNameLabel.setBounds(195, 10, 80, 25);
-		//listener event for right arrow
+		playlistNameLabel.setBounds(360, 10, 110, 26);
+		//event that searches for a specific song in the create playlist tab
+		searchSong.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				allSongs.removeAll();
+				//for loop that searches for the song
+				for (Song song : songList) {
+					//if search field isn't empty
+					if (!songSearchField.getText().toLowerCase().equals("")) {
+						if (song.getName().toLowerCase().contains(songSearchField.getText().toLowerCase()) || 
+								song.getArtist().toLowerCase().contains(songSearchField.getText().toLowerCase())) {
+							allSongs.add(song.getName());
+						}//end nested if
+					}//end if
+					else {
+						allSongs.add(song.getName());
+					}//end else
+				}//end for loop
+			}
+		});//end event to search for specific song
+
+		/**
+		 * I removed the line which cleared the song from the list on the right after it is selected to make a playlist because the song will not repopulate after hitting "create playlist"
+		 * so the same song could not be in more than one playlist at once (or in multiple spots on the same playlist)
+		 */
 		rightArrow.addSelectionListener(new SelectionAdapter() {
-		    @Override
-		    public void widgetSelected(SelectionEvent e) {
-		        String[] selectedItems = allSongs.getSelection();
-		        for (String item : selectedItems) {
-		            songsToAdd.add(item);
-		            allSongs.remove(item);
-		        }
-		    }
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String[] selectedItems = allSongs.getSelection();
+				for (String item : selectedItems) {
+					songsToAdd.add(item);
+				}
+			}
 		});
-		//listener event for left arrow
+
 		leftArrow.addSelectionListener(new SelectionAdapter() {
-		    @Override
-		    public void widgetSelected(SelectionEvent e) {
-		        String[] selectedItems = songsToAdd.getSelection();
-		        for (String item : selectedItems) {
-		            allSongs.add(item);
-		            songsToAdd.remove(item);
-		        }
-		    }
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String[] selectedItems = songsToAdd.getSelection();
+				for (String item : selectedItems) {
+					allSongs.add(item);
+					songsToAdd.remove(item);
+				}
+			}
 		});
-		
+
 		Text playlistNameField = new Text(composite_2, SWT.BORDER);
 		playlistNameField.setText("");
-		playlistNameField.setBounds(280, 10, 100, 20);
+		playlistNameField.setBounds(475, 10, 85, 30);
 		//add listener to move song selected on left off of the list
-		
+
 		Button createPlaylistButton = new Button(composite_2, SWT.NONE);
-		createPlaylistButton.setText("create playlist");
-		createPlaylistButton.setBounds(240, 279, 105, 35);
-		
+		createPlaylistButton.setText("Create Playlist");
+		createPlaylistButton.setBounds(225, 279, 120, 35);
+
 		//Playlist tab controls:
 		TabItem playlistTab = new TabItem(tabFolder, SWT.NONE);
 		playlistTab.setText("Playlists");
-		
-		Composite composite_1 = new Composite(tabFolder, SWT.NONE);
+
 		playlistTab.setControl(composite_1);
-		
-		List playlistList = new List(composite_1, SWT.BORDER);
-		playlistList.setBounds(10, 50, 150, 150); //spacing TBD
-		
+
+		playlistList.setBounds(220, 70, 150, 150);
+
 		Label playlistListLabel = new Label(composite_1, SWT.NONE);
 		playlistListLabel.setText("Playlists");
-		playlistListLabel.setBounds(25, 25, 150, 30);
-		
-		List songsInPlayList = new List(composite_1, SWT.BORDER);
-		songsInPlayList.setBounds(400, 50, 150, 150); //spacing TBD
-		Label songsInPlaylistLabel = new Label(composite_1, SWT.NONE);
-		songsInPlaylistLabel.setText("Songs in Playlist");
-		songsInPlaylistLabel.setBounds(425, 20, 150, 20); //spacing TBD
-		
-				playlistList.addSelectionListener(new SelectionAdapter() {
-				    @Override
-				    public void widgetSelected(SelectionEvent e) {
-				        songsInPlayList.removeAll(); // clear the songs list
-				        String playlistName = playlistList.getItem(playlistList.getSelectionIndex());
-				        Playlist playlist = playlistCollections.getPlaylistByName(playlistName);
-				        if (playlist != null) {
-				            for (Song song : playlist.getSongs()) {
-				                songsInPlayList.add(song.getName());
-				            }
-				        }
-				    }
-				});
-				
-				Button selectButton = new Button(composite_1, SWT.NONE);
-				selectButton.setText("Play");
-				selectButton.setBounds(240, 279, 105, 35);
-		
-		//creates playlist and adds it to the list on tab 2
+		playlistListLabel.setBounds(270, 25, 150, 30);
+
+		Button playButton = new Button(composite_1, SWT.NONE);
+		playButton.setText("Play Playlist");
+		playButton.setBounds(300, 279, 105, 35);
+
+		Button deleteButton = new Button(composite_1, SWT.NONE);
+		deleteButton.setText("Delete");
+		deleteButton.setBounds(180, 279, 105, 35);
+
+		Button shuffleButton = new Button(composite_1, SWT.NONE);
+		shuffleButton.setText("Shuffle");
+		shuffleButton.setBounds(420, 279, 105, 35);
+
+		Button skipButton = new Button(composite_1, SWT.NONE);
+		skipButton.setText("Skip Song");
+		skipButton.setBounds(50, 279, 105, 35);
+
+		/**
+		 * This button iterates over the current user's collection of playlists and rewrites it to exclude the playlist the user selected to delete
+		 * it then re-populates the playlistList with the new user playlists
+		 */
+		deleteButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				TreeItem[] currentSelection = playlistList.getSelection();
+				if (currentSelection.length > 0) {
+					TreeItem selectedPlaylist = currentSelection[0];
+					String playlistName = selectedPlaylist.getText();
+					java.util.List<Playlist> playlists = PlaylistCollections.loadPlaylistsFromJson(currentUser.getPlaylistFileName());
+					JSONObject newUserPlaylistsJson = new JSONObject();
+					JSONArray playlistsJsonArray = new JSONArray();
+					for (Playlist playlist : playlists) {
+						if (playlist.getName().equalsIgnoreCase(playlistName)) {
+							currentUser.getUsersPlaylist().removePlaylist(playlist);
+						} else {
+							currentUser.getUsersPlaylist().updateJsonFile();
+						}
+					}
+					selectedPlaylist.dispose();
+				}
+			}
+		});//end delete playlist button listener
+
+		//creates play list and adds it to the list on playlist tab
 		createPlaylistButton.addSelectionListener(new SelectionAdapter() {
-		    @Override
-		    public void widgetSelected(SelectionEvent e) {
-		        String playlistName = playlistNameField.getText();
-		        String[] songs = songsToAdd.getItems();
-		        Playlist newPlaylist = new Playlist(playlistName);
-		        boolean playlistExists = false;
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				String playlistName = playlistNameField.getText();
+				String[] songs = songsToAdd.getItems();
+				Playlist newPlaylist = new Playlist(playlistName);
+				boolean playlistExists = false;
+				//if statement to make sure playlist isn't empty
+				if (playlistName.isEmpty()) {
+					MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
+					messageBox.setText("Invalid playlist name");
+					messageBox.setMessage("Playlist name cannot be empty. Please enter a valid name.");
+					messageBox.open();
+				} else {
+					// Check if playlist name already exists
+					for (TreeItem item : playlistList.getItems()) {
+						if (item.getText().equals(playlistName)) {
+							playlistExists = true;
+							break;
+						}//end if
+					}//end for loop to check if name is already used
 
-		        if (playlistName.isEmpty()) {
-		            MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
-		            messageBox.setText("Invalid playlist name");
-		            messageBox.setMessage("Playlist name cannot be empty. Please enter a valid name.");
-		            messageBox.open();
-		        } else {
-		            // Check if playlist name already exists
-		            for (int i = 0; i < playlistList.getItemCount(); i++) {
-		                if (playlistList.getItem(i).equals(playlistName)) {
-		                    playlistExists = true;
-		                    break;
-		                }
-		            }
+					if (!playlistExists) {
+						// add the new playlist to the playlist list on playlist tab
+						TreeItem newPlaylistItem = new TreeItem(playlistList, SWT.NONE);
+						newPlaylistItem.setText(playlistName);
 
-		            if (!playlistExists) {
-		                // add the new playlist to the playlist list on tab 2
-		                playlistList.add(playlistName); 
-		                // add songs to the new playlist
-		                for (String songName : songs) {
-		                    for (Song song : songList) {
-		                        if (song.getName().equals(songName)) {
-		                            newPlaylist.addSong(song);
-		                            break;
-		                        }
-		                    }
-		                }
-		                // clear the songsToAdd list
-		                songsToAdd.removeAll();
-		                playlistNameField.setText("");
-		                
-		                // Add the new playlist to the playlistCollections
-		                playlistCollections.addPlaylist(newPlaylist);
-		                
-		                // Debug output
-		                System.out.println("Playlist '" + newPlaylist.getName() + "' added with songs:");
-		                for (Song song : newPlaylist.getSongs()) {
-		                    System.out.println(song.getName());
-		                }
-		            } else {
-		                MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
-		                messageBox.setText("Playlist already exists");
-		                messageBox.setMessage("A playlist with the name '" + playlistName + "' already exists. Please choose a different name.");
-		                messageBox.open();
-		            }
-		        }
-		    }
+						// add songs to the new playlist
+						for (String songName : songs) {
+							for (Song song : songList) {
+								if (song.getName().equals(songName)) {
+									newPlaylist.addSong(song);
+									TreeItem songItem = new TreeItem(newPlaylistItem, SWT.NONE);
+									songItem.setText(songName);
+									songItem.setData(song);
+									break;
+								}///end if
+							}//end nested for loop
+						}//end outer for loop to add songs to new playlist
+
+						// clear the songsToAdd list
+						songsToAdd.removeAll();
+						playlistNameField.setText("");
+
+						// Add the new playlist to the playlistCollections for the current user
+						currentUser.getUsersPlaylist().addPlaylist(newPlaylist);
+
+						// Debug output
+						System.out.println("Playlist '" + newPlaylist.getName() + "' added with songs:");
+						//for loop that prints new playlist to console
+						for (Song song : newPlaylist.getSongs()) {
+							System.out.println(song.getName());
+						}//end for loop
+					} else {
+						MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
+						messageBox.setText("Playlist already exists");
+						messageBox.setMessage("A playlist with the name '" + playlistName + "' already exists. Please choose a different name.");
+						messageBox.open();
+					}//end nested else
+				}//end outer else
+			}
+		});//end create playlist event
+
+
+		//listener event for playButton that plays the playlist from the playlist tab
+		playButton.addListener(SWT.Selection, event -> {
+			TreeItem[] selectedItems = playlistList.getSelection();
+			if (selectedItems.length > 0) {
+				// Only play songs if a playlist is selected
+				TreeItem playlistItem = selectedItems[0];
+				for (TreeItem songItem : playlistItem.getItems()) {
+					Song song = (Song) songItem.getData();
+					playQueue.push(song);
+					updateQueueList(lstQueue);
+				}//end if
+			}
 		});
-		
+
+		shuffleButton.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent event) {
+				// Get the selected playlist
+				TreeItem[] selection = playlistList.getSelection();
+				if (selection.length == 0) {
+					// No playlist has been selected, do nothing
+					MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
+					messageBox.setText("No play list Selected.");
+					messageBox.setMessage("Please select a play list to shuffle");
+					messageBox.open();
+					return;
+				}//end if
+				TreeItem selectedPlaylist = selection[0];
+
+				// Get the child items (songs) of the selected playlist
+				TreeItem[] songs = selectedPlaylist.getItems();
+
+				// Create a list to hold the song objects
+				ArrayList<Song> songList = new ArrayList<Song>();
+
+				// Add each song object to the list
+				for (TreeItem song : songs) {
+					songList.add((Song) song.getData());
+				}
+				
+				//clear the Queue
+				playQueue.removeAllElements();
+
+				// Shuffle the list
+				Collections.shuffle(songList);
+				
+				//add each song to the queue
+				playQueue.addAll(songList);
+				updateQueueList(lstQueue);
+
+				// Clear the existing child items from the selected playlist
+				selectedPlaylist.removeAll();
+
+				// Add the shuffled songs back to the playlist as child items
+				for (Song song : songList) {
+					TreeItem songItem = new TreeItem(selectedPlaylist, SWT.NONE);
+					songItem.setText(song.getName());
+					songItem.setData(song);
+				}
+
+				// Update the tree widget
+				tree.update();
+			}
+		});
+	}
+
+	/**
+	 * event that loads from a json file the already existing playlists associated with the current user
+	 */
+	private void initialPlaylistLoad() {
+		if (!(currentUser.getUsername().equals("guest"))) {
+			java.util.List<Playlist> playlists = PlaylistCollections.loadPlaylistsFromJson(currentUser.getPlaylistFileName());
+			for (Playlist playlist : playlists) {
+				TreeItem newPlaylistItem = new TreeItem(playlistList, 0);
+				newPlaylistItem.setText(playlist.getName());
+				
+				java.util.List<Song> songs = playlist.getSongs();
+				for (Song song : songs) {
+					TreeItem songItem = new TreeItem(newPlaylistItem, SWT.NONE);
+					songItem.setText(song.getName());
+					songItem.setData(song);		
+				}//end nested for loop	
+			}//end outer for loop
+		}//end if		
+	}//end initialPlaylistLoad method
+
+	public static void reloadPlaylists() {
+		if (playlistList != null) {
+			playlistList.clearAll(true);
+		}
+		java.util.List<Playlist> playlists = PlaylistCollections.loadPlaylistsFromJson(currentUser.getPlaylistFileName());
+		for (Playlist playlist : playlists) {
+			TreeItem newPlaylistItem = new TreeItem(playlistList, SWT.NONE);
+			newPlaylistItem.setText(playlist.getName());
+
+			java.util.List<Song> songs = playlist.getSongs();
+			for (Song song : songs) {
+				TreeItem songItem = new TreeItem(newPlaylistItem, SWT.NONE);
+				songItem.setText(song.getName());
+				songItem.setData(song);		
+			}
+		}
+	}
+
+	protected void createNewUserFile(String fileName) {
+    	File newUserFile = new File(fileName);
+    	FileWriter fileWriter;
+    	try {
+    		fileWriter = new FileWriter(newUserFile, false);
+    		fileWriter.write("{\n\"playlists\":[\n{\"playlist name\": \"Liked Songs\",\n\"songs\": []\n}]}");
+    	} catch (IOException e) {
+    		e.printStackTrace();
+    	}
+
+
     }
 		
 	
@@ -524,23 +803,28 @@ public class Player extends Shell {
 	 * before we call the startTimer method
 	 * @param display
 	 */
-	public void startTimer(Display display, ProgressBar progress) {
+	
+	public void startTimer(Display display, ProgressBar progress, List list, Label name, Label album, Label artist, Label genre) {
 		if(paused == false) {
 			display.timerExec(1000, new Runnable() {
 				public void run() {
+					/*recursive loop that decrements the timer variable by 1 every second until the variable is
+					 * no longer larger than 0
+					 */
 					if (timer > 0) {
 						timer--;
 						display.asyncExec(new Runnable() {
 							public void run() {
-								progress.setSelection(songList.get(i).getDuration() - timer);
+							//if statement to make sure the progress bar stops when the song is paused
+								if (paused == false) {
+								progress.setSelection(playQueue.peek().getDuration() - timer);}//end if
 							}
-						});
+						});//end recursive loop
 						display.timerExec(1000, this);
 					} else {
 						// Stop the timer
 						display.timerExec(-1, this);
-						if (repeat = false) {
-						i++;}//end if
+						playQueue.pop();
 						// Remove the Browser widget so we can load the second one
 						Control[] controls = Player.this.getChildren();
 						for (Control control : controls) {
@@ -548,31 +832,56 @@ public class Player extends Shell {
 								control.dispose();
 							}//end if
 						}//end for
-						if (i == songList.size() - 1) { //if statment to check if current song is the last in the list
+						if (playQueue.isEmpty()) { //if statement to check if current song is the last in the list
+							// Remove the Browser widget if there is no queue
+							Control[] controls1 = Player.this.getChildren();
+							for (Control control : controls) {
+								if (control instanceof Browser) {
+									control.dispose();
+								}//end if
+							}//end for
 							return;
-						}//end if
+						}//end if to check if at end of queue
 						//creating the new browser
 						Browser browser = new Browser(Player.this, SWT.NONE);
 						browser.setBounds(50, 50, 1, 1);
-						browser.setUrl(songList.get(i).getUrl());
-						// Set the timer variable to 36 for testing purposes will be changed later
-						timer = songList.get(i).getDuration();
-						startTimer(display, progress);
+						browser.setUrl(playQueue.peek().getUrl());
+						updateQueueList(list);
+						UpdateLabels(name, album, artist, genre);
+						timer = playQueue.peek().getDuration();
+						startTimer(display, progress, list, name, album, artist, genre);
 					}//end else
 				}
 			});
 			}//end if
 		}//end StartTimer method
 	
-	public void UpdateLabels(Label song, Label album, Label artist) {
-		song.setText(songList.get(i).getName());
-		album.setText(songList.get(i).getAlbum());
-		artist.setText(songList.get(i).getArtist());
-	}//end updatelables method
+	public void UpdateLabels(Label song, Label album, Label artist, Label genre) {
+		song.setText(playQueue.peek().getName());
+		album.setText(playQueue.peek().getAlbum());
+		artist.setText(playQueue.peek().getArtist());
+		genre.setText(playQueue.peek().getGenre());
+	}//end updateLables method
+	/**
+	 * method that updates the GUI to show queue list
+	 * @param list
+	 */
+	public void updateQueueList(List list) {
+		list.removeAll();
+		for(int i=0; i<playQueue.size(); i++) {
+			list.add(playQueue.elementAt(i).getName());
+		}//end for loop
+	}//end updateQueueList method
 
-
+	
 	@Override
 	protected void checkSubclass() {
 		// Disable the check that prevents subclassing of SWT components
+	}
+	
+	public static void getUserFromLogin(User user) {
+		currentUser = user;
+		currentUserPlaylist = currentUser.getUsersPlaylist();
+		loginwindow.dispose();
 	}
 }

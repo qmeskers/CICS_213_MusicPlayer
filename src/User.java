@@ -31,7 +31,6 @@ public class User {
 		this.playlistFileName = username + "Playlists.json";
 		this.usersPlaylist = new PlaylistCollections();
 		Player.userList.add(this);
-		//TODO: userlistIO update json call has to go somewhere
 	}
 	/**
 	 * @return the firstname

@@ -8,7 +8,7 @@ public class User {
 	String firstname; //User's first name
 	String lastname; //User's last name
 	String email; //User's email
-	String password; //User's password *optional
+	String password; //User's password
 	String username;
 	int userID;
 	String playlistFileName; //fileName for user's playlist
@@ -28,10 +28,9 @@ public class User {
 		this.password = password;
 		this.username = username;
 		this.userID = userID;
-		playlistFileName = username + "Playlists.json";
-		usersPlaylist = new PlaylistCollections();
+		this.playlistFileName = username + "Playlists.json";
+		this.usersPlaylist = new PlaylistCollections();
 		Player.userList.add(this);
-		userListIO.updateUserJsonFile();
 	}
 	/**
 	 * @return the firstname

@@ -117,17 +117,15 @@ public class Player extends Shell {
 		
 		//load the playlistList with initial user data from login
 		playlistList = new Tree(composite_1, SWT.BORDER);
+		//put all the users playlists into the users playlist collection
 		initialPlaylistLoad();
 
 		//adds the icon to the top corner of the window
 		Image play = new Image(display, "play.png");
 		this.setImage(play);
-
 		
 		
 		//User Management Controls:
-		
-		//TODO: sign out button
 		TabItem userManagementTab = new TabItem(tabFolder, SWT.NONE);
 		userManagementTab.setText("User Management");
 		userManagementTab.setControl(userTabComposite);
@@ -204,6 +202,8 @@ public class Player extends Shell {
 				User newUser = new User(firstNameField.getText(), lastNameField.getText(), 
 						emailField.getText(), passwordField.getText(), usernameField.getText(), 0);
 				currentUser = newUser;
+				userList.add(newUser);
+				userListIO.updateUserJsonFile();
 			}
 		});//end create new user button listener
 		
@@ -223,11 +223,10 @@ public class Player extends Shell {
 
 		//Now playing tab controls:
 		TabItem playerTab = new TabItem(tabFolder, SWT.NONE);
-		playerTab.setText("Now Playing");
-
-		
+		playerTab.setText("Now Playing");		
 		playerTab.setControl(composite);
 		composite.setLayout(null);
+		
 		//label that acts as a header for the artist
 		Label lblArtist = new Label(composite, SWT.NONE);
 		lblArtist.setBounds(10, 10, 81, 25);
@@ -285,7 +284,7 @@ public class Player extends Shell {
 
 		//button used to restart the current song
 		Button btnRestart = new Button(composite, SWT.NONE);
-		btnRestart.setBounds(132, 349, 91, 39);
+		btnRestart.setBounds(136, 349, 66, 40);
 		btnRestart.setText("Restart");
 		//listener event for btnRestart that restarts the song by removing the browser then generating a new one
 		btnRestart.addListener(SWT.Selection, event -> {
@@ -303,7 +302,7 @@ public class Player extends Shell {
 
 		//button used to start playing the playlist
 		Button btnPlay = new Button(composite, SWT.NONE);
-		btnPlay.setBounds(229, 349, 91, 39);
+		btnPlay.setBounds(208, 349, 66, 40);
 		btnPlay.setText("Play");
 		//listener event for btnPlay that generates a browser and embeds a youtube video into it, also starts the timer
 		btnPlay.addListener(SWT.Selection, event -> {
@@ -330,7 +329,7 @@ public class Player extends Shell {
 
 		//button used to repeat the current song once it's finished playing
 		Button btnRepeat = new Button(composite, SWT.NONE);
-		btnRepeat.setBounds(35, 348, 91, 40);
+		btnRepeat.setBounds(64, 349, 66, 40);
 		btnRepeat.setText("Repeat");
 		//listener event for btnRepeat that adds the current song to the next index in the ArrayList
 		btnRepeat.addListener(SWT.Selection, event -> {
@@ -373,8 +372,8 @@ public class Player extends Shell {
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
-		btnPause.setBounds(326, 349, 91, 39);
-		btnPause.setText("Pause");
+		btnPause.setBounds(279, 349, 66, 40);
+		btnPause.setText("Ⅱ");
 		//listener event for btnPause that pauses or resumes a song depending on the paused boolean value
 		btnPause.addListener(SWT.Selection, event -> {
 			//generates a new browser if the song is already paused, resumes the song at the paused location
@@ -382,7 +381,9 @@ public class Player extends Shell {
 				Browser browser = new Browser(this, SWT.NONE);
 				browser.setBounds(50, 50, 200, 200);
 				browser.setUrl(playQueue.peek().getUrl() + "&start=" + resumeTime);
-				btnPause.setText("Pause");
+				timer = playQueue.peek().getDuration() - resumeTime;
+				progressBar.setSelection(resumeTime);
+				btnPause.setText("Ⅱ");
 				paused = false;
 			}//end if to resume song
 			else { //takes the pause time and then disposes of the broswer
@@ -396,18 +397,26 @@ public class Player extends Shell {
 						control.dispose();
 					}//end if
 				}//end for loop to dispose browser objects
-				btnPause.setText("Resume");
+				btnPause.setText("►");
 				startTimer(display, progressBar, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);//end else  for pausing the song
 			}});//end selection listener event for btnPause
 
 		//button used to skip the current song that's playing
 		Button btnSkip = new Button(composite, SWT.NONE);
-		btnSkip.setBounds(423, 349, 91, 39);
+		btnSkip.setBounds(351, 349, 66, 40);
 		btnSkip.setText("Skip");
+		//button to like the currently playling song
+		Button btnLike = new Button(composite, SWT.NONE);
+		btnLike.setBounds(423, 349, 66, 40);
+		btnLike.setText("Like");
 		//button that adds selected song in treemap to queue
 		Button btnAddToQueue = new Button(composite, SWT.NONE);
-		btnAddToQueue.setBounds(396, 245, 117, 35);
+		btnAddToQueue.setBounds(390, 245, 124, 35);
 		btnAddToQueue.setText("Add to Queue");
+		//button to clear queue 
+		Button btnClearQ = new Button(composite, SWT.NONE);
+		btnClearQ.setBounds(273, 245, 111, 35);
+		btnClearQ.setText("Clear Queue");
 		
 		Label lblUpNext = new Label(composite, SWT.NONE);
 		lblUpNext.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
@@ -418,6 +427,73 @@ public class Player extends Shell {
 		lblAllSongs.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		lblAllSongs.setBounds(332, 10, 81, 25);
 		lblAllSongs.setText("All Songs:");
+		//button to move songs up the Queue
+		Button btnQueueUp = new Button(composite, SWT.NONE);
+		btnQueueUp.setFont(SWTResourceManager.getFont("Segoe UI", 7, SWT.NORMAL));
+		//listener event to move a song up the Queue
+		btnQueueUp.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				//if statement to check if no song is selected
+				if (lstQueue.getSelectionIndex()==-1) {
+					return;
+				}//end if
+				//if statement to prevent the event from replacing the song currently playing with the one selected
+				if(lstQueue.getSelectionIndex()!=0) {
+				Song tempSong; //used to store song being moved
+				int tempInt; //used to save selected song's location so song is still selected after move
+				tempSong = playQueue.get(lstQueue.getSelectionIndex() + 1);
+				tempInt = lstQueue.getSelectionIndex();
+				playQueue.remove(lstQueue.getSelectionIndex()+1);
+				playQueue.add(lstQueue.getSelectionIndex(), tempSong);
+				updateQueueList(lstQueue);
+				lstQueue.setSelection(tempInt - 1);
+				}//end if
+			}
+		});//end listener event to move a song up the Queue
+		btnQueueUp.setBounds(284, 12, 22, 25);
+		btnQueueUp.setText("▲");
+		//button to move songs down the Queue
+		Button btnQueueDown = new Button(composite, SWT.NONE);
+		//listener event to move a selected song down the Queue
+		btnQueueDown.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				//if statement to check if no song is selected
+				if (lstQueue.getSelectionIndex()==-1) {
+					return;
+				}//end if
+				//if statement to prevent the event from moving a song that's already at the bottom of the Queue
+				if(lstQueue.getSelectionIndex()+1!=playQueue.size()-1) {
+				Song tempSong; //used to store song being moved
+				int tempInt; //used to save selected song's location so song is still selected after move
+				tempSong = playQueue.get(lstQueue.getSelectionIndex() + 1);
+				tempInt = lstQueue.getSelectionIndex();
+				playQueue.remove(lstQueue.getSelectionIndex()+1);
+				playQueue.add(lstQueue.getSelectionIndex()+2, tempSong);
+				updateQueueList(lstQueue);
+				lstQueue.setSelection(tempInt + 1);
+				}//end if
+			}
+		});//end event to move selected song down the Queue
+		btnQueueDown.setFont(SWTResourceManager.getFont("Segoe UI", 7, SWT.NORMAL));
+		btnQueueDown.setBounds(306, 12, 22, 25);
+		btnQueueDown.setText("▼");
+		//button to remove a song from the Queue, only works on songs not currently playing
+		Button btnRemove = new Button(composite, SWT.NONE);
+		btnRemove.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				//if statement to check if no song is selected or Queuelist is empty
+				if (lstQueue.getSelectionIndex()==-1 || playQueue.size() < 2) {
+					return;
+				}//end if
+				playQueue.remove(lstQueue.getSelectionIndex()+1);
+				updateQueueList(lstQueue);
+			}
+		});//end event to remove song from Queue
+		btnRemove.setBounds(208, 245, 57, 35);
+		btnRemove.setText("✖");
 		//event for adding a song to the queue
 		btnAddToQueue.addSelectionListener(new SelectionAdapter() {
 			@Override
@@ -429,6 +505,20 @@ public class Player extends Shell {
 				}//end if
 			}
 		});//end event to add single song to event
+		//listener event for clearing a queue
+		btnClearQ.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				timer = 0;
+				playQueue.clear();
+				updateQueueList(lstQueue);
+				lblsongplaying.setText("");
+				lblalbumplaying.setText("");
+				lblartistplaying.setText("");
+				lblgenreplaying.setText("");
+				progressBar.setSelection(0);
+			}//end if
+		});//end event to clear queue
 		//listener event for btnSkip that sets the timer to 0 so the next song immediately loads in the timer method
 		btnSkip.addListener(SWT.Selection, event -> {
 			timer = 0;
@@ -442,6 +532,20 @@ public class Player extends Shell {
 				}//end for loop to dispose of browser
 			}//end if
 		});//end listener event for btnSkip
+		//listener for btnLike to add the current song to the liked songs playlist when clicked
+		btnLike.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if(!currentUser.getUsername().equals("guest")) {
+					currentUser.getUsersPlaylist().getPlaylistByName("Liked Songs").addSong(songList.get(i));
+					currentUser.getUsersPlaylist().updateJsonFile(currentUser.getPlaylistFileName());
+					reloadPlaylists();
+				}else {
+					JOptionPane.showMessageDialog(null, "To like songs and save playlists, "
+							+ "please log in or create an account on the user management tab");
+				}
+				
+			}
+		});
 
 		// load the songs from the JSON file
 		songList = Songs.loadSongsFromJson("songsList.json");
@@ -520,7 +624,8 @@ public class Player extends Shell {
 					//if search field isn't empty
 					if (!songSearchField.getText().toLowerCase().equals("")) {
 						if (song.getName().toLowerCase().contains(songSearchField.getText().toLowerCase()) || 
-								song.getArtist().toLowerCase().contains(songSearchField.getText().toLowerCase())) {
+								song.getArtist().toLowerCase().contains(songSearchField.getText().toLowerCase()) || 
+								song.getGenre().toLowerCase().contains(songSearchField.getText().toLowerCase())) {
 							allSongs.add(song.getName());
 						}//end nested if
 					}//end if
@@ -531,10 +636,6 @@ public class Player extends Shell {
 			}
 		});//end event to search for specific song
 
-		/**
-		 * I removed the line which cleared the song from the list on the right after it is selected to make a playlist because the song will not repopulate after hitting "create playlist"
-		 * so the same song could not be in more than one playlist at once (or in multiple spots on the same playlist)
-		 */
 		rightArrow.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -608,9 +709,9 @@ public class Player extends Shell {
 					JSONArray playlistsJsonArray = new JSONArray();
 					for (Playlist playlist : playlists) {
 						if (playlist.getName().equalsIgnoreCase(playlistName)) {
-							currentUser.getUsersPlaylist().removePlaylist(playlist);
+							currentUser.getUsersPlaylist().removePlaylist(playlist, currentUser.getPlaylistFileName());
 						} else {
-							currentUser.getUsersPlaylist().updateJsonFile();
+							currentUser.getUsersPlaylist().updateJsonFile(currentUser.getPlaylistFileName());
 						}
 					}
 					selectedPlaylist.dispose();
@@ -664,14 +765,10 @@ public class Player extends Shell {
 						playlistNameField.setText("");
 
 						// Add the new playlist to the playlistCollections for the current user
-						currentUser.getUsersPlaylist().addPlaylist(newPlaylist);
-
-						// Debug output
-						System.out.println("Playlist '" + newPlaylist.getName() + "' added with songs:");
-						//for loop that prints new playlist to console
-						for (Song song : newPlaylist.getSongs()) {
-							System.out.println(song.getName());
-						}//end for loop
+						//unless the current user is a guest account
+						if (!currentUser.getUsername().equals("guest")) {
+							currentUser.getUsersPlaylist().addPlaylist(newPlaylist, currentUser.getPlaylistFileName());
+						}
 					} else {
 						MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
 						messageBox.setText("Playlist already exists");
@@ -755,6 +852,8 @@ public class Player extends Shell {
 		if (!(currentUser.getUsername().equals("guest"))) {
 			java.util.List<Playlist> playlists = PlaylistCollections.loadPlaylistsFromJson(currentUser.getPlaylistFileName());
 			for (Playlist playlist : playlists) {
+				//testLine
+				currentUser.getUsersPlaylist().addPlaylist(playlist, null);
 				TreeItem newPlaylistItem = new TreeItem(playlistList, 0);
 				newPlaylistItem.setText(playlist.getName());
 				
@@ -786,17 +885,21 @@ public class Player extends Shell {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void createNewUserFile(String fileName) {
-    	File newUserFile = new File(fileName);
-    	FileWriter fileWriter;
-    	try {
-    		fileWriter = new FileWriter(newUserFile, false);
-    		fileWriter.write("{\n\"playlists\":[\n{\"playlist name\": \"Liked Songs\",\n\"songs\": []\n}]}");
-    	} catch (IOException e) {
-    		e.printStackTrace();
-    	}
-
-
+		JSONObject newUserJsonFile = new JSONObject();
+		JSONArray playlistsJsonArray = new JSONArray();
+		JSONObject currentPlaylistJson = new JSONObject();
+		JSONArray emptyArray = new JSONArray();
+		currentPlaylistJson.put("playlist name", "Liked Songs");
+		currentPlaylistJson.put("songs", emptyArray);
+		playlistsJsonArray.add(currentPlaylistJson);
+		newUserJsonFile.put("playlists", playlistsJsonArray);
+		try {
+			Files.write(Paths.get(fileName), newUserJsonFile.toJSONString().getBytes());
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
     }
 		
 	

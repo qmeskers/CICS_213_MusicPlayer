@@ -405,12 +405,16 @@ public class Player extends Shell {
 		btnSkip.setText("Skip");
 		//button to like the currently playling song
 		Button btnLike = new Button(composite, SWT.NONE);
-		btnLike.setBounds(274, 245, 117, 35);
+		btnLike.setBounds(331, 245, 55, 35);
 		btnLike.setText("Like");
 		//button that adds selected song in treemap to queue
 		Button btnAddToQueue = new Button(composite, SWT.NONE);
-		btnAddToQueue.setBounds(396, 245, 117, 35);
+		btnAddToQueue.setBounds(390, 245, 124, 35);
 		btnAddToQueue.setText("Add to Queue");
+		//button to clear queue 
+		Button btnClearQ = new Button(composite, SWT.NONE);
+		btnClearQ.setBounds(207, 245, 111, 35);
+		btnClearQ.setText("Clear Queue");
 		
 		Label lblUpNext = new Label(composite, SWT.NONE);
 		lblUpNext.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
@@ -432,6 +436,19 @@ public class Player extends Shell {
 				}//end if
 			}
 		});//end event to add single song to event
+		//event for clearing a queue
+		btnClearQ.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				timer = 0;
+				playQueue.clear();
+				updateQueueList(lstQueue);
+				lblsongplaying.setText("");
+				lblalbumplaying.setText("");
+				lblartistplaying.setText("");
+				lblgenreplaying.setText("");
+			}//end if
+		});//end event to clear queue
 		//listener event for btnSkip that sets the timer to 0 so the next song immediately loads in the timer method
 		btnSkip.addListener(SWT.Selection, event -> {
 			timer = 0;
@@ -537,7 +554,8 @@ public class Player extends Shell {
 					//if search field isn't empty
 					if (!songSearchField.getText().toLowerCase().equals("")) {
 						if (song.getName().toLowerCase().contains(songSearchField.getText().toLowerCase()) || 
-								song.getArtist().toLowerCase().contains(songSearchField.getText().toLowerCase())) {
+								song.getArtist().toLowerCase().contains(songSearchField.getText().toLowerCase()) || 
+								song.getGenre().toLowerCase().contains(songSearchField.getText().toLowerCase())) {
 							allSongs.add(song.getName());
 						}//end nested if
 					}//end if

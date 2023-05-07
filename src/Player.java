@@ -280,8 +280,43 @@ public class Player extends Shell {
 		ProgressBar progressBar = new ProgressBar(composite, SWT.NONE);
 		progressBar.setBounds(35, 301, 478, 19);
 		progressBar.setMinimum(0);
-
-
+		
+		//button used to pause the song that is currently playing
+		Button btnPause = new Button(composite, SWT.NONE);
+		btnPause.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+			}
+		});
+		btnPause.setBounds(326, 349, 91, 39);
+		btnPause.setText("Pause");
+		//listener event for btnPause that pauses or resumes a song depending on the paused boolean value
+		btnPause.addListener(SWT.Selection, event -> {
+			//if Queue isn't empty
+			if (!playQueue.isEmpty()) {
+				//generates a new browser if the song is already paused, resumes the song at the paused location
+				if(paused == true) {
+					Browser browser = new Browser(this, SWT.NONE);
+					browser.setBounds(50, 50, 200, 200);
+					browser.setUrl(playQueue.peek().getUrl() + "&start=" + resumeTime);
+					btnPause.setText("Pause");
+					paused = false;
+				}//end if to resume song
+				else { //takes the pause time and then disposes of the broswer
+					paused = true;
+					stopTime = timer;
+					resumeTime = playQueue.peek().getDuration() - stopTime - 2; //subtracting an additional 2 seconds to account for loading times
+					//remove the current browser
+					Control[] controls = Player.this.getChildren();
+					for (Control control : controls) {
+						if (control instanceof Browser) {
+							control.dispose();
+						}//end if
+					}//end for loop to dispose browser objects
+					btnPause.setText("Resume");
+					startTimer(display, progressBar, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);//end else  for pausing the song
+				} //end else
+		}});//end selection listener event for btnPause
 		//button used to restart the current song
 		Button btnRestart = new Button(composite, SWT.NONE);
 		btnRestart.setBounds(132, 349, 91, 39);
@@ -298,6 +333,8 @@ public class Player extends Shell {
 			browser.setBounds(50, 50, 1, 1);
 			browser.setUrl(playQueue.peek().getUrl());
 			timer = playQueue.peek().getDuration();
+			paused = false;
+			btnPause.setText("Pause");
 		});//end btnRestart listener event
 
 		//button used to start playing the playlist
@@ -324,6 +361,8 @@ public class Player extends Shell {
 			progressBar.setMaximum(playQueue.peek().getDuration());
 			startTimer(display, progressBar, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
 			UpdateLabels(lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
+			paused = false;
+			btnPause.setText("Pause");
 		});//end btnPlay listener event
 
 
@@ -365,39 +404,6 @@ public class Player extends Shell {
 				}//end for loop to look for song index
 			}
 		});//end of listener event for the tree
-		//button used to pause the song that is currently playing
-		Button btnPause = new Button(composite, SWT.NONE);
-		btnPause.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-			}
-		});
-		btnPause.setBounds(326, 349, 91, 39);
-		btnPause.setText("Pause");
-		//listener event for btnPause that pauses or resumes a song depending on the paused boolean value
-		btnPause.addListener(SWT.Selection, event -> {
-			//generates a new browser if the song is already paused, resumes the song at the paused location
-			if(paused == true) {
-				Browser browser = new Browser(this, SWT.NONE);
-				browser.setBounds(50, 50, 200, 200);
-				browser.setUrl(playQueue.peek().getUrl() + "&start=" + resumeTime);
-				btnPause.setText("Pause");
-				paused = false;
-			}//end if to resume song
-			else { //takes the pause time and then disposes of the broswer
-				paused = true;
-				stopTime = timer;
-				resumeTime = playQueue.peek().getDuration() - stopTime - 2; //subtracting an additional 2 seconds to account for loading times
-				//remove the current browser
-				Control[] controls = Player.this.getChildren();
-				for (Control control : controls) {
-					if (control instanceof Browser) {
-						control.dispose();
-					}//end if
-				}//end for loop to dispose browser objects
-				btnPause.setText("Resume");
-				startTimer(display, progressBar, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);//end else  for pausing the song
-			}});//end selection listener event for btnPause
 
 		//button used to skip the current song that's playing
 		Button btnSkip = new Button(composite, SWT.NONE);
@@ -443,15 +449,16 @@ public class Player extends Shell {
 				timer = 0;
 				playQueue.clear();
 				updateQueueList(lstQueue);
-				lblsongplaying.setText("");
-				lblalbumplaying.setText("");
-				lblartistplaying.setText("");
-				lblgenreplaying.setText("");
+				progressBar.setSelection(0);
+				UpdateLabels(lblsongplaying, lblalbumplaying,lblartistplaying,lblgenreplaying);
 			}//end if
 		});//end event to clear queue
 		//listener event for btnSkip that sets the timer to 0 so the next song immediately loads in the timer method
 		btnSkip.addListener(SWT.Selection, event -> {
 			timer = 0;
+			progressBar.setSelection(0);
+			paused = false;
+			btnPause.setText("Pause");
 			//if statement to check if Queue is empty
 			if (playQueue.isEmpty()) {
 				Control[] controls = Player.this.getChildren();
@@ -907,10 +914,18 @@ public class Player extends Shell {
 		}//end StartTimer method
 	
 	public void UpdateLabels(Label song, Label album, Label artist, Label genre) {
-		song.setText(playQueue.peek().getName());
-		album.setText(playQueue.peek().getAlbum());
-		artist.setText(playQueue.peek().getArtist());
-		genre.setText(playQueue.peek().getGenre());
+		try {
+			song.setText(playQueue.peek().getName());
+			album.setText(playQueue.peek().getAlbum());
+			artist.setText(playQueue.peek().getArtist());
+			genre.setText(playQueue.peek().getGenre());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			song.setText("");
+			album.setText("");
+			artist.setText("");
+			genre.setText("");
+		}
 	}//end updateLables method
 	/**
 	 * method that updates the GUI to show queue list

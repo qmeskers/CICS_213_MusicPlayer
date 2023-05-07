@@ -87,7 +87,8 @@ public class loginWindow extends JDialog {
 						//iterate through the list of users.  if a match is found, set that user to currentUser and display their playlists
 						//otherwise show an error
 						for (User user : Player.userList) {
-							if (user.getUsername().equals(usernameField.getText()) && user.getPassword().equals(passwordField.getText())){
+							if (user.getUsername().equalsIgnoreCase(usernameField.getText()) 
+									&& (user.getPassword().equals(passwordField.getText()))){
 								launchMainApp(user);
 							}
 						}

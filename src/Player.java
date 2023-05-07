@@ -117,17 +117,15 @@ public class Player extends Shell {
 		
 		//load the playlistList with initial user data from login
 		playlistList = new Tree(composite_1, SWT.BORDER);
+		//put all the users playlists into the users playlist collection
 		initialPlaylistLoad();
 
 		//adds the icon to the top corner of the window
 		Image play = new Image(display, "play.png");
 		this.setImage(play);
-
 		
 		
 		//User Management Controls:
-		
-		//TODO: sign out button
 		TabItem userManagementTab = new TabItem(tabFolder, SWT.NONE);
 		userManagementTab.setText("User Management");
 		userManagementTab.setControl(userTabComposite);
@@ -204,6 +202,8 @@ public class Player extends Shell {
 				User newUser = new User(firstNameField.getText(), lastNameField.getText(), 
 						emailField.getText(), passwordField.getText(), usernameField.getText(), 0);
 				currentUser = newUser;
+				userList.add(newUser);
+				userListIO.updateUserJsonFile();
 			}
 		});//end create new user button listener
 		
@@ -223,11 +223,10 @@ public class Player extends Shell {
 
 		//Now playing tab controls:
 		TabItem playerTab = new TabItem(tabFolder, SWT.NONE);
-		playerTab.setText("Now Playing");
-
-		
+		playerTab.setText("Now Playing");		
 		playerTab.setControl(composite);
 		composite.setLayout(null);
+		
 		//label that acts as a header for the artist
 		Label lblArtist = new Label(composite, SWT.NONE);
 		lblArtist.setBounds(10, 10, 81, 25);
@@ -404,6 +403,10 @@ public class Player extends Shell {
 		Button btnSkip = new Button(composite, SWT.NONE);
 		btnSkip.setBounds(423, 349, 91, 39);
 		btnSkip.setText("Skip");
+		//button to like the currently playling song
+		Button btnLike = new Button(composite, SWT.NONE);
+		btnLike.setBounds(274, 245, 117, 35);
+		btnLike.setText("Like");
 		//button that adds selected song in treemap to queue
 		Button btnAddToQueue = new Button(composite, SWT.NONE);
 		btnAddToQueue.setBounds(396, 245, 117, 35);
@@ -442,6 +445,20 @@ public class Player extends Shell {
 				}//end for loop to dispose of browser
 			}//end if
 		});//end listener event for btnSkip
+		//listener for btnLike to add the current song to the liked songs playlist when clicked
+		btnLike.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				if(!currentUser.getUsername().equals("guest")) {
+					currentUser.getUsersPlaylist().getPlaylistByName("Liked Songs").addSong(songList.get(i));
+					currentUser.getUsersPlaylist().updateJsonFile(currentUser.getPlaylistFileName());
+					reloadPlaylists();
+				}else {
+					JOptionPane.showMessageDialog(null, "To like songs and save playlists, "
+							+ "please log in or create an account on the user management tab");
+				}
+				
+			}
+		});
 
 		// load the songs from the JSON file
 		songList = Songs.loadSongsFromJson("songsList.json");
@@ -531,10 +548,6 @@ public class Player extends Shell {
 			}
 		});//end event to search for specific song
 
-		/**
-		 * I removed the line which cleared the song from the list on the right after it is selected to make a playlist because the song will not repopulate after hitting "create playlist"
-		 * so the same song could not be in more than one playlist at once (or in multiple spots on the same playlist)
-		 */
 		rightArrow.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -608,9 +621,9 @@ public class Player extends Shell {
 					JSONArray playlistsJsonArray = new JSONArray();
 					for (Playlist playlist : playlists) {
 						if (playlist.getName().equalsIgnoreCase(playlistName)) {
-							currentUser.getUsersPlaylist().removePlaylist(playlist);
+							currentUser.getUsersPlaylist().removePlaylist(playlist, currentUser.getPlaylistFileName());
 						} else {
-							currentUser.getUsersPlaylist().updateJsonFile();
+							currentUser.getUsersPlaylist().updateJsonFile(currentUser.getPlaylistFileName());
 						}
 					}
 					selectedPlaylist.dispose();
@@ -664,14 +677,10 @@ public class Player extends Shell {
 						playlistNameField.setText("");
 
 						// Add the new playlist to the playlistCollections for the current user
-						currentUser.getUsersPlaylist().addPlaylist(newPlaylist);
-
-						// Debug output
-						System.out.println("Playlist '" + newPlaylist.getName() + "' added with songs:");
-						//for loop that prints new playlist to console
-						for (Song song : newPlaylist.getSongs()) {
-							System.out.println(song.getName());
-						}//end for loop
+						//unless the current user is a guest account
+						if (!currentUser.getUsername().equals("guest")) {
+							currentUser.getUsersPlaylist().addPlaylist(newPlaylist, currentUser.getPlaylistFileName());
+						}
 					} else {
 						MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
 						messageBox.setText("Playlist already exists");
@@ -755,6 +764,8 @@ public class Player extends Shell {
 		if (!(currentUser.getUsername().equals("guest"))) {
 			java.util.List<Playlist> playlists = PlaylistCollections.loadPlaylistsFromJson(currentUser.getPlaylistFileName());
 			for (Playlist playlist : playlists) {
+				//testLine
+				currentUser.getUsersPlaylist().addPlaylist(playlist, null);
 				TreeItem newPlaylistItem = new TreeItem(playlistList, 0);
 				newPlaylistItem.setText(playlist.getName());
 				
@@ -786,17 +797,21 @@ public class Player extends Shell {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	protected void createNewUserFile(String fileName) {
-    	File newUserFile = new File(fileName);
-    	FileWriter fileWriter;
-    	try {
-    		fileWriter = new FileWriter(newUserFile, false);
-    		fileWriter.write("{\n\"playlists\":[\n{\"playlist name\": \"Liked Songs\",\n\"songs\": []\n}]}");
-    	} catch (IOException e) {
-    		e.printStackTrace();
-    	}
-
-
+		JSONObject newUserJsonFile = new JSONObject();
+		JSONArray playlistsJsonArray = new JSONArray();
+		JSONObject currentPlaylistJson = new JSONObject();
+		JSONArray emptyArray = new JSONArray();
+		currentPlaylistJson.put("playlist name", "Liked Songs");
+		currentPlaylistJson.put("songs", emptyArray);
+		playlistsJsonArray.add(currentPlaylistJson);
+		newUserJsonFile.put("playlists", playlistsJsonArray);
+		try {
+			Files.write(Paths.get(fileName), newUserJsonFile.toJSONString().getBytes());
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
     }
 		
 	

@@ -270,11 +270,11 @@ public class Player extends Shell {
 		//list of the queue
 		List lstQueue = new List(composite, SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL);
 		lstQueue.setFont(SWTResourceManager.getFont("Segoe UI", 7, SWT.NORMAL));
-		lstQueue.setBounds(208, 38, 109, 201);
+		lstQueue.setBounds(210, 38, 137, 201);
 
 		// create the tree widget
 		Tree tree = new Tree(composite, SWT.BORDER);
-		tree.setBounds(332, 38, 181, 201);
+		tree.setBounds(362, 38, 181, 201);
 
 		//ProgressBar used to track location within song
 		ProgressBar progressBar = new ProgressBar(composite, SWT.NONE);
@@ -289,7 +289,7 @@ public class Player extends Shell {
 			}
 		});
 		btnPause.setBounds(326, 349, 91, 39);
-		btnPause.setText("Pause");
+		btnPause.setText("Ⅱ");
 		//listener event for btnPause that pauses or resumes a song depending on the paused boolean value
 		btnPause.addListener(SWT.Selection, event -> {
 			//if Queue isn't empty
@@ -362,7 +362,7 @@ public class Player extends Shell {
 			startTimer(display, progressBar, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
 			UpdateLabels(lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
 			paused = false;
-			btnPause.setText("Pause");
+			btnPause.setText("Ⅱ");
 		});//end btnPlay listener event
 
 
@@ -411,26 +411,93 @@ public class Player extends Shell {
 		btnSkip.setText("Skip");
 		//button to like the currently playling song
 		Button btnLike = new Button(composite, SWT.NONE);
-		btnLike.setBounds(331, 245, 55, 35);
+		btnLike.setBounds(358, 245, 55, 35);
 		btnLike.setText("Like");
 		//button that adds selected song in treemap to queue
 		Button btnAddToQueue = new Button(composite, SWT.NONE);
-		btnAddToQueue.setBounds(390, 245, 124, 35);
+		btnAddToQueue.setBounds(419, 245, 124, 35);
 		btnAddToQueue.setText("Add to Queue");
 		//button to clear queue 
 		Button btnClearQ = new Button(composite, SWT.NONE);
-		btnClearQ.setBounds(207, 245, 111, 35);
+		btnClearQ.setBounds(271, 245, 81, 35);
 		btnClearQ.setText("Clear Queue");
 		
 		Label lblUpNext = new Label(composite, SWT.NONE);
 		lblUpNext.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
-		lblUpNext.setBounds(208, 10, 81, 25);
+		lblUpNext.setBounds(210, 10, 81, 25);
 		lblUpNext.setText("Up Next:");
 		
 		Label lblAllSongs = new Label(composite, SWT.NONE);
 		lblAllSongs.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
-		lblAllSongs.setBounds(332, 10, 81, 25);
+		lblAllSongs.setBounds(364, 10, 81, 25);
 		lblAllSongs.setText("All Songs:");
+		//button to move songs up the Queue
+		Button btnQueueUp = new Button(composite, SWT.NONE);
+		btnQueueUp.setFont(SWTResourceManager.getFont("Segoe UI", 7, SWT.NORMAL));
+		//listener event to move a song up the Queue
+		btnQueueUp.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				//if statement to check if no song is selected
+				if (lstQueue.getSelectionIndex()==-1) {
+					return;
+				}//end if
+				//if statement to prevent the event from replacing the song currently playing with the one selected
+				if(lstQueue.getSelectionIndex()!=0) {
+				Song tempSong; //used to store song being moved
+				int tempInt; //used to save selected song's location so song is still selected after move
+				tempSong = playQueue.get(lstQueue.getSelectionIndex() + 1);
+				tempInt = lstQueue.getSelectionIndex();
+				playQueue.remove(lstQueue.getSelectionIndex()+1);
+				playQueue.add(lstQueue.getSelectionIndex(), tempSong);
+				updateQueueList(lstQueue);
+				lstQueue.setSelection(tempInt - 1);
+				}//end if
+			}
+		});//end listener event to move a song up the Queue
+		btnQueueUp.setBounds(303, 10, 22, 25);
+		btnQueueUp.setText("▲");
+		//button to move songs down the Queue
+		Button btnQueueDown = new Button(composite, SWT.NONE);
+		//listener event to move a selected song down the Queue
+		btnQueueDown.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				//if statement to check if no song is selected
+				if (lstQueue.getSelectionIndex()==-1) {
+					return;
+				}//end if
+				//if statement to prevent the event from moving a song that's already at the bottom of the Queue
+				if(lstQueue.getSelectionIndex()+1!=playQueue.size()-1) {
+				Song tempSong; //used to store song being moved
+				int tempInt; //used to save selected song's location so song is still selected after move
+				tempSong = playQueue.get(lstQueue.getSelectionIndex() + 1);
+				tempInt = lstQueue.getSelectionIndex();
+				playQueue.remove(lstQueue.getSelectionIndex()+1);
+				playQueue.add(lstQueue.getSelectionIndex()+2, tempSong);
+				updateQueueList(lstQueue);
+				lstQueue.setSelection(tempInt + 1);
+				}//end if
+			}
+		});//end event to move selected song down the Queue
+		btnQueueDown.setFont(SWTResourceManager.getFont("Segoe UI", 7, SWT.NORMAL));
+		btnQueueDown.setBounds(325, 10, 22, 25);
+		btnQueueDown.setText("▼");
+		//button to remove a song from the Queue, only works on songs not currently playing
+		Button btnRemove = new Button(composite, SWT.NONE);
+		btnRemove.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				//if statement to check if no song is selected or Queuelist is empty
+				if (lstQueue.getSelectionIndex()==-1 || playQueue.size() < 2) {
+					return;
+				}//end if
+				playQueue.remove(lstQueue.getSelectionIndex()+1);
+				updateQueueList(lstQueue);
+			}
+		});//end event to remove song from Queue
+		btnRemove.setBounds(208, 245, 57, 35);
+		btnRemove.setText("✖");
 		//event for adding a song to the queue
 		btnAddToQueue.addSelectionListener(new SelectionAdapter() {
 			@Override

@@ -44,6 +44,9 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import java.util.*;
+import org.eclipse.swt.widgets.Scale;
+import org.eclipse.swt.events.MouseAdapter;
+import org.eclipse.swt.events.MouseEvent;
 /**
  * This class contains the user interface, within that there are four tabs: a music player tab, a create playlist tab, a user management tab, and 
  * a view playlist tab
@@ -59,6 +62,7 @@ public class Player extends Shell {
 	private int resumeTime; //used for pausing and resuming
 	private boolean paused = false; //used to stop timer when song is paused
 	private boolean repeat = false;//used tell if song has been repeated
+	private boolean isPlaying = false;//used to tell if the Queue is empty
 	private int i = 0; //used to track location in Arraylist
 	private java.util.List<Song> songList = new ArrayList<Song>();// this is the arraylist for the song list-brian
 	public static java.util.List<User> userList = new ArrayList<User>();//this is the list of users
@@ -276,10 +280,11 @@ public class Player extends Shell {
 		Tree tree = new Tree(composite, SWT.BORDER);
 		tree.setBounds(332, 38, 181, 201);
 
-		//ProgressBar used to track location within song
-		ProgressBar progressBar = new ProgressBar(composite, SWT.NONE);
-		progressBar.setBounds(35, 301, 478, 19);
-		progressBar.setMinimum(0);
+	
+		//scale used to track location within song
+		Scale scale = new Scale(composite, SWT.NONE);
+		scale.setBounds(35, 286, 478, 54);
+		scale.setVisible(false);
 
 
 		//button used to restart the current song
@@ -321,8 +326,8 @@ public class Player extends Shell {
 			browser.setBounds(50, 50, 1, 1);
 			browser.setUrl(playQueue.peek().getUrl());
 			timer = playQueue.peek().getDuration();
-			progressBar.setMaximum(playQueue.peek().getDuration());
-			startTimer(display, progressBar, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
+			scale.setMaximum(playQueue.peek().getDuration());
+			startTimer(display, scale, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
 			UpdateLabels(lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
 		});//end btnPlay listener event
 
@@ -382,7 +387,7 @@ public class Player extends Shell {
 				browser.setBounds(50, 50, 200, 200);
 				browser.setUrl(playQueue.peek().getUrl() + "&start=" + resumeTime);
 				timer = playQueue.peek().getDuration() - resumeTime;
-				progressBar.setSelection(resumeTime);
+				scale.setSelection(resumeTime);
 				btnPause.setText("Ⅱ");
 				paused = false;
 			}//end if to resume song
@@ -398,7 +403,7 @@ public class Player extends Shell {
 					}//end if
 				}//end for loop to dispose browser objects
 				btnPause.setText("►");
-				startTimer(display, progressBar, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);//end else  for pausing the song
+				startTimer(display, scale, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);//end else  for pausing the song
 			}});//end selection listener event for btnPause
 
 		//button used to skip the current song that's playing
@@ -426,7 +431,8 @@ public class Player extends Shell {
 		Label lblAllSongs = new Label(composite, SWT.NONE);
 		lblAllSongs.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
 		lblAllSongs.setBounds(332, 10, 81, 25);
-		lblAllSongs.setText("All Songs:");
+		lblAllSongs.setText("All Songs:"); 
+		
 		//button to move songs up the Queue
 		Button btnQueueUp = new Button(composite, SWT.NONE);
 		btnQueueUp.setFont(SWTResourceManager.getFont("Segoe UI", 7, SWT.NORMAL));
@@ -494,14 +500,49 @@ public class Player extends Shell {
 		});//end event to remove song from Queue
 		btnRemove.setBounds(208, 245, 57, 35);
 		btnRemove.setText("✖");
+		
+		//event that plays the current song at the point selected in the slider
+		scale.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseUp(MouseEvent e) {
+				//remove the current browser
+				Control[] controls = Player.this.getChildren();
+				for (Control control : controls) {
+					if (control instanceof Browser) {
+						control.dispose();
+					}//end if
+				}//end for loop to dispose browser objects
+				Browser browser = new Browser(Player.this, SWT.NONE);
+				browser.setBounds(50, 50, 200, 200);
+				browser.setUrl(playQueue.peek().getUrl() + "&start=" + (scale.getSelection()-2));
+				timer = playQueue.peek().getDuration() - scale.getSelection() + 2;
+				scale.setSelection(scale.getSelection()-2);//subtracting 2 seconds to account for load time
+				}//end if
+		});
 		//event for adding a song to the queue
 		btnAddToQueue.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				playQueue.add(songList.get(i));
 				updateQueueList(lstQueue);
-				if(playQueue.size()<=1) {
+				//Starts playing automatically if the Queue is empty
+				if(isPlaying==false) {
 					UpdateLabels(lblsongplaying, lblalbumplaying,lblartistplaying,lblgenreplaying);
+					//for loop to dispose of browser in case something is already playing
+					Control[] controls = Player.this.getChildren();
+					for (Control control : controls) {
+						if (control instanceof Browser) {
+							control.dispose();
+						}//end if
+					}//end for loop to dispose of browser
+					Browser browser = new Browser(Player.this, SWT.NONE);
+					browser.setBounds(50, 50, 1, 1);
+					browser.setUrl(playQueue.peek().getUrl());
+					timer = playQueue.peek().getDuration();
+					scale.setMaximum(playQueue.peek().getDuration());
+					scale.setVisible(true);
+					startTimer(display, scale, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
+					isPlaying= true;
 				}//end if
 			}
 		});//end event to add single song to event
@@ -516,7 +557,7 @@ public class Player extends Shell {
 				lblalbumplaying.setText("");
 				lblartistplaying.setText("");
 				lblgenreplaying.setText("");
-				progressBar.setSelection(0);
+				scale.setSelection(0);
 			}//end if
 		});//end event to clear queue
 		//listener event for btnSkip that sets the timer to 0 so the next song immediately loads in the timer method
@@ -791,8 +832,27 @@ public class Player extends Shell {
 					playQueue.add(song);
 					updateQueueList(lstQueue);
 				}//end if
+				//Starts playing automatically if the Queue is empty
+				if(isPlaying==false) {
+					UpdateLabels(lblsongplaying, lblalbumplaying,lblartistplaying,lblgenreplaying);
+					//for loop to dispose of browser in case something is already playing
+					Control[] controls = Player.this.getChildren();
+					for (Control control : controls) {
+						if (control instanceof Browser) {
+							control.dispose();
+						}//end if
+					}//end for loop to dispose of browser
+					Browser browser = new Browser(Player.this, SWT.NONE);
+					browser.setBounds(50, 50, 1, 1);
+					browser.setUrl(playQueue.peek().getUrl());
+					timer = playQueue.peek().getDuration();
+					scale.setMaximum(playQueue.peek().getDuration());
+					scale.setVisible(true);
+					startTimer(display, scale, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
+					isPlaying= true;
+				}//end if
 			}
-		});
+		});//end event to play playlist
 
 		shuffleButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
@@ -828,6 +888,25 @@ public class Player extends Shell {
 				//add each song to the queue
 				playQueue.addAll(songList);
 				updateQueueList(lstQueue);
+				//Starts playing automatically if the Queue is empty
+				if(isPlaying==false) {
+					UpdateLabels(lblsongplaying, lblalbumplaying,lblartistplaying,lblgenreplaying);
+					//for loop to dispose of browser in case something is already playing
+					Control[] controls = Player.this.getChildren();
+					for (Control control : controls) {
+						if (control instanceof Browser) {
+							control.dispose();
+						}//end if
+					}//end for loop to dispose of browser
+					Browser browser = new Browser(Player.this, SWT.NONE);
+					browser.setBounds(50, 50, 1, 1);
+					browser.setUrl(playQueue.peek().getUrl());
+					timer = playQueue.peek().getDuration();
+					scale.setMaximum(playQueue.peek().getDuration());
+					scale.setVisible(true);
+					startTimer(display, scale, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
+					isPlaying= true;
+				}//end if
 
 				// Clear the existing child items from the selected playlist
 				selectedPlaylist.removeAll();
@@ -924,7 +1003,7 @@ public class Player extends Shell {
 	 * @param display
 	 */
 	
-	public void startTimer(Display display, ProgressBar progress, List list, Label name, Label album, Label artist, Label genre) {
+	public void startTimer(Display display, Scale scale, List list, Label name, Label album, Label artist, Label genre) {
 		if(paused == false) {
 			display.timerExec(1000, new Runnable() {
 				public void run() {
@@ -937,7 +1016,7 @@ public class Player extends Shell {
 							public void run() {
 							//if statement to make sure the progress bar stops when the song is paused
 								if (paused == false) {
-								progress.setSelection(playQueue.peek().getDuration() - timer);}//end if
+								scale.setSelection(playQueue.peek().getDuration() - timer);}//end if
 							}
 						});//end recursive loop
 						display.timerExec(1000, this);
@@ -960,6 +1039,13 @@ public class Player extends Shell {
 									control.dispose();
 								}//end if
 							}//end for
+							name.setText("");
+							album.setText("");
+							artist.setText("");
+							genre.setText("");
+							scale.setSelection(0);
+							scale.setVisible(false);
+							isPlaying = false;
 							return;
 						}//end if to check if at end of queue
 						//creating the new browser
@@ -969,7 +1055,8 @@ public class Player extends Shell {
 						updateQueueList(list);
 						UpdateLabels(name, album, artist, genre);
 						timer = playQueue.peek().getDuration();
-						startTimer(display, progress, list, name, album, artist, genre);
+						scale.setMaximum(playQueue.peek().getDuration());
+						startTimer(display, scale, list, name, album, artist, genre);
 					}//end else
 				}
 			});

@@ -299,7 +299,7 @@ public class Player extends Shell {
 					Browser browser = new Browser(this, SWT.NONE);
 					browser.setBounds(50, 50, 200, 200);
 					browser.setUrl(playQueue.peek().getUrl() + "&start=" + resumeTime);
-					btnPause.setText("Pause");
+					btnPause.setText("Ⅱ");
 					paused = false;
 				}//end if to resume song
 				else { //takes the pause time and then disposes of the broswer
@@ -334,7 +334,7 @@ public class Player extends Shell {
 			browser.setUrl(playQueue.peek().getUrl());
 			timer = playQueue.peek().getDuration();
 			paused = false;
-			btnPause.setText("Pause");
+			btnPause.setText("Ⅱ");
 		});//end btnRestart listener event
 
 		//button used to start playing the playlist
@@ -525,7 +525,7 @@ public class Player extends Shell {
 			timer = 0;
 			progressBar.setSelection(0);
 			paused = false;
-			btnPause.setText("Pause");
+			btnPause.setText("Ⅱ");
 			//if statement to check if Queue is empty
 			if (playQueue.isEmpty()) {
 				Control[] controls = Player.this.getChildren();
@@ -585,7 +585,7 @@ public class Player extends Shell {
 		playlistBuilderTab.setText("Create Playlists");
 		playlistBuilderTab.setControl(composite_2);
 
-		List allSongs = new List(composite_2, SWT.BORDER | SWT.V_SCROLL);
+		List allSongs = new List(composite_2, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
 		allSongs.setBounds(10, 45, 200, 268);
 
 		Text songSearchField = new Text(composite_2, SWT.BORDER);
@@ -676,27 +676,24 @@ public class Player extends Shell {
 
 		playlistTab.setControl(composite_1);
 
-		playlistList.setBounds(220, 70, 150, 150);
+		playlistList.setBounds(199, 61, 150, 222);
 
 		Label playlistListLabel = new Label(composite_1, SWT.NONE);
+		playlistListLabel.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.NORMAL));
 		playlistListLabel.setText("Playlists");
-		playlistListLabel.setBounds(270, 25, 150, 30);
+		playlistListLabel.setBounds(249, 25, 79, 30);
 
 		Button playButton = new Button(composite_1, SWT.NONE);
 		playButton.setText("Play Playlist");
-		playButton.setBounds(300, 279, 105, 35);
+		playButton.setBounds(223, 335, 105, 35);
 
 		Button deleteButton = new Button(composite_1, SWT.NONE);
 		deleteButton.setText("Delete");
-		deleteButton.setBounds(180, 279, 105, 35);
+		deleteButton.setBounds(106, 335, 105, 35);
 
 		Button shuffleButton = new Button(composite_1, SWT.NONE);
 		shuffleButton.setText("Shuffle");
-		shuffleButton.setBounds(420, 279, 105, 35);
-
-		Button skipButton = new Button(composite_1, SWT.NONE);
-		skipButton.setText("Skip Song");
-		skipButton.setBounds(50, 279, 105, 35);
+		shuffleButton.setBounds(344, 335, 105, 35);
 
 		/**
 		 * This button iterates over the current user's collection of playlists and rewrites it to exclude the playlist the user selected to delete

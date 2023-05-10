@@ -289,7 +289,7 @@ public class Player extends Shell {
 
 		//button used to restart the current song
 		Button btnRestart = new Button(composite, SWT.NONE);
-		btnRestart.setBounds(136, 349, 66, 40);
+		btnRestart.setBounds(174, 349, 66, 40);
 		btnRestart.setText("Restart");
 		//listener event for btnRestart that restarts the song by removing the browser then generating a new one
 		btnRestart.addListener(SWT.Selection, event -> {
@@ -304,37 +304,10 @@ public class Player extends Shell {
 			browser.setUrl(playQueue.peek().getUrl());
 			timer = playQueue.peek().getDuration();
 		});//end btnRestart listener event
-
-		//button used to start playing the playlist
-		Button btnPlay = new Button(composite, SWT.NONE);
-		btnPlay.setBounds(208, 349, 66, 40);
-		btnPlay.setText("Play");
-		//listener event for btnPlay that generates a browser and embeds a youtube video into it, also starts the timer
-		btnPlay.addListener(SWT.Selection, event -> {
-			//for loop to dispose of browser in case something is already playing
-			Control[] controls = Player.this.getChildren();
-			for (Control control : controls) {
-				if (control instanceof Browser) {
-					control.dispose();
-				}//end if
-			}//end for loop to dispose of browser
-			if(playQueue.isEmpty()) {
-				JOptionPane.showMessageDialog(null, "No songs selected, please add a song to the Queue");
-				return;
-			}//end if statement to check for empty Queue
-			Browser browser = new Browser(this, SWT.NONE);
-			browser.setBounds(50, 50, 1, 1);
-			browser.setUrl(playQueue.peek().getUrl());
-			timer = playQueue.peek().getDuration();
-			scale.setMaximum(playQueue.peek().getDuration());
-			startTimer(display, scale, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
-			UpdateLabels(lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
-		});//end btnPlay listener event
-
-
+		
 		//button used to repeat the current song once it's finished playing
 		Button btnRepeat = new Button(composite, SWT.NONE);
-		btnRepeat.setBounds(64, 349, 66, 40);
+		btnRepeat.setBounds(102, 349, 66, 40);
 		btnRepeat.setText("Repeat");
 		//listener event for btnRepeat that adds the current song to the next index in the ArrayList
 		btnRepeat.addListener(SWT.Selection, event -> {
@@ -377,7 +350,7 @@ public class Player extends Shell {
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
-		btnPause.setBounds(279, 349, 66, 40);
+		btnPause.setBounds(246, 349, 66, 40);
 		btnPause.setText("Ⅱ");
 		//listener event for btnPause that pauses or resumes a song depending on the paused boolean value
 		btnPause.addListener(SWT.Selection, event -> {
@@ -408,11 +381,11 @@ public class Player extends Shell {
 
 		//button used to skip the current song that's playing
 		Button btnSkip = new Button(composite, SWT.NONE);
-		btnSkip.setBounds(351, 349, 66, 40);
+		btnSkip.setBounds(318, 349, 66, 40);
 		btnSkip.setText("Skip");
 		//button to like the currently playling song
 		Button btnLike = new Button(composite, SWT.NONE);
-		btnLike.setBounds(423, 349, 66, 40);
+		btnLike.setBounds(390, 349, 66, 40);
 		btnLike.setText("Like");
 		//button that adds selected song in treemap to queue
 		Button btnAddToQueue = new Button(composite, SWT.NONE);

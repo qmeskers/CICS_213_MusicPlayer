@@ -83,7 +83,7 @@ public class Player extends Shell {
 	 * @param args
 	 */
 	public static void main(String args[]) {
-		//before launching the login window, read into memory a list of users and their credentials
+		//before launching the login window, read into memory a list of users and their credentials so the login window has something to verify against
 		userListIO.loadUsersFromJson();
 		//before launching the player, launch the login window
 		loginwindow = new loginWindow();
@@ -552,10 +552,20 @@ public class Player extends Shell {
 		//listener for btnLike to add the current song to the liked songs playlist when clicked
 		btnLike.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
+				//As long as the current user is not guest, write the song to the users json file of playlists
 				if(!currentUser.getUsername().equals("guest")) {
 					currentUser.getUsersPlaylist().getPlaylistByName("Liked Songs").addSong(songList.get(i));
 					currentUser.getUsersPlaylist().updateJsonFile(currentUser.getPlaylistFileName());
-					reloadPlaylists();
+					
+					//add the song to the playlist tree
+					for (TreeItem treeItem : playlistList.getItems()) {
+						if (treeItem.getText().equals("Liked Songs")) {
+							TreeItem songItem = new TreeItem(treeItem, SWT.NONE);
+							songItem.setText(songList.get(i).getName());
+							songItem.setData(songList.get(i));
+						}
+					}
+				//if the user is guest, display an error
 				}else {
 					JOptionPane.showMessageDialog(null, "To like songs and save playlists, "
 							+ "please log in or create an account on the user management tab");

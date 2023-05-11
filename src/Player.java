@@ -83,7 +83,7 @@ public class Player extends Shell {
 	 * @param args
 	 */
 	public static void main(String args[]) {
-		//before launching the login window, read into memory a list of users and their credentials
+		//before launching the login window, read into memory a list of users and their credentials so the login window has something to verify against
 		userListIO.loadUsersFromJson();
 		//before launching the player, launch the login window
 		loginwindow = new loginWindow();
@@ -289,7 +289,7 @@ public class Player extends Shell {
 
 		//button used to restart the current song
 		Button btnRestart = new Button(composite, SWT.NONE);
-		btnRestart.setBounds(174, 349, 66, 40);
+		btnRestart.setBounds(174, 347, 66, 40);
 		btnRestart.setText("Restart");
 		//listener event for btnRestart that restarts the song by removing the browser then generating a new one
 		btnRestart.addListener(SWT.Selection, event -> {
@@ -303,11 +303,12 @@ public class Player extends Shell {
 			browser.setBounds(50, 50, 1, 1);
 			browser.setUrl(playQueue.peek().getUrl());
 			timer = playQueue.peek().getDuration();
-		});//end btnRestart listener event
-		
+		});
+
+
 		//button used to repeat the current song once it's finished playing
 		Button btnRepeat = new Button(composite, SWT.NONE);
-		btnRepeat.setBounds(102, 349, 66, 40);
+		btnRepeat.setBounds(102, 347, 66, 40);
 		btnRepeat.setText("Repeat");
 		//listener event for btnRepeat that adds the current song to the next index in the ArrayList
 		btnRepeat.addListener(SWT.Selection, event -> {
@@ -350,7 +351,7 @@ public class Player extends Shell {
 			public void widgetSelected(SelectionEvent e) {
 			}
 		});
-		btnPause.setBounds(246, 349, 66, 40);
+		btnPause.setBounds(246, 347, 66, 40);
 		btnPause.setText("Ⅱ");
 		//listener event for btnPause that pauses or resumes a song depending on the paused boolean value
 		btnPause.addListener(SWT.Selection, event -> {
@@ -381,11 +382,11 @@ public class Player extends Shell {
 
 		//button used to skip the current song that's playing
 		Button btnSkip = new Button(composite, SWT.NONE);
-		btnSkip.setBounds(318, 349, 66, 40);
+		btnSkip.setBounds(318, 347, 66, 40);
 		btnSkip.setText("Skip");
 		//button to like the currently playling song
 		Button btnLike = new Button(composite, SWT.NONE);
-		btnLike.setBounds(390, 349, 66, 40);
+		btnLike.setBounds(390, 347, 66, 40);
 		btnLike.setText("Like");
 		//button that adds selected song in treemap to queue
 		Button btnAddToQueue = new Button(composite, SWT.NONE);
@@ -398,7 +399,7 @@ public class Player extends Shell {
 		
 		Label lblUpNext = new Label(composite, SWT.NONE);
 		lblUpNext.setFont(SWTResourceManager.getFont("Segoe UI", 9, SWT.BOLD));
-		lblUpNext.setBounds(208, 10, 81, 25);
+		lblUpNext.setBounds(208, 10, 66, 25);
 		lblUpNext.setText("Up Next:");
 		
 		Label lblAllSongs = new Label(composite, SWT.NONE);
@@ -536,6 +537,8 @@ public class Player extends Shell {
 		//listener event for btnSkip that sets the timer to 0 so the next song immediately loads in the timer method
 		btnSkip.addListener(SWT.Selection, event -> {
 			timer = 0;
+			paused = false;
+			btnPause.setText("Ⅱ");
 			//if statement to check if Queue is empty
 			if (playQueue.isEmpty()) {
 				Control[] controls = Player.this.getChildren();
@@ -549,10 +552,20 @@ public class Player extends Shell {
 		//listener for btnLike to add the current song to the liked songs playlist when clicked
 		btnLike.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
+				//As long as the current user is not guest, write the song to the users json file of playlists
 				if(!currentUser.getUsername().equals("guest")) {
 					currentUser.getUsersPlaylist().getPlaylistByName("Liked Songs").addSong(songList.get(i));
 					currentUser.getUsersPlaylist().updateJsonFile(currentUser.getPlaylistFileName());
-					reloadPlaylists();
+					
+					//add the song to the playlist tree
+					for (TreeItem treeItem : playlistList.getItems()) {
+						if (treeItem.getText().equals("Liked Songs")) {
+							TreeItem songItem = new TreeItem(treeItem, SWT.NONE);
+							songItem.setText(songList.get(i).getName());
+							songItem.setData(songList.get(i));
+						}
+					}
+				//if the user is guest, display an error
 				}else {
 					JOptionPane.showMessageDialog(null, "To like songs and save playlists, "
 							+ "please log in or create an account on the user management tab");
@@ -595,7 +608,7 @@ public class Player extends Shell {
 		playlistBuilderTab.setText("Create Playlists");
 		playlistBuilderTab.setControl(composite_2);
 
-		List allSongs = new List(composite_2, SWT.BORDER | SWT.V_SCROLL);
+		List allSongs = new List(composite_2, SWT.BORDER | SWT.V_SCROLL | SWT.MULTI);
 		allSongs.setBounds(10, 45, 200, 268);
 
 		Text songSearchField = new Text(composite_2, SWT.BORDER);
@@ -686,27 +699,23 @@ public class Player extends Shell {
 
 		playlistTab.setControl(composite_1);
 
-		playlistList.setBounds(220, 70, 150, 150);
+		playlistList.setBounds(182, 70, 223, 186);
 
 		Label playlistListLabel = new Label(composite_1, SWT.NONE);
 		playlistListLabel.setText("Playlists");
-		playlistListLabel.setBounds(270, 25, 150, 30);
+		playlistListLabel.setBounds(270, 25, 63, 30);
 
 		Button playButton = new Button(composite_1, SWT.NONE);
 		playButton.setText("Play Playlist");
-		playButton.setBounds(300, 279, 105, 35);
+		playButton.setBounds(243, 279, 105, 35);
 
 		Button deleteButton = new Button(composite_1, SWT.NONE);
 		deleteButton.setText("Delete");
-		deleteButton.setBounds(180, 279, 105, 35);
+		deleteButton.setBounds(123, 279, 105, 35);
 
 		Button shuffleButton = new Button(composite_1, SWT.NONE);
 		shuffleButton.setText("Shuffle");
-		shuffleButton.setBounds(420, 279, 105, 35);
-
-		Button skipButton = new Button(composite_1, SWT.NONE);
-		skipButton.setText("Skip Song");
-		skipButton.setBounds(50, 279, 105, 35);
+		shuffleButton.setBounds(363, 279, 105, 35);
 
 		/**
 		 * This button iterates over the current user's collection of playlists and rewrites it to exclude the playlist the user selected to delete

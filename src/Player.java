@@ -848,38 +848,39 @@ public class Player extends Shell {
 			}
 		});//end create playlist event
 
-
 		//listener event for playButton that plays the playlist from the playlist tab
 		playButton.addListener(SWT.Selection, event -> {
 			TreeItem[] selectedItems = playlistList.getSelection();
-			if (selectedItems.length > 0) {
-				// Only play songs if a playlist is selected
-				TreeItem playlistItem = selectedItems[0];
-				for (TreeItem songItem : playlistItem.getItems()) {
-					Song song = (Song) songItem.getData();
-					playQueue.add(song);
-					updateQueueList(lstQueue);
-				}//end if
-				//Starts playing automatically if the Queue is empty
-				if(isPlaying==false) {
-					UpdateLabels(lblsongplaying, lblalbumplaying,lblartistplaying,lblgenreplaying);
-					//for loop to dispose of browser in case something is already playing
-					Control[] controls = Player.this.getChildren();
-					for (Control control : controls) {
-						if (control instanceof Browser) {
-							control.dispose();
-						}//end if
-					}//end for loop to dispose of browser
-					Browser browser = new Browser(Player.this, SWT.NONE);
-					browser.setBounds(50, 50, 1, 1);
-					browser.setUrl(playQueue.peek().getUrl());
-					timer = playQueue.peek().getDuration();
-					scale.setMaximum(playQueue.peek().getDuration());
-					scale.setVisible(true);
-					startTimer(display, scale, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
-					isPlaying= true;
-				}//end if
-			}
+			if (!selectedItems[0].equals(defaultplaylists)) {
+				if (selectedItems.length > 0) {
+					// Only play songs if a playlist is selected
+					TreeItem playlistItem = selectedItems[0];
+					for (TreeItem songItem : playlistItem.getItems()) {
+						Song song = (Song) songItem.getData();
+						playQueue.add(song);
+						updateQueueList(lstQueue);
+					}//end if
+					//Starts playing automatically if the Queue is empty
+					if(isPlaying==false) {
+						UpdateLabels(lblsongplaying, lblalbumplaying,lblartistplaying,lblgenreplaying);
+						//for loop to dispose of browser in case something is already playing
+						Control[] controls = Player.this.getChildren();
+						for (Control control : controls) {
+							if (control instanceof Browser) {
+								control.dispose();
+							}//end if
+						}//end for loop to dispose of browser
+						Browser browser = new Browser(Player.this, SWT.NONE);
+						browser.setBounds(50, 50, 1, 1);
+						browser.setUrl(playQueue.peek().getUrl());
+						timer = playQueue.peek().getDuration();
+						scale.setMaximum(playQueue.peek().getDuration());
+						scale.setVisible(true);
+						startTimer(display, scale, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
+						isPlaying= true;
+					}//end if
+				}//selected length if
+			}//default can't play if
 		});//end event to play playlist
 		shuffleButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {

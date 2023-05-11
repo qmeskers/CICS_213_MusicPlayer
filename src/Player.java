@@ -886,71 +886,73 @@ public class Player extends Shell {
 			public void widgetSelected(SelectionEvent event) {
 				// Get the selected playlist
 				TreeItem[] selection = playlistList.getSelection();
-				if (selection.length == 0) {
-					// No playlist has been selected, do nothing
-					MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
-					messageBox.setText("No play list Selected.");
-					messageBox.setMessage("Please select a play list to shuffle");
-					messageBox.open();
-					return;
-				}//end if
-				TreeItem selectedPlaylist = selection[0];
-
-				// Get the child items (songs) of the selected playlist
-				TreeItem[] songs = selectedPlaylist.getItems();
-
-				// Create a list to hold the song objects
-				ArrayList<Song> songList = new ArrayList<Song>();
-
-				// Add each song object to the list
-				for (TreeItem song : songs) {
-					songList.add((Song) song.getData());
-				}
+				if (!selection[0].equals(defaultplaylists)) {
+					if (selection.length == 0) {
+						// No playlist has been selected, do nothing
+						MessageBox messageBox = new MessageBox(getShell(), SWT.ICON_WARNING | SWT.OK);
+						messageBox.setText("No play list Selected.");
+						messageBox.setMessage("Please select a play list to shuffle");
+						messageBox.open();
+						return;
+					}//end if
+					TreeItem selectedPlaylist = selection[0];
+					
+					// Get the child items (songs) of the selected playlist
+					TreeItem[] songs = selectedPlaylist.getItems();
+					
+					// Create a list to hold the song objects
+					ArrayList<Song> songList = new ArrayList<Song>();
+					
+					// Add each song object to the list
+					for (TreeItem song : songs) {
+						songList.add((Song) song.getData());
+					}
 				
-				//clear the Queue
-				playQueue.clear();
+					//clear the Queue
+					playQueue.clear();
 
-				// Shuffle the list
-				Collections.shuffle(songList);
+					// Shuffle the list
+					Collections.shuffle(songList);
 				
-				//add each song to the queue
-				playQueue.addAll(songList);
-				updateQueueList(lstQueue);
-				//Starts playing automatically if the Queue is empty
-				if(isPlaying==false) {
-					UpdateLabels(lblsongplaying, lblalbumplaying,lblartistplaying,lblgenreplaying);
-					//for loop to dispose of browser in case something is already playing
-					Control[] controls = Player.this.getChildren();
-					for (Control control : controls) {
-						if (control instanceof Browser) {
-							control.dispose();
-						}//end if
-					}//end for loop to dispose of browser
-					Browser browser = new Browser(Player.this, SWT.NONE);
-					browser.setBounds(50, 50, 1, 1);
-					browser.setUrl(playQueue.peek().getUrl());
-					timer = playQueue.peek().getDuration();
-					scale.setMaximum(playQueue.peek().getDuration());
-					scale.setVisible(true);
-					startTimer(display, scale, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
-					isPlaying= true;
-				}//end if
+					//add each song to the queue
+					playQueue.addAll(songList);
+					updateQueueList(lstQueue);
+					//Starts playing automatically if the Queue is empty
+					if(isPlaying==false) {
+						UpdateLabels(lblsongplaying, lblalbumplaying,lblartistplaying,lblgenreplaying);
+						//for loop to dispose of browser in case something is already playing
+						Control[] controls = Player.this.getChildren();
+						for (Control control : controls) {
+							if (control instanceof Browser) {
+								control.dispose();
+							}//end if
+						}//end for loop to dispose of browser
+						Browser browser = new Browser(Player.this, SWT.NONE);
+						browser.setBounds(50, 50, 1, 1);
+						browser.setUrl(playQueue.peek().getUrl());
+						timer = playQueue.peek().getDuration();
+						scale.setMaximum(playQueue.peek().getDuration());
+						scale.setVisible(true);
+						startTimer(display, scale, lstQueue, lblsongplaying, lblalbumplaying, lblartistplaying, lblgenreplaying);
+						isPlaying= true;
+					}//end if
 
-				// Clear the existing child items from the selected playlist
-				selectedPlaylist.removeAll();
+					// Clear the existing child items from the selected playlist
+					selectedPlaylist.removeAll();
+					
+					// Add the shuffled songs back to the playlist as child items
+					for (Song song : songList) {
+						TreeItem songItem = new TreeItem(selectedPlaylist, SWT.NONE);
+						songItem.setText(song.getName());
+						songItem.setData(song);
+					}
 
-				// Add the shuffled songs back to the playlist as child items
-				for (Song song : songList) {
-					TreeItem songItem = new TreeItem(selectedPlaylist, SWT.NONE);
-					songItem.setText(song.getName());
-					songItem.setData(song);
-				}
-
-				// Update the tree widget
-				tree.update();
-			}
-		});
-	}
+					// Update the tree widget
+					tree.update();
+				}//default wont shuffle
+			}//widget selected
+		});//shuffle button listener
+	}//player 
 
 	/**
 	 * event that loads from a json file the already existing playlists associated with the current user

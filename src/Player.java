@@ -716,7 +716,53 @@ public class Player extends Shell {
 		Button shuffleButton = new Button(composite_1, SWT.NONE);
 		shuffleButton.setText("Shuffle");
 		shuffleButton.setBounds(363, 279, 105, 35);
-
+		
+		TreeItem defaultplaylists = new TreeItem(playlistList, 0);
+		defaultplaylists.setText("default playlists");
+		
+		ArrayList<String> defaults = new ArrayList<String>();
+		
+		/*
+		 * adds the genre playlists to list
+		 */
+		java.util.List<Playlist> genreplaylists = PlaylistCollections.loadPlaylistsFromJson("GenrePlayList.json");
+		
+		for (Playlist playlist : genreplaylists) {
+			//testLine
+			TreeItem newPlaylistItem = new TreeItem(defaultplaylists, 0);
+			newPlaylistItem.setText(playlist.getName());
+			
+			defaults.add(playlist.getName());
+			
+			java.util.List<Song> songs = playlist.getSongs();
+			for (Song song : songs) {
+				TreeItem songItem = new TreeItem(newPlaylistItem, SWT.NONE);
+				songItem.setText(song.getName());
+				songItem.setData(song);		
+			}//end nested for loop	
+		}//end outer for loop
+		
+		/*
+		 * adds the genre playlists to list
+		 */
+		java.util.List<Playlist> yearplaylists = PlaylistCollections.loadPlaylistsFromJson("YearPlayList.json");
+		
+		for (Playlist playlist : yearplaylists) {
+			//testLine
+			TreeItem newPlaylistItem = new TreeItem(defaultplaylists, 0);
+			newPlaylistItem.setText(playlist.getName());
+			
+			defaults.add(playlist.getName());
+			
+			java.util.List<Song> songs = playlist.getSongs();
+			for (Song song : songs) {
+				TreeItem songItem = new TreeItem(newPlaylistItem, SWT.NONE);
+				songItem.setText(song.getName());
+				songItem.setData(song);		
+			}//end nested for loop	
+		}//end outer for loop
+		
+		
 		/**
 		 * This button iterates over the current user's collection of playlists and rewrites it to exclude the playlist the user selected to delete
 		 * it then re-populates the playlistList with the new user playlists
@@ -738,8 +784,8 @@ public class Player extends Shell {
 						}
 					}
 					selectedPlaylist.dispose();
-				}
-			}
+				}//end if to exclude default
+			}//end widgetSelected
 		});//end delete playlist button listener
 
 		//creates play list and adds it to the list on playlist tab
@@ -835,7 +881,6 @@ public class Player extends Shell {
 				}//end if
 			}
 		});//end event to play playlist
-
 		shuffleButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent event) {
 				// Get the selected playlist
